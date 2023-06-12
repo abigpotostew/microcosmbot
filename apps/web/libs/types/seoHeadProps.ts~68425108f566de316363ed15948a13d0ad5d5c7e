@@ -1,0 +1,10 @@
+export interface BasicSEOProps {
+  title: string;
+  description: string
+}
+
+export interface CommonSEOProps extends BasicSEOProps {
+  ogImage: string
+  ogType: string
+  twImage: string
+}

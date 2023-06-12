@@ -1,0 +1,11 @@
+{
+  "name": "@daokitchen/nouns-stream-sdk",
+  "version": "1.0.2",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "access": "private",
+  "license": "GPLv3",
+  "dependencies": {
+    "typescript": "^4.5.2"
+  }
+}

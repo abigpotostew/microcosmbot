@@ -1,0 +1,52 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["clean", "test", "^build"],
+      "outputs": ["dist/**", ".next/**"],
+      "env": [
+        "NEXT_PUBLIC_ALCHEMY_ID",
+        "NEXT_PUBLIC_BOT_DAO",
+        "NEXT_PUBLIC_RPC_URL",
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+      ]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "dev": {
+      "dependsOn": ["clean"],
+      "env": [
+        "NEXT_PUBLIC_ALCHEMY_ID",
+        "NEXT_PUBLIC_BOT_DAO",
+        "NEXT_PUBLIC_RPC_URL",
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+      ],
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["clean"],
+      "env": [
+        "NEXT_PUBLIC_ALCHEMY_ID",
+        "NEXT_PUBLIC_BOT_DAO",
+        "NEXT_PUBLIC_RPC_URL",
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+      ]
+    },
+    "test:watch": {
+      "cache": false,
+      "env": [
+        "NEXT_PUBLIC_ALCHEMY_ID",
+        "NEXT_PUBLIC_BOT_DAO",
+        "NEXT_PUBLIC_RPC_URL",
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+      ]
+    }
+  },
+  "globalEnv": ["GOLD_SKY_API_KEY"]
+}

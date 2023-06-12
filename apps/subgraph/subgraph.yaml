@@ -1,0 +1,102 @@
+specVersion: 0.0.5
+features:
+  - fullTextSearch
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Manager
+    network: base-goerli
+    source:
+      abi: Manager
+      address: "0xb6E0407F0094816a67b7d6E2FA27a87be9396f05"
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Initialized
+        - OwnerCanceled
+        - OwnerPending
+        - OwnerUpdated
+        - StreamCreated
+        - UpgradeRegistered
+        - UpgradeRemoved
+        - Upgraded
+        - Activity
+      abis:
+        - name: Manager
+          file: ./abis/Manager.json
+        - name: Milestones
+          file: ./abis/Milestones.json
+        - name: Intervals
+          file: ./abis/Intervals.json
+      eventHandlers:
+        - event: StreamCreated(address,string)
+          handler: handleStreamCreated
+      file: ./src/manager.ts
+templates:
+  - kind: ethereum
+    name: Intervals
+    network: base-goerli
+    source:
+      abi: Intervals
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FundsDisbursed
+        - IntervalsOwnerUpdated
+        - Paused
+        - Unpaused
+        - Withdraw
+        - Stream
+        - Activity
+      abis:
+        - name: Intervals
+          file: ./abis/Intervals.json
+      eventHandlers:
+        - event: FundsDisbursed(address,uint256,string)
+          handler: handleFundsDisbursed
+        - event: OwnerUpdated(indexed address,indexed address)
+          handler: handleIntervalsOwnerUpdated
+        - event: Paused(address)
+          handler: handlePaused
+        - event: Unpaused(address)
+          handler: handleUnpaused
+        - event: Withdraw(address,uint256)
+          handler: handleWithdraw
+      file: ./src/intervals.ts
+  - kind: ethereum
+    name: Milestones
+    network: base-goerli
+    source:
+      abi: Milestones
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FundsDisbursed
+        - OwnerUpdated
+        - Paused
+        - Unpaused
+        - Withdraw
+        - Stream
+        - Activity
+      abis:
+        - name: Milestones
+          file: ./abis/Milestones.json
+      eventHandlers:
+        - event: FundsDisbursed(address,uint256,string)
+          handler: handleMilestonesFundsDisbursed
+        - event: OwnerUpdated(indexed address,indexed address)
+          handler: handleMilestonesOwnerUpdated
+        - event: Paused(address)
+          handler: handleMilestonesPaused
+        - event: Unpaused(address)
+          handler: handleMilestonesUnpaused
+        - event: Withdraw(address,uint256)
+          handler: handleMilestonesWithdraw
+      file: ./src/milestones.ts
