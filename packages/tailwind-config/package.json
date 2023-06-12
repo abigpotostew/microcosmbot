@@ -1,0 +1,14 @@
+{
+  "name": "tailwind-config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "license": "GPLv3",
+  "devDependencies": {
+    "tailwindcss": "^3.2.6"
+  },
+  "dependencies": {
+    "flowbite": "^1.6.3",
+    "flowbite-react": "^0.3.8"
+  }
+}

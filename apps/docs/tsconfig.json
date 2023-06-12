@@ -1,0 +1,22 @@
+{
+  "extends": "tsconfig/nextjs.json",
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "svg-module.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "components/*": ["components/*"],
+      "markdoc/*": ["markdoc/*"],
+      "styles/*": ["styles/*"],
+      "assets/*": ["public/*"],
+      "state/*": ["state/*"],
+    }
+  }
+}

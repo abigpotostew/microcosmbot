@@ -1,0 +1,6 @@
+@openzeppelin/=../../node_modules/@openzeppelin/
+ds-test/=../../node_modules/ds-test/src/
+forge-std/=../../node_modules/forge-std/src/
+micro-onchain-metadata-utils/=../../node_modules/micro-onchain-metadata-utils/src/
+sol-uriencode/=../../node_modules/sol-uriencode/
+sol2string/=../../node_modules/sol2string/

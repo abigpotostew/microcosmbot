@@ -1,0 +1,35 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+  .input-component {
+    @apply font-sans text-sm text-gray-900 block w-full appearance-none rounded-lx bg-transparent box-border border px-4 py-6px h-11 placeholder-olive-600 transition-colors outline-none;
+  }
+
+  .button-adorn-component {
+    @apply relative inline-flex items-center gap-x-1.5 px-3 py-2 text-sm font-semibold text-gray-900 ring-1 hover:border-olive-600 transition-colors;
+  }
+
+  .primary-btn {
+    @apply flex justify-center rounded-4xl py-4 px-6 font-sans uppercase tracking-primary-btn text-13px font-medium text-white transition-colors bg-gray-900 select-none hover:bg-olive-800;
+  }
+
+  .outlined-btn {
+    @apply flex items-center box-border rounded-lx border border-gray-900 transition-colors shrink-0 gap-1 p-3 h-auto hover:bg-olive-400 select-none;
+  }
+}
+
+.loader-icon path {
+  stroke-dasharray: 100;
+  animation: load 5s linear infinite;
+}
+
+@keyframes load {
+  to {
+    stroke-dashoffset: 600;
+  }
+}
