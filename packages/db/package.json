@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "check-types": "tsc --noEmit",
-    "clean": "rm -rf .dist"
+    "clean": "rm -rf .dist",
+    "prepare": "prisma generate"
   },
   "devDependencies": {
     "eslint-config-custom": "*",
