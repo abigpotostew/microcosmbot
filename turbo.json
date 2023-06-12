@@ -2,6 +2,10 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env"],
   "pipeline": {
+    "prepare": {
+      "dependsOn": ["^prepare"],
+      "outputs": ["node_modules/.prisma/**"]
+    },
     "build": {
       "dependsOn": ["clean", "test", "^build"],
       "outputs": ["dist/**", ".next/**"],
@@ -9,19 +13,23 @@
         "NEXT_PUBLIC_ALCHEMY_ID",
         "NEXT_PUBLIC_BOT_DAO",
         "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
+        "PORT",
+        "TELEGRAM_BOT_KEY"
       ]
     },
     "lint": {
       "outputs": []
     },
     "dev": {
-      "dependsOn": ["clean"],
+      "dependsOn": ["clean", "prepare"],
       "env": [
         "NEXT_PUBLIC_ALCHEMY_ID",
         "NEXT_PUBLIC_BOT_DAO",
         "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
+        "PORT",
+        "TELEGRAM_BOT_KEY"
       ],
       "cache": false,
       "persistent": true
@@ -35,7 +43,9 @@
         "NEXT_PUBLIC_ALCHEMY_ID",
         "NEXT_PUBLIC_BOT_DAO",
         "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
+        "PORT",
+        "TELEGRAM_BOT_KEY"
       ]
     },
     "test:watch": {
@@ -44,7 +54,9 @@
         "NEXT_PUBLIC_ALCHEMY_ID",
         "NEXT_PUBLIC_BOT_DAO",
         "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY"
+        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
+        "PORT",
+        "TELEGRAM_BOT_KEY"
       ]
     }
   },
