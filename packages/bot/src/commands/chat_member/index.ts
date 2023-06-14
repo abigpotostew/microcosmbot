@@ -1,6 +1,9 @@
-import { Context } from 'grammy'
+import { Context, Middleware } from 'grammy'
+import { MyContext } from '../../bot'
 
-const chat_member = async (ctx: Context): Promise<void> => {
+const chat_member: Middleware<MyContext> = async (
+  ctx: MyContext
+): Promise<void> => {
   // console.log('chat_member', ctx)
   ctx
 }
