@@ -12,6 +12,7 @@
     "clean": "rm -rf .next"
   },
   "dependencies": {
+    "@stargateway/bot": "*",
     "@daokitchen/nouns-stream-sdk": "*",
     "@grammyjs/chat-members": "^1.0.10",
     "@headlessui/react": "^1.7.11",

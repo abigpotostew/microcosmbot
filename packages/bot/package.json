@@ -2,6 +2,11 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@stargateway/bot",
   "version": "0.0.0",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src"
+  },
+  "main": "./src/index.ts",
   "scripts": {
     "dev": "echo nodemon"
   },
