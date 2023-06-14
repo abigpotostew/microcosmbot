@@ -1,8 +1,16 @@
-import { Context } from 'grammy'
+import { Context, HearsMiddleware } from 'grammy'
+import { MyContext } from '../../bot'
 
-const echo = async (ctx: Context): Promise<void> => {
+const echo: HearsMiddleware<MyContext> = async (
+  ctx: MyContext
+): Promise<void> => {
   console.log('echo chat is', ctx.chat)
-  await ctx.reply(ctx.msg?.text || '')
+  const chatMember = await ctx.chatMembers.getChatMember(
+    ctx.chat.id,
+    ctx.from.id
+  )
+  console.log('chatMember', chatMember)
+  await ctx.reply((ctx.msg?.text || '') + 'chatMember: ' + chatMember?.user?.id)
 }
 
 export default echo

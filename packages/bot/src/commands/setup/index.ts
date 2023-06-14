@@ -1,11 +1,14 @@
-import { Context } from 'grammy'
+import { CommandMiddleware, Context } from 'grammy'
+import { MyContext } from '../../bot'
 
 const users = {
   skymagic: 1445777026,
   stewdev01: 6100753315,
 }
 
-const setup = async (ctx: Context): Promise<void> => {
+const setup: CommandMiddleware<MyContext> = async (
+  ctx: Context
+): Promise<void> => {
   // console.log('setup', ctx)
   const chat = ctx.chat
   const type = chat?.type

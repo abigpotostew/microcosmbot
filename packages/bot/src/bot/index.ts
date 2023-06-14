@@ -1,12 +1,19 @@
-import { Bot } from 'grammy'
+import { Bot, type Context, MemorySessionStorage } from 'grammy'
+import { type ChatMember } from 'grammy/types'
+import { chatMembers, type ChatMembersFlavor } from '@grammyjs/chat-members'
 
-export const bot = new Bot(process.env.TELEGRAM_BOT_KEY || '', {
+export type MyContext = Context & ChatMembersFlavor
+
+const adapter = new MemorySessionStorage<ChatMember>()
+
+export const bot = new Bot<MyContext>(process.env.TELEGRAM_BOT_KEY || '', {
   client: {
     canUseWebhookReply: (m) => false,
   },
 
   //todo setup botInfo
 })
+bot.use(chatMembers(adapter))
 
 // You can now register listeners on your bot object `bot`.
 // grammY will call the listeners when users send messages to your bot.
