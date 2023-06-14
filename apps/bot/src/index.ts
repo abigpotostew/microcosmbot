@@ -1,7 +1,8 @@
-import { createAppAndListen } from './app'
+import 'dotenv/config'
+import { createBotServer } from './app'
 
 async function main() {
-  createAppAndListen()
+  createBotServer()
 }
 
 main()
