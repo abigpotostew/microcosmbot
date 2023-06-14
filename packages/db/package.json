@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src"
   },
+  "main": "./src/index.ts",
   "license": "MIT",
   "scripts": {
     "check-types": "tsc --noEmit",

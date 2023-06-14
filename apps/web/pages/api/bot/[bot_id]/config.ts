@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Bot } from 'grammy'
-import bot from 'libs/bot/bot'
+import { bot } from '@stargateway/bot'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
@@ -28,6 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     { command: 'verify', description: 'Open settings' },
     { command: 'echo', description: 'echo input ' },
   ])
+  console.log('bot configured')
 
   res.status(200).json({ ok: true })
 }

@@ -1,6 +1,6 @@
 import { Bot } from 'grammy'
 
-const bot = new Bot(process.env.TELEGRAM_BOT_KEY || '', {
+export const bot = new Bot(process.env.TELEGRAM_BOT_KEY || '', {
   client: {
     canUseWebhookReply: (m) => false,
   },

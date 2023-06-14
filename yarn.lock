@@ -1942,7 +1942,7 @@
     aria-hidden "^1.1.3"
     tabbable "^6.0.1"
 
-"@grammyjs/chat-members@^1.0.10":
+"@grammyjs/chat-members@1.0.10", "@grammyjs/chat-members@^1.0.10":
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/@grammyjs/chat-members/-/chat-members-1.0.10.tgz#b4e4a648e0fd99290c92e3356ce09a7a943295a2"
   integrity sha512-jpSwFTw83/GguSJ9+WehOogYcqK1i6D4z76EQCzm9sNiSB4ZTuZihipeby09V0260Etsrb7SaaQAo4m3YVA4wA==
