@@ -71,15 +71,15 @@ export default function NounsStream({ Component, pageProps }: AppProps) {
       <WagmiConfig client={client}>
         <ConnectKitProvider theme="nouns">
           <RecoilRoot>
-            <LayoutWrapper
-              className={classNames(
-                lex.className,
-                `${roboto.variable} font-sans`,
-                `${londrina.variable} font-serif`
-              )}
-            >
-              <Component {...pageProps} />
-            </LayoutWrapper>
+            {/*<LayoutWrapper*/}
+            {/*  className={classNames(*/}
+            {/*    lex.className,*/}
+            {/*    `${roboto.variable} font-sans`,*/}
+            {/*    `${londrina.variable} font-serif`*/}
+            {/*  )}*/}
+            {/*>*/}
+            <Component {...pageProps} />
+            {/*</LayoutWrapper>*/}
           </RecoilRoot>
         </ConnectKitProvider>
       </WagmiConfig>

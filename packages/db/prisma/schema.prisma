@@ -1,6 +1,6 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -8,18 +8,68 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+model Account {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // tg id
+  userId BigInt @unique
+
+  wallets Wallet[]
+  groups  Group[]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Wallet {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  address String @unique
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  groupMembers GroupMember[]
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // tg id
+  groupId BigInt @unique
+
+  creator   Account @relation(fields: [creatorId], references: [id])
+  creatorId String
+
+  groupMembers    GroupMember[]
+  manageGroupCodes ManageGroupCode[]
+}
+
+model ManageGroupCode {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  code      String
+  expiresAt DateTime
+
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String
+
+  @@unique([groupId, code])
+}
+
+model GroupMember {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String
+
+  wallet   Wallet @relation(fields: [walletId], references: [id])
+  walletId String
 }

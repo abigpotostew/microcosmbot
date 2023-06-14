@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "echo next dev -p 3000",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@daokitchen/nouns-stream-sdk": "*",
+    "@grammyjs/chat-members": "^1.0.10",
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
     "@hookform/resolvers": "^2.9.11",

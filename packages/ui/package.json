@@ -13,7 +13,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "dev": "echo tsup --watch",
+    "dev": "tsup --watch",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf .dist"
   },
