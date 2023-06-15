@@ -53,4 +53,8 @@ export const websiteData: WebsiteData = {
     title: 'Verify Wallet',
     subtitle: 'Verify your wallet to join a group',
   },
+  manageSection: {
+    title: 'Manage Group',
+    subtitle: 'Configure your telegram group access',
+  },
 }

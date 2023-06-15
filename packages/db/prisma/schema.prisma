@@ -89,6 +89,7 @@ model ManageGroupCode {
   groupId String
 
   @@unique([groupId, code])
+  @@index([code])
 }
 
 model GroupAdmin {

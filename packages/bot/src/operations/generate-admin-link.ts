@@ -2,7 +2,6 @@ import { Group, prismaClient } from '@microcosms/db'
 import crypto from 'crypto'
 
 export const generateAdminLink = async (group: Group) => {
-  //
   const code = crypto.randomBytes(16).toString('hex')
   await prismaClient().manageGroupCode.create({
     data: {
@@ -15,5 +14,5 @@ export const generateAdminLink = async (group: Group) => {
       },
     },
   })
-  const link = `${process.env.BASEURL}/manage-group/${code}`
+  return `${process.env.BASEURL}/manage-group/${code}`
 }
