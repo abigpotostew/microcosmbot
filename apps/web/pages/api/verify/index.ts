@@ -7,7 +7,7 @@ import { Bech32Address, verifyADR36Amino } from '@keplr-wallet/cosmos'
 import { AccountData, StdSignature, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from 'libs/verify/build-mesage'
 import { prismaClient } from '@microcosms/db'
-import { verifyWallet } from '@microcosms/bot/src/operations/verify-wallet'
+import { verifyWallet } from '@microcosms/bot'
 
 function sortedObject(obj: any): any {
   if (typeof obj !== 'object' || obj === null) {
@@ -107,81 +107,14 @@ export default async function handler(
 
   try {
     await verifyWallet({ otp, setStatus: setResponse(res), resolveAddress })
-    // const now = new Date()
-    // //todo store the thing in the db
-    // const existing = await prismaClient().pendingGroupMember.findFirst({
-    //   where: {
-    //     code: otp,
-    //     expiresAt: {
-    //       gte: now,
-    //     },
-    //     consumed: false,
-    //   },
-    //   include: {
-    //     group: true,
-    //     account: true,
-    //   },
-    // })
-    // if (!existing) {
-    //   res.status(401).json({ message: 'unauthorized' })
-    //   console.log('no pending non-expired group member found')
-    //   return
-    // }
-    // const count = await prismaClient().pendingGroupMember.updateMany({
-    //   where: {
-    //     id: existing.id,
-    //     consumed: false,
-    //   },
-    //   data: {
-    //     consumed: true,
-    //   },
-    // })
-    // if (count.count !== 1) {
-    //   res.status(401).json({ message: 'unauthorized' })
-    //   console.log('pending group member already consumed')
-    //   return
-    // }
-    // // create a fresh invite link here for the user
-    // const inviteLink = ''
-    // const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
-    // await prismaClient().groupMember.create({
-    //   data: {
-    //     group: {
-    //       connect: {
-    //         id: existing.group.id,
-    //       },
-    //     },
-    //     wallet: {
-    //       connectOrCreate: {
-    //         where: {
-    //           address: resolveAddress,
-    //         },
-    //         create: {
-    //           address: resolveAddress,
-    //           account: {
-    //             connect: {
-    //               id: existing.account.id,
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     groupMemberInviteLink: {
-    //       create: {
-    //         inviteLink,
-    //         expiresAt,
-    //       },
-    //     },
-    //   },
-    // })
   } catch (e) {
-    console.error(e)
-    throw e
+    console.error('unknown', e)
+    res.status(500).json({ message: 'unknown' })
+    return
   }
 
   // issueToCookie(resolveAddress, req, res)
   //return success message
-  res.status(200).json({ message: 'ok' })
 }
 
 const isValidSignature = async (

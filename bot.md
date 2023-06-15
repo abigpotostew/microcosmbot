@@ -277,3 +277,8 @@ when a user modifies the bot admin permissions:
   "chatMembers": {}
 }
 ```
+
+### This is the link to initially setup the bot in a group
+https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
+
+### generate a unique link for group owner to add their group

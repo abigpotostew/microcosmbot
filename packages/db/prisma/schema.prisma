@@ -77,15 +77,17 @@ model GroupMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  group   Group  @relation(fields: [groupId], references: [id])
+  group   Group   @relation(fields: [groupId], references: [id])
   groupId String
+  active  Boolean @default(false)
 
   wallet   Wallet @relation(fields: [walletId], references: [id])
   walletId String
 
   groupMemberInviteLink GroupMemberInviteLink[]
 
-  @@index([walletId])
+  @@unique([walletId, groupId], name: "GroupMember_walletId_groupId_unique")
+  // @@index([walletId])
   @@index([groupId])
 }
 
@@ -119,7 +121,7 @@ model GroupMemberInviteLink {
   inviteLink String
   expiresAt  DateTime
 
-  @@index([groupMemberId])
+  @@index([groupMemberId, createdAt(sort: Desc)])
 }
 
 model AuditLog {
@@ -140,4 +142,5 @@ model AuditLog {
 
 enum AuditTypes {
   MY_CHAT_MEMBER
+  CHAT_MEMBER
 }
