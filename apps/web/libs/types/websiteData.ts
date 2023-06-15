@@ -1,5 +1,5 @@
-import { StaticImageData } from "next/image"
-import { FunctionComponent } from "react"
+import { StaticImageData } from 'next/image'
+import { FunctionComponent } from 'react'
 
 export interface WTFList {
   title: string
@@ -17,18 +17,22 @@ export interface WebsiteData {
   heroSection: {
     imageSrc: StaticImageData
     processImageSrc: StaticImageData
-  },
+  }
   benefitsSection: {
-    benefits: IBenefitItem[],
-  },
+    benefits: IBenefitItem[]
+  }
   wtfSection: {
     title: string
     subtitle: string
     text: string
     imageSrc: StaticImageData
     wtfList: WTFList[]
-  },
+  }
   payoutSection: {
+    title: string
+    subtitle: string
+  }
+  verifySection: {
     title: string
     subtitle: string
   }

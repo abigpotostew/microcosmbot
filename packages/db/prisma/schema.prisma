@@ -16,8 +16,10 @@ model Account {
   // tg id
   userId BigInt @unique
 
-  wallets Wallet[]
-  groups  Group[]
+  wallets            Wallet[]
+  pendingGroupMember PendingGroupMember[]
+
+  @@index([userId])
 }
 
 model Wallet {
@@ -31,6 +33,9 @@ model Wallet {
   accountId String
 
   groupMembers GroupMember[]
+
+  @@index([accountId])
+  @@index([address])
 }
 
 model Group {
@@ -38,14 +43,19 @@ model Group {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  active Boolean @default(false)
+
   // tg id
   groupId BigInt @unique
 
-  creator   Account @relation(fields: [creatorId], references: [id])
-  creatorId String
+  // creator   Account @relation(fields: [creatorId], references: [id])
+  // creatorId String
 
-  groupMembers    GroupMember[]
-  manageGroupCodes ManageGroupCode[]
+  groupMembers        GroupMember[]
+  manageGroupCodes    ManageGroupCode[]
+  pendingGroupMembers PendingGroupMember[]
+
+  @@index([groupId])
 }
 
 model ManageGroupCode {
@@ -72,4 +82,59 @@ model GroupMember {
 
   wallet   Wallet @relation(fields: [walletId], references: [id])
   walletId String
+
+  groupMemberInviteLink GroupMemberInviteLink[]
+
+  @@index([walletId])
+  @@index([groupId])
+}
+
+model PendingGroupMember {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  code      String   @unique
+  expiresAt DateTime
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+  group     Group   @relation(fields: [groupId], references: [id])
+  groupId   String
+
+  @@index([accountId, groupId, expiresAt(sort: Desc)])
+}
+
+model GroupMemberInviteLink {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  groupMember   GroupMember @relation(fields: [groupMemberId], references: [id])
+  groupMemberId String
+
+  inviteLink String
+  expiresAt  DateTime
+
+  @@index([groupMemberId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  updateId   BigInt
+  updateDate DateTime
+
+  // tg id
+  groupId BigInt
+
+  auditType AuditTypes
+
+  data Json
+}
+
+enum AuditTypes {
+  MY_CHAT_MEMBER
 }

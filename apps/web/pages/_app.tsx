@@ -17,6 +17,19 @@ import { publicProvider } from 'wagmi/providers/public'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import * as Fathom from 'fathom-client'
+import { QueryClient } from '@tanstack/query-core'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ChainProvider } from '@cosmos-kit/react'
+import { chains, assets } from 'chain-registry'
+import { wallets as keplrWallets } from '@cosmos-kit/keplr'
+import { wallets as cosmostationWallets } from '@cosmos-kit/cosmostation'
+import { wallets as leapWallets } from '@cosmos-kit/leap'
+import { SignerOptions } from '@cosmos-kit/core'
+import { Chain } from '@chain-registry/types'
+import { getSigningCosmosClientOptions } from 'stargazejs'
+import { GasPrice } from '@cosmjs/stargate'
+
+const queryClient = new QueryClient()
 
 const { provider } = configureChains(
   [mainnet, goerli],
@@ -65,24 +78,69 @@ export default function NounsStream({ Component, pageProps }: AppProps) {
       router.events.off('routeChangeComplete', onRouteChangeComplete)
     }
   }, [])
+  const signerOptions: SignerOptions = {
+    signingStargate: (_chain: Chain) => {
+      return getSigningCosmosClientOptions()
+    },
+    signingCosmwasm: (chain: Chain) => {
+      switch (chain.chain_name) {
+        case 'stargaze':
+          return {
+            gasPrice: GasPrice.fromString('0.0025ustars'),
+          }
+      }
+    },
+  }
 
+  console.log(
+    'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID',
+    process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+  )
   return (
     <>
-      <WagmiConfig client={client}>
-        <ConnectKitProvider theme="nouns">
-          <RecoilRoot>
-            {/*<LayoutWrapper*/}
-            {/*  className={classNames(*/}
-            {/*    lex.className,*/}
-            {/*    `${roboto.variable} font-sans`,*/}
-            {/*    `${londrina.variable} font-serif`*/}
-            {/*  )}*/}
-            {/*>*/}
-            <Component {...pageProps} />
-            {/*</LayoutWrapper>*/}
-          </RecoilRoot>
-        </ConnectKitProvider>
-      </WagmiConfig>
+      <QueryClientProvider client={queryClient}>
+        <WagmiConfig client={client}>
+          <ConnectKitProvider theme="nouns">
+            <ChainProvider
+              chains={chains}
+              assetLists={assets}
+              wallets={[
+                ...keplrWallets,
+                // ...cosmostationWallets,
+                // ...leapWallets,
+              ]}
+              walletConnectOptions={{
+                signClient: {
+                  projectId: process.env
+                    .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,
+                  relayUrl: 'wss://relay.walletconnect.org',
+                  metadata: {
+                    name: 'MicroCosms Bot',
+                    description:
+                      'MicroCosms bot creates token gated telegram groups.',
+                    url: 'https://microcosmsbot.tunnelmole.com',
+                    icons: [],
+                  },
+                },
+              }}
+              wrappedWithChakra={false}
+              signerOptions={signerOptions}
+            >
+              <RecoilRoot>
+                {/*<LayoutWrapper*/}
+                {/*  className={classNames(*/}
+                {/*    lex.className,*/}
+                {/*    `${roboto.variable} font-sans`,*/}
+                {/*    `${londrina.variable} font-serif`*/}
+                {/*  )}*/}
+                {/*>*/}
+                <Component {...pageProps} />
+                {/*</LayoutWrapper>*/}
+              </RecoilRoot>
+            </ChainProvider>
+          </ConnectKitProvider>
+        </WagmiConfig>
+      </QueryClientProvider>
     </>
   )
 }

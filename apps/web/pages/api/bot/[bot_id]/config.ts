@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { bot } from '@stargateway/bot'
+import { bot } from '@microcosms/bot'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
@@ -17,6 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       'channel_post',
       'edited_channel_post',
       'edited_message',
+      'callback_query',
     ],
   })
 
