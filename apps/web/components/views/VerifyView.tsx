@@ -5,7 +5,10 @@ import { PrimaryButton } from '@nouns-stream/ui'
 import { useMutation } from '@tanstack/react-query'
 import { getSigningPublicawesomeClient } from 'stargazejs'
 import { useChain } from '@cosmos-kit/react'
-import { signLoginMessageWithArbitrary } from 'libs/verify/keplr'
+import {
+  signLoginMessageWithAmino,
+  signLoginMessageWithArbitrary,
+} from 'libs/verify/keplr'
 
 //todo client side render to grab the OTP, and group.
 const chainName = 'stargaze'
@@ -24,6 +27,8 @@ const VerifyView: React.FC = () => {
     chain: chainInfo,
     logoUrl,
     signArbitrary,
+    signAmino,
+    getAccount,
     getSigningCosmWasmClient,
   } = useChain(chainName)
 
@@ -35,14 +40,29 @@ const VerifyView: React.FC = () => {
       throw new Error('no otp')
     }
 
+    const account = await getAccount()
     const signingCosmWasmClient = await getSigningCosmWasmClient()
 
     // const stargateClient = await getSigningPublicawesomeClient({
     //   rpcEndpoint: 'https://rpc.stargaze-apis.com/',
     //   signer: signingCosmWasmClient,
     // })
-    const res = await signLoginMessageWithArbitrary(otp, signArbitrary)
-    console.log('res', res)
+    const res1 = await signLoginMessageWithAmino(otp, signAmino)
+
+    // const res = await signLoginMessageWithArbitrary(otp, signArbitrary)
+    console.log('res', res1)
+    const res = await fetch('/api/verify', {
+      method: 'POST',
+      body: JSON.stringify({ ...res1.signature, otp, account: account }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!res.ok) {
+      throw new Error('failed to verify')
+    }
+    const body = await res.json()
+    console.log('ITs SUCCESS body', body)
   })
 
   return (

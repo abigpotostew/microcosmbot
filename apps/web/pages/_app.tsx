@@ -86,7 +86,7 @@ export default function NounsStream({ Component, pageProps }: AppProps) {
       switch (chain.chain_name) {
         case 'stargaze':
           return {
-            gasPrice: GasPrice.fromString('0.0025ustars'),
+            gasPrice: GasPrice.fromString('0.0ustars'),
           }
       }
     },

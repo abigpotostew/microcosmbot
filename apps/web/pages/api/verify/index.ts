@@ -4,7 +4,7 @@ import { Secp256k1, Secp256k1Signature, sha256 } from '@cosmjs/crypto'
 import { fromBase64, toUtf8 } from '@cosmjs/encoding'
 import { decodeSignature } from '@cosmjs/amino'
 import { Bech32Address, verifyADR36Amino } from '@keplr-wallet/cosmos'
-import { StdSignature, StdSignDoc } from 'cosmwasm'
+import { AccountData, StdSignature, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from 'libs/verify/build-mesage'
 
 function sortedObject(obj: any): any {
@@ -40,6 +40,12 @@ export interface SignArbitraryVerification extends SignatureVerify {
   address: string
   otp: string
 }
+export interface SignAminoVerification extends SignatureVerify {
+  signature: StdSignature
+  signed: StdSignDoc
+  account: AccountData
+  otp: string
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -50,22 +56,40 @@ export default async function handler(
     return
   }
 
+  console.log('')
   let { strategy } = req.body
   strategy = strategy || 'SIGNAMINO'
 
-  const { signature, address, otp } = req.body as SignArbitraryVerification
-  const { pubkey: decodedPubKey, signature: decodedSignature } =
-    decodeSignature(signature)
-  const data = JSON.stringify(buildMessage(otp))
-  const chainPrefix = Bech32Address.defaultBech32Config('stars')
-  // https://github.com/wgwz/simple-express-keplr-passport/pull/2
-  const verified = verifyADR36Amino(
-    chainPrefix.bech32PrefixAccAddr,
-    address,
-    data,
-    decodedPubKey,
-    decodedSignature
-  )
+  let resolveAddress: string
+  let verified = false
+  if (strategy === 'SIGNAMINO') {
+    const { signed, signature, account, otp } =
+      req.body as SignAminoVerification
+    const publicKey = account.pubkey
+    const valid = await isValidSignature(signed, signature, publicKey)
+    if (!valid) {
+      res.status(401).json({ message: 'unauthorized' })
+      return
+    }
+
+    verified = await isCorrectOtp(otp, signed)
+    resolveAddress = account.address
+  } else {
+    const { signature, address, otp } = req.body as SignArbitraryVerification
+    const { pubkey: decodedPubKey, signature: decodedSignature } =
+      decodeSignature(signature)
+    const data = JSON.stringify(buildMessage(otp))
+    const chainPrefix = Bech32Address.defaultBech32Config('stars')
+    // https://github.com/wgwz/simple-express-keplr-passport/pull/2
+    verified = verifyADR36Amino(
+      chainPrefix.bech32PrefixAccAddr,
+      address,
+      data,
+      decodedPubKey,
+      decodedSignature
+    )
+    resolveAddress = address
+  }
 
   if (!verified) {
     res.status(403).json({ message: 'forbidden' })
@@ -97,7 +121,7 @@ const isValidSignature = async (
     const binaryPublicKey = new Uint8Array(Object.values(publicKey))
 
     valid = await Secp256k1.verifySignature(
-      Secp256k1Signature.fromFixedLength(fromBase64(signature)),
+      Secp256k1Signature.fromFixedLength(fromBase64(signature.signature)),
       binaryHashSigned,
       binaryPublicKey
     )
@@ -114,7 +138,7 @@ const isCorrectOtp = async (expectedOtp: string, signed: any) => {
     // What they signed
     const signedSaganism = signed.msgs[0].value
     // What they should have signed
-    const assignedSaganism = 'Magic, please!' + ' ' + expectedOtp
+    const assignedSaganism = JSON.stringify(buildMessage(expectedOtp))
     isCorrect = signedSaganism === assignedSaganism
   } catch (e) {
     console.error('Issue determining if the user signed the right thing', e)
