@@ -3,6 +3,7 @@ import { Middleware } from 'grammy'
 import { ChatMemberUpdated } from 'grammy/types'
 import { MyContext } from '../../bot'
 import { ChatMemberAdministrator } from '@grammyjs/types/manage'
+import { syncAdmins } from '../../operations/sync-admins'
 
 const checkHasPermissions = (admin: ChatMemberAdministrator) => {
   if (!admin.can_manage_chat) {
@@ -83,13 +84,16 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
       groupId: ctx.myChatMember.chat.id,
     },
     create: {
+      name: myChatMember.chat.title,
       groupId: ctx.myChatMember.chat.id,
       active: true,
     },
     update: {
+      name: myChatMember.chat.title,
       active: true,
     },
   })
+  await syncAdmins(ctx, ctx.myChatMember.chat.id, group)
   return ctx.reply('Group activated!')
   //new_chat_member old member
   //old_chat_member new member

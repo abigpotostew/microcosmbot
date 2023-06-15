@@ -18,6 +18,7 @@ model Account {
 
   wallets            Wallet[]
   pendingGroupMember PendingGroupMember[]
+  GroupAdmin         GroupAdmin[]
 
   @@index([userId])
 }
@@ -43,8 +44,8 @@ model Group {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  name String @default("")
   active Boolean @default(false)
-
   // tg id
   groupId BigInt @unique
 
@@ -54,6 +55,24 @@ model Group {
   groupMembers        GroupMember[]
   manageGroupCodes    ManageGroupCode[]
   pendingGroupMembers PendingGroupMember[]
+  groupTokenGate      GroupTokenGate[]
+  groupAdmins         GroupAdmin[]
+
+  @@index([groupId])
+}
+
+model GroupTokenGate {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  active          Boolean @default(true)
+  contractAddress String
+  minTokens       Int?
+  maxTokens       Int?
+
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String
 
   @@index([groupId])
 }
@@ -72,6 +91,20 @@ model ManageGroupCode {
   @@unique([groupId, code])
 }
 
+model GroupAdmin {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group     Group   @relation(fields: [groupId], references: [id])
+  groupId   String
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  @@unique([groupId, accountId])
+}
+
+// anyone who has gone through the auth flow and needs to be token gate checked
 model GroupMember {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -87,7 +120,6 @@ model GroupMember {
   groupMemberInviteLink GroupMemberInviteLink[]
 
   @@unique([walletId, groupId], name: "GroupMember_walletId_groupId_unique")
-  // @@index([walletId])
   @@index([groupId])
 }
 

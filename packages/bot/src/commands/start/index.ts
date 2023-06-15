@@ -50,39 +50,6 @@ const start: CommandMiddleware<MyContext> = async (
 
     ctx.match = otp.code
 
-    // const existingGroupMember = await prismaClient().groupMember.findFirst({
-    //   where: {
-    //     groupId: otp.groupId,
-    //     wallet: {
-    //       account: {
-    //         userId: ctx.from.id,
-    //       },
-    //     },
-    //   },
-    //   include: {
-    //     wallet: {
-    //       include: { account: true },
-    //     },
-    //   },
-    // })
-
-    // todo check if they're already a member in the group
-    // if so, then change the message, saying they can change
-
-    // const account = await prismaClient().account.upsert({
-    //   where: {
-    //     userId: ctx.from.id,
-    //   },
-    //   create: {
-    //     userId: ctx.from.id,
-    //   },
-    //   update: {},
-    // })
-    // console.log(menuUserResponse)
-    // const menuUserResponse = new InlineKeyboard()
-    //   .url('Register new wallet', 'register-new-wallet')
-    //   .row()
-    //   .url('Use existing wallets:', 'https://skymagic.art')
     const existingWallets = await prismaClient().wallet.findMany({
       where: {
         account: {
