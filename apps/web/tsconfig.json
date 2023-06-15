@@ -19,6 +19,7 @@
       "assets/*": ["public/*"],
       "utils/*": ["utils/*"],
       "state/*": ["state/*"],
+      "server/*": ["server/*"],
     }
   }
 }

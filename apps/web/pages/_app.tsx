@@ -4,7 +4,7 @@ import '@nouns-stream/ui/styles.css'
 import 'styles/globals.css'
 
 import { RecoilRoot } from 'recoil'
-import type { AppProps } from 'next/app'
+import type { AppProps, AppType } from 'next/app'
 import { WagmiConfig, configureChains, createClient } from 'wagmi'
 import { mainnet, goerli, arbitrum, optimism, polygon } from 'wagmi/chains'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
@@ -28,6 +28,7 @@ import { SignerOptions } from '@cosmos-kit/core'
 import { Chain } from '@chain-registry/types'
 import { getSigningCosmosClientOptions } from 'stargazejs'
 import { GasPrice } from '@cosmjs/stargate'
+import { trpc } from 'utils/trpc'
 
 const queryClient = new QueryClient()
 
@@ -59,7 +60,7 @@ const londrina = Londrina_Solid({
   variable: '--font-londrina',
 })
 
-export default function NounsStream({ Component, pageProps }: AppProps) {
+const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
 
   useEffect(() => {
@@ -140,3 +141,4 @@ export default function NounsStream({ Component, pageProps }: AppProps) {
     </>
   )
 }
+export default trpc.withTRPC(MyApp)

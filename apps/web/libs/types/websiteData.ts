@@ -36,4 +36,8 @@ export interface WebsiteData {
     title: string
     subtitle: string
   }
+  manageSection: {
+    title: string
+    subtitle: string
+  }
 }
