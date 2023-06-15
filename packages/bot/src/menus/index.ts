@@ -1,6 +1,6 @@
 import { Menu, MenuRange } from '@grammyjs/menu'
 import { MyContext } from '../bot'
-import { Bot, Composer, InlineKeyboard } from 'grammy'
+import { Composer } from 'grammy'
 import { prismaClient } from '@microcosms/db'
 import { generateAdminLink } from '../operations/generate-admin-link'
 
@@ -38,7 +38,7 @@ export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
 export const menuAdminConfig = new Menu<MyContext>('admin-config-menu').dynamic(
   async (ctx) => {
     const range = new MenuRange<MyContext>()
-    const from = ctx.from?.id
+    const from = ctx.from?.id?.toString()
     if (!from) {
       await ctx.reply('You must be logged in to use this command.')
       return
