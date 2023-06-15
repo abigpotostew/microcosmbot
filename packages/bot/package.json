@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@stargateway/bot",
+  "name": "@microcosms/bot",
   "version": "0.0.0",
   "types": "./src/index.ts",
   "exports": {
@@ -15,7 +15,7 @@
     "ts-node": "^10.9.1",
     "dotenv": "^10.0.0",
     "@grammyjs/chat-members":"1.0.10",
-    "@stargateway/db": "*",
+    "@microcosms/db": "*"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

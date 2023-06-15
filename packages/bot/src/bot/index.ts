@@ -8,12 +8,12 @@ const adapter = new MemorySessionStorage<ChatMember>()
 
 export const bot = new Bot<MyContext>(process.env.TELEGRAM_BOT_KEY || '', {
   client: {
-    canUseWebhookReply: (m) => false,
+    // canUseWebhookReply: (m) => false,
   },
 
   //todo setup botInfo
 })
-bot.use(chatMembers(adapter))
+// bot.use(chatMembers(adapter))
 
 // You can now register listeners on your bot object `bot`.
 // grammY will call the listeners when users send messages to your bot.

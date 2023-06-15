@@ -49,4 +49,8 @@ export const websiteData: WebsiteData = {
     title: 'Payouts',
     subtitle: 'Most recent streams for payouts',
   },
+  verifySection: {
+    title: 'Verify Wallet',
+    subtitle: 'Verify your wallet to join a group',
+  },
 }

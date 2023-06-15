@@ -1,7 +1,7 @@
-import { bot } from '@stargateway/bot'
+import { bot, registerMenus } from '@microcosms/bot'
 import { webhookCallback } from 'grammy'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { commands } from '@stargateway/bot'
+import { commands } from '@microcosms/bot'
 
 // The free version of vercel has restrictions on quotas, which we need to enable in the configuration file vercel.json
 // webhookCallback will make sure that the correct middleware(listener) function is called
