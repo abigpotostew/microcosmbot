@@ -199,10 +199,10 @@ export const startUserVerifyFlow = (fromUserId: number, group: Group) => {
       account: {
         connectOrCreate: {
           where: {
-            userId: fromUserId,
+            userId: fromUserId.toString(),
           },
           create: {
-            userId: fromUserId,
+            userId: fromUserId.toString(),
           },
         },
       },

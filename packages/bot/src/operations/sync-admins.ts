@@ -12,21 +12,21 @@ export const syncAdmins = async (
   ///create accounts for admins if neded
   const accounts = await prismaClient().account.createMany({
     data: admins.map((a) => ({
-      userId: a.user.id,
+      userId: a.user.id.toString(),
     })),
     skipDuplicates: true,
   })
   const adminAccounts = await prismaClient().account.findMany({
     where: {
       userId: {
-        in: admins.map((a) => a.user.id),
+        in: admins.map((a) => a.user.id.toString()),
       },
     },
   })
   if (!group) {
     group = await prismaClient().group.findFirst({
       where: {
-        groupId: chatId,
+        groupId: chatId.toString(),
       },
     })
   }

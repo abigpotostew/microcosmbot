@@ -1,6 +1,5 @@
 import { prismaClient } from '@microcosms/db'
 import { Middleware } from 'grammy'
-import { ChatMemberUpdated } from 'grammy/types'
 import { MyContext } from '../../bot'
 import { ChatMemberAdministrator } from '@grammyjs/types/manage'
 import { syncAdmins } from '../../operations/sync-admins'
@@ -70,7 +69,7 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
   //create or activate the group
   const existingGroup = await prismaClient().group.findFirst({
     where: {
-      groupId: ctx.myChatMember.chat.id,
+      groupId: ctx.myChatMember.chat.id.toString(),
     },
   })
   if (existingGroup?.active) {
@@ -81,11 +80,11 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
   }
   const group = await prismaClient().group.upsert({
     where: {
-      groupId: ctx.myChatMember.chat.id,
+      groupId: ctx.myChatMember.chat.id.toString(),
     },
     create: {
       name: myChatMember.chat.title,
-      groupId: ctx.myChatMember.chat.id,
+      groupId: ctx.myChatMember.chat.id.toString(),
       active: true,
     },
     update: {

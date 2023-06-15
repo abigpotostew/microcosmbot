@@ -14,7 +14,7 @@ model Account {
   updatedAt DateTime @updatedAt
 
   // tg id
-  userId BigInt @unique
+  userId String @unique
 
   wallets            Wallet[]
   pendingGroupMember PendingGroupMember[]
@@ -47,7 +47,7 @@ model Group {
   name String @default("")
   active Boolean @default(false)
   // tg id
-  groupId BigInt @unique
+  groupId String @unique
 
   // creator   Account @relation(fields: [creatorId], references: [id])
   // creatorId String

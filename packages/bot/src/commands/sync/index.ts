@@ -10,7 +10,7 @@ export const cmd_sync: CommandMiddleware<MyContext> = async (ctx) => {
   const chatId = ctx.chat.id
   const group = await prismaClient().group.findFirst({
     where: {
-      groupId: chatId,
+      groupId: chatId.toString(),
     },
   })
   await syncAdmins(ctx, chatId, group)

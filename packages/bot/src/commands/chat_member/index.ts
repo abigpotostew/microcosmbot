@@ -49,7 +49,7 @@ const chat_member: Middleware<MyContext> = async (
         groupMember: {
           wallet: {
             account: {
-              userId: ctx.chatMember.new_chat_member.user.id,
+              userId: ctx.chatMember.new_chat_member.user.id.toString(),
             },
           },
         },
@@ -76,7 +76,7 @@ const chat_member: Middleware<MyContext> = async (
     ) {
       // revoke any invite links if it's in the db
       await ctx.api.revokeChatInviteLink(
-        Number(dbInviteLink.groupMember.group.groupId),
+        parseInt(dbInviteLink.groupMember.group.groupId),
         chatMember.invite_link.invite_link
       )
       console.log('revoked chat link,', chatMember.invite_link.invite_link)
@@ -86,7 +86,7 @@ const chat_member: Middleware<MyContext> = async (
           ' ' +
           chatMember.new_chat_member.user.last_name
       await ctx.api.sendMessage(
-        Number(dbInviteLink.groupMember.group.groupId),
+        parseInt(dbInviteLink.groupMember.group.groupId),
         `@${name} has arrived`
       )
     }
@@ -99,11 +99,11 @@ const chat_member: Middleware<MyContext> = async (
     const res = await prismaClient().groupMember.updateMany({
       where: {
         group: {
-          groupId: chatMember.chat.id,
+          groupId: chatMember.chat.id.toString(),
         },
         wallet: {
           account: {
-            userId: ctx.chatMember.new_chat_member.user.id,
+            userId: ctx.chatMember.new_chat_member.user.id.toString(),
           },
         },
         active: false,

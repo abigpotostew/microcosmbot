@@ -9,7 +9,7 @@ export const cmd_invite: CommandMiddleware<MyContext> = async (ctx) => {
   }
   const group = await prismaClient().group.findFirst({
     where: {
-      groupId: ctx.chat.id,
+      groupId: ctx.chat.id.toString(),
     },
   })
   if (!group) {
