@@ -1,3 +1,5 @@
 export * from './bot'
 export * from './commands'
 export * from './menus'
+export * from './operations'
+export * from './botinfo'

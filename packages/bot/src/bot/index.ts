@@ -1,6 +1,7 @@
 import { Bot, type Context, MemorySessionStorage } from 'grammy'
 import { type ChatMember } from 'grammy/types'
 import { chatMembers, type ChatMembersFlavor } from '@grammyjs/chat-members'
+import { botInfo } from '../botinfo'
 
 export type MyContext = Context & ChatMembersFlavor
 
@@ -10,6 +11,7 @@ export const bot = new Bot<MyContext>(process.env.TELEGRAM_BOT_KEY || '', {
   client: {
     // canUseWebhookReply: (m) => false,
   },
+  botInfo: botInfo,
 
   //todo setup botInfo
 })

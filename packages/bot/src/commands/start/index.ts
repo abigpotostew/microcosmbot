@@ -4,13 +4,14 @@ import { Chat } from 'grammy/types'
 import { MyContext } from '../../bot'
 import { menuUserResponse } from '../../menus'
 import * as crypto from 'crypto'
+import { registerAccountToPendingGroupMember } from '../../operations/register-account-to-pending-group-member'
 const users = {
   skymagic: 1445777026,
   stewdev01: 6100753315,
 }
 
 const start: CommandMiddleware<MyContext> = async (
-  ctx: Context
+  ctx: MyContext
 ): Promise<void> => {
   // console.log('setup', ctx)
   const chat = ctx.chat
@@ -37,42 +38,36 @@ const start: CommandMiddleware<MyContext> = async (
       )
       return
     }
-    const group = await prismaClient().group.findFirst({
-      where: { id: ctx.match!, active: true },
+
+    const otp = await registerAccountToPendingGroupMember({
+      ctx,
+      fromTgId: ctx.from.id,
+      groupJoinId: ctx.match!,
     })
-    if (!group) {
-      await ctx.reply(
-        "This group hasn't registered yet. Please contact the group admin to register."
-      )
+    if (!otp) {
       return
     }
-    // if they have a wallet, let them choose to either use these wallets or verify a new wallet.
-    //create an account for this user. here
-    const otp = await startUserVerifyFlow(ctx.from.id, group)
-    // const code = crypto.randomBytes(64).toString('hex')
-    // const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 3)
-    // const pendingGroupMember = await prismaClient().pendingGroupMember.create({
-    //   data: {
-    //     code,
-    //     expiresAt,
-    //     group: {
-    //       connect: {
-    //         id: group.id,
-    //       },
-    //     },
-    //     account: {
-    //       connectOrCreate: {
-    //         where: {
-    //           userId: ctx.from.id,
-    //         },
-    //         create: {
-    //           userId: ctx.from.id,
-    //         },
+
+    ctx.match = otp.code
+
+    // const existingGroupMember = await prismaClient().groupMember.findFirst({
+    //   where: {
+    //     groupId: otp.groupId,
+    //     wallet: {
+    //       account: {
+    //         userId: ctx.from.id,
     //       },
     //     },
     //   },
+    //   include: {
+    //     wallet: {
+    //       include: { account: true },
+    //     },
+    //   },
     // })
-    ctx.match = otp.code
+
+    // todo check if they're already a member in the group
+    // if so, then change the message, saying they can change
 
     // const account = await prismaClient().account.upsert({
     //   where: {
