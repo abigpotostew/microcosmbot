@@ -10,7 +10,6 @@ export const registerAccountToPendingGroupMember = async ({
 }: {
   ctx: MyContext
   fromTgId: number
-
   groupJoinId: string
 }): Promise<(PendingGroupMember & { account: Account }) | null> => {
   const group = await prismaClient().group.findFirst({

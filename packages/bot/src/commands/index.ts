@@ -7,11 +7,15 @@ import { bot, MyContext } from '../bot'
 import { my_chat_member } from './my_chat_member'
 import { registerMenus } from '../menus'
 import { cmd_invite } from './invite'
+import { cmd_settings } from './settings'
+import { cmd_sync } from './sync'
 
 export const commands = new Composer<MyContext>()
 
 registerMenus(commands)
 commands.command('start', start)
+commands.command('settings', cmd_settings)
+commands.command('sync', cmd_sync)
 commands.on('chat_member', chat_member)
 // commands.on('message', (ctx) => {
 //   console.log('message', ctx)

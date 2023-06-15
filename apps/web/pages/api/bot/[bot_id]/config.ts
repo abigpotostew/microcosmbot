@@ -31,6 +31,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     { command: 'echo', description: 'echo input ' },
     { command: 'invite', description: 'Get Invite Link' },
     { command: 'me', description: 'Get registered accounts' },
+    { command: 'settings', description: 'Configure your group' },
+    { command: 'sync', description: 'Sync group admins' },
   ])
   console.log('bot configured', webhookUrl)
 
