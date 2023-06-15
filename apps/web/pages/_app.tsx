@@ -92,10 +92,6 @@ export default function NounsStream({ Component, pageProps }: AppProps) {
     },
   }
 
-  console.log(
-    'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID',
-    process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-  )
   return (
     <>
       <QueryClientProvider client={queryClient}>

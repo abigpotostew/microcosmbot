@@ -96,13 +96,16 @@ model PendingGroupMember {
 
   code      String   @unique
   expiresAt DateTime
+  consumed  Boolean  @default(false)
 
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
   group     Group   @relation(fields: [groupId], references: [id])
   groupId   String
 
-  @@index([accountId, groupId, expiresAt(sort: Desc)])
+  @@index([accountId])
+  @@index([groupId])
+  @@index([code])
 }
 
 model GroupMemberInviteLink {

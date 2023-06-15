@@ -6,6 +6,8 @@ import { decodeSignature } from '@cosmjs/amino'
 import { Bech32Address, verifyADR36Amino } from '@keplr-wallet/cosmos'
 import { AccountData, StdSignature, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from 'libs/verify/build-mesage'
+import { prismaClient } from '@microcosms/db'
+import { verifyWallet } from '@microcosms/bot/src/operations/verify-wallet'
 
 function sortedObject(obj: any): any {
   if (typeof obj !== 'object' || obj === null) {
@@ -46,7 +48,9 @@ export interface SignAminoVerification extends SignatureVerify {
   account: AccountData
   otp: string
 }
-
+const setResponse = (res: NextApiResponse) => (status: number, body: any) => {
+  res.status(status).json(body)
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -62,6 +66,11 @@ export default async function handler(
 
   let resolveAddress: string
   let verified = false
+  const { otp } = req.body
+  if (!otp) {
+    res.status(401).json({ message: 'unauthorized' })
+    return
+  }
   if (strategy === 'SIGNAMINO') {
     const { signed, signature, account, otp } =
       req.body as SignAminoVerification
@@ -97,8 +106,74 @@ export default async function handler(
   }
 
   try {
-    //todo store the thing in the db
-    // await stores().user.createIfNeeded(resolveAddress)
+    await verifyWallet({ otp, setStatus: setResponse(res), resolveAddress })
+    // const now = new Date()
+    // //todo store the thing in the db
+    // const existing = await prismaClient().pendingGroupMember.findFirst({
+    //   where: {
+    //     code: otp,
+    //     expiresAt: {
+    //       gte: now,
+    //     },
+    //     consumed: false,
+    //   },
+    //   include: {
+    //     group: true,
+    //     account: true,
+    //   },
+    // })
+    // if (!existing) {
+    //   res.status(401).json({ message: 'unauthorized' })
+    //   console.log('no pending non-expired group member found')
+    //   return
+    // }
+    // const count = await prismaClient().pendingGroupMember.updateMany({
+    //   where: {
+    //     id: existing.id,
+    //     consumed: false,
+    //   },
+    //   data: {
+    //     consumed: true,
+    //   },
+    // })
+    // if (count.count !== 1) {
+    //   res.status(401).json({ message: 'unauthorized' })
+    //   console.log('pending group member already consumed')
+    //   return
+    // }
+    // // create a fresh invite link here for the user
+    // const inviteLink = ''
+    // const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
+    // await prismaClient().groupMember.create({
+    //   data: {
+    //     group: {
+    //       connect: {
+    //         id: existing.group.id,
+    //       },
+    //     },
+    //     wallet: {
+    //       connectOrCreate: {
+    //         where: {
+    //           address: resolveAddress,
+    //         },
+    //         create: {
+    //           address: resolveAddress,
+    //           account: {
+    //             connect: {
+    //               id: existing.account.id,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     groupMemberInviteLink: {
+    //       create: {
+    //         inviteLink,
+    //         expiresAt,
+    //       },
+    //     },
+    //   },
+    // })
   } catch (e) {
     console.error(e)
     throw e
