@@ -1,6 +1,14 @@
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCNext } from '@trpc/next'
+import { inferReactQueryProcedureOptions } from '@trpc/react-query'
+import {
+  inferProcedureInput,
+  inferProcedureOutput,
+  inferRouterInputs,
+  inferRouterOutputs,
+} from '@trpc/server'
 import { AppRouter } from 'server/routers/_app'
+import superjson from 'superjson'
 
 function getBaseUrl() {
   if (typeof window !== 'undefined')
@@ -22,6 +30,7 @@ function getBaseUrl() {
 export const trpc = createTRPCNext<AppRouter>({
   config(opts) {
     return {
+      transformer: superjson, // <--
       links: [
         httpBatchLink({
           /**
@@ -45,3 +54,8 @@ export const trpc = createTRPCNext<AppRouter>({
    **/
   ssr: false,
 })
+
+// infer the types for your router
+export type ReactQueryOptions = inferReactQueryProcedureOptions<AppRouter>
+export type RouterInputs = inferRouterInputs<AppRouter>
+export type RouterOutputs = inferRouterOutputs<AppRouter>

@@ -137,3 +137,7 @@ input::-webkit-datetime-edit-fields-wrapper {
   top: 60%;
   right: 45%;
 }
+
+body{
+  background-color: #ffffff;
+}
