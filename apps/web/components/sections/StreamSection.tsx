@@ -381,6 +381,7 @@ const StreamSection: React.FC = () => {
       return {
         ...prev,
         isModalOpen: true,
+
         modalChildren: (
           <FrameBlock>
             <DepositBlock

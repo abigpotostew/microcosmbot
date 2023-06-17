@@ -76,7 +76,7 @@ const getRule = procedure
 const saveRule = procedure
   .input(
     z.object({
-      id: z.string().cuid(),
+      id: z.string().cuid().optional(),
       code: z.string(),
       updates: z.object({
         name: z.string().max(128),
@@ -88,7 +88,7 @@ const saveRule = procedure
   )
 
   .mutation(async ({ input, ctx }) => {
-    if (!input.code || !input.id) {
+    if (!input.code) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
     //check code in db
@@ -102,27 +102,6 @@ const saveRule = procedure
         message: 'maxToken must be greater than minToken',
       })
     }
-
-    const updated = await prismaClient().groupTokenGate.updateMany({
-      where: {
-        id: input.id,
-        group: {
-          active: true,
-          manageGroupCodes: {
-            some: {
-              code: input.code,
-              expiresAt: {
-                gt: new Date(),
-              },
-            },
-          },
-        },
-      },
-      data: {
-        ...input.updates,
-      },
-    })
-
     const codeDb = await prismaClient().manageGroupCode.findFirst({
       where: {
         code: input.code,
@@ -146,7 +125,66 @@ const saveRule = procedure
     if (!codeDb) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
-    return codeDb
+    if (!input.id) {
+      return prismaClient().groupTokenGate.create({
+        data: {
+          name: input.updates.name,
+          minTokens: input.updates.minToken || 1,
+          maxTokens: input.updates.maxToken,
+          contractAddress: input.updates.contractAddress,
+          group: {
+            connect: {
+              id: codeDb.group.id,
+            },
+          },
+        },
+      })
+    }
+
+    return prismaClient().groupTokenGate.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        name: input.updates.name,
+        minTokens: input.updates.minToken || 1,
+        maxTokens: input.updates.maxToken,
+        contractAddress: input.updates.contractAddress,
+      },
+    })
+  })
+
+const deleteRule = procedure
+  .input(
+    z.object({
+      id: z.string().cuid(),
+      code: z.string(),
+    })
+  )
+
+  .mutation(async ({ input, ctx }) => {
+    if (!input.code) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    //check code in db
+    const deletedRes = await prismaClient().groupTokenGate.deleteMany({
+      where: {
+        id: input.id,
+        group: {
+          manageGroupCodes: {
+            some: {
+              code: input.code,
+              expiresAt: {
+                gt: new Date(),
+              },
+            },
+          },
+        },
+      },
+    })
+    if (!deletedRes.count) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
   })
 
 export const manageGroupRouter = router({
@@ -154,4 +192,5 @@ export const manageGroupRouter = router({
   getGroup: getGroup,
   getRule: getRule,
   saveRule: saveRule,
+  deleteRule: deleteRule,
 })

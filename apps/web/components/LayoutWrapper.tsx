@@ -28,69 +28,69 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
   const [modalState, setModalState] = useRecoilState(modalInitState)
   const fixedWrapperClassList = 'overflow-hidden max-h-screen'
   const [tokensList, setTokensList] = useRecoilState(tokenListState)
-  const { chain } = useNetwork()
+  // const { chain } = useNetwork()
 
-  useEffect(() => {
-    if (!chain) {
-      return
-    }
+  // useEffect(() => {
+  //   if (!chain) {
+  //     return
+  //   }
+  //
+  //   fetchTokenListBasedOnNetwork(chain.network)
+  // }, [chain]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    fetchTokenListBasedOnNetwork(chain.network)
-  }, [chain]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const fetchTokenListBasedOnNetwork = async (network: string) => {
-    let blockedTokensResult: any
-
-    if (network === 'goerli') {
-      return
-    }
-
-    try {
-      blockedTokensResult = await fetch(tokenListUrls.blockedTokens).then(
-        (data) => data.json()
-      )
-    } catch {
-      blockedTokensResult = await require(`pages/api/tokens/blockedTokens.json`)
-    }
-
-    let result: any
-
-    try {
-      result = await fetch(tokenListUrls[network]).then((data) => data.json())
-    } catch {
-      result = await require(`pages/api/tokens/${network}.json`)
-    }
-
-    const tokensList = (result.tokens || result)?.filter(
-      (token: any) =>
-        (token.chainId as number) === chain?.id &&
-        !blockedTokensResult?.tokens?.some(
-          (blockedToken: any) =>
-            blockedToken.chainId === token.chainId &&
-            blockedToken.symbol === token.symbol
-        )
-    )
-
-    setTokensList((prev) => {
-      return {
-        ...prev,
-        [network]: tokensList.map((token: any) => {
-          return {
-            chainId: token.chainId as number,
-            address:
-              (token.address as string) || (token.tokenAddress as string),
-            name: token.name as string,
-            symbol: token.symbol as string,
-            logoUri:
-              network === 'homestead' || network === 'mainnet'
-                ? `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
-                : (token.logoURI as string),
-            decimals: token.decimals,
-          } as Token
-        }),
-      }
-    })
-  }
+  // const fetchTokenListBasedOnNetwork = async (network: string) => {
+  //   let blockedTokensResult: any
+  //
+  //   if (network === 'goerli') {
+  //     return
+  //   }
+  //
+  //   try {
+  //     blockedTokensResult = await fetch(tokenListUrls.blockedTokens).then(
+  //       (data) => data.json()
+  //     )
+  //   } catch {
+  //     blockedTokensResult = await require(`pages/api/tokens/blockedTokens.json`)
+  //   }
+  //
+  //   let result: any
+  //
+  //   try {
+  //     result = await fetch(tokenListUrls[network]).then((data) => data.json())
+  //   } catch {
+  //     result = await require(`pages/api/tokens/${network}.json`)
+  //   }
+  //
+  //   const tokensList = (result.tokens || result)?.filter(
+  //     (token: any) =>
+  //       (token.chainId as number) === chain?.id &&
+  //       !blockedTokensResult?.tokens?.some(
+  //         (blockedToken: any) =>
+  //           blockedToken.chainId === token.chainId &&
+  //           blockedToken.symbol === token.symbol
+  //       )
+  //   )
+  //
+  //   setTokensList((prev) => {
+  //     return {
+  //       ...prev,
+  //       [network]: tokensList.map((token: any) => {
+  //         return {
+  //           chainId: token.chainId as number,
+  //           address:
+  //             (token.address as string) || (token.tokenAddress as string),
+  //           name: token.name as string,
+  //           symbol: token.symbol as string,
+  //           logoUri:
+  //             network === 'homestead' || network === 'mainnet'
+  //               ? `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
+  //               : (token.logoURI as string),
+  //           decimals: token.decimals,
+  //         } as Token
+  //       }),
+  //     }
+  //   })
+  // }
 
   const onModalClose = () =>
     setModalState((prev) => {

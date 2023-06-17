@@ -11,6 +11,7 @@ import {
 } from 'libs/verify/keplr'
 import { trpc } from 'utils/trpc'
 import { ManageGroup } from 'components/ManageGroup'
+import AlertAttentionNeeded from 'components/info/AlertAttentionNeeded'
 
 //todo client side render to grab the OTP, and group.
 const chainName = 'stargaze'
@@ -51,6 +52,9 @@ const ManageGroupView: React.FC = () => {
       >
         <ManageGroup />
       </div>
+      <AlertAttentionNeeded>
+        Do not share this link with anyone.
+      </AlertAttentionNeeded>
     </>
   )
 }

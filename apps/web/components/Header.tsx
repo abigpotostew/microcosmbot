@@ -30,26 +30,26 @@ const Header: React.FC = () => {
             {websiteData.logo}
           </Link>
         </div>
-        <nav className="hidden lg:flex xl:flex" aria-label="Global">
-          <ul className="flex items-center gap-3">
-            {NAV_LINKS.map((l) => (
-              <li key={l.name}>
-                <Link href={l.url} className="menu-item">
-                  {l.icon}
-                  <span className="text-body4 font-medium capitalize">
-                    {l.name}
-                  </span>
-                </Link>
-              </li>
-            ))}
-            <li>
-              <ConnectKitButton theme="nouns" label="Connect" />
-            </li>
-          </ul>
-        </nav>
+        {/*<nav className="hidden lg:flex xl:flex" aria-label="Global">*/}
+        {/*  <ul className="flex items-center gap-3">*/}
+        {/*    {NAV_LINKS.map((l) => (*/}
+        {/*      <li key={l.name}>*/}
+        {/*        <Link href={l.url} className="menu-item">*/}
+        {/*          {l.icon}*/}
+        {/*          <span className="text-body4 font-medium capitalize">*/}
+        {/*            {l.name}*/}
+        {/*          </span>*/}
+        {/*        </Link>*/}
+        {/*      </li>*/}
+        {/*    ))}*/}
+        {/*    <li>*/}
+        {/*      <ConnectKitButton theme="nouns" label="Connect" />*/}
+        {/*    </li>*/}
+        {/*  </ul>*/}
+        {/*</nav>*/}
         <button
           className={classNames(
-            "inline-flex w-10 h-10 items-center justify-center transition-colors rounded-lx border border-olive-500 focus:outline-none lg:hidden xl:hidden",
+            'inline-flex w-10 h-10 items-center justify-center transition-colors rounded-lx border border-olive-500 focus:outline-none lg:hidden xl:hidden',
             mobileMenuState.mobileMenuIsOpened ? 'bg-olive-400' : ''
           )}
           onClick={toggleMobileMenu}
