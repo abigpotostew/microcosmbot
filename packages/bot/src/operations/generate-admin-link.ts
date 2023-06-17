@@ -3,10 +3,11 @@ import crypto from 'crypto'
 
 export const generateAdminLink = async (group: Group) => {
   const code = crypto.randomBytes(16).toString('hex')
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 12)
   await prismaClient().manageGroupCode.create({
     data: {
       code,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2),
+      expiresAt,
       group: {
         connect: {
           id: group.id,
@@ -14,5 +15,9 @@ export const generateAdminLink = async (group: Group) => {
       },
     },
   })
-  return `${process.env.BASEURL}/manage-group/${code}`
+  return {
+    link: `${process.env.BASEURL}/manage-group/${code}`,
+    expiresAt,
+    durationMs: 1000 * 60 * 60 * 12,
+  }
 }

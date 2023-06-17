@@ -17,7 +17,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import * as Fathom from 'fathom-client'
-import { QueryClient } from '@tanstack/query-core'
+import { QueryClient } from '@tanstack/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ChainProvider } from '@cosmos-kit/react'
 import { chains, assets } from 'chain-registry'
@@ -124,15 +124,15 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
               signerOptions={signerOptions}
             >
               <RecoilRoot>
-                {/*<LayoutWrapper*/}
-                {/*  className={classNames(*/}
-                {/*    lex.className,*/}
-                {/*    `${roboto.variable} font-sans`,*/}
-                {/*    `${londrina.variable} font-serif`*/}
-                {/*  )}*/}
-                {/*>*/}
-                <Component {...pageProps} />
-                {/*</LayoutWrapper>*/}
+                <LayoutWrapper
+                  className={classNames(
+                    lex.className,
+                    `${roboto.variable} font-sans`,
+                    `${londrina.variable} font-serif`
+                  )}
+                >
+                  <Component {...pageProps} />
+                </LayoutWrapper>
               </RecoilRoot>
             </ChainProvider>
           </ConnectKitProvider>

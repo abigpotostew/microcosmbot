@@ -9,6 +9,7 @@ import { registerMenus } from '../menus'
 import { cmd_invite } from './invite'
 import { cmd_settings } from './settings'
 import { cmd_sync } from './sync'
+import { cmd_me } from './me'
 
 export const commands = new Composer<MyContext>()
 
@@ -16,6 +17,7 @@ registerMenus(commands)
 commands.command('start', start)
 commands.command('settings', cmd_settings)
 commands.command('sync', cmd_sync)
+commands.command('me', cmd_me)
 commands.on('chat_member', chat_member)
 // commands.on('message', (ctx) => {
 //   console.log('message', ctx)

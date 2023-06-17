@@ -64,23 +64,14 @@ export const menuAdminConfig = new Menu<MyContext>('admin-config-menu').dynamic(
       },
     })
     for (let group of groups) {
-      // range.submenu(
-      //   {
-      //     text: group.name || group.id,
-      //     payload: (ctx) => {
-      //       return group.id
-      //     },
-      //   },
-      //   'admin-config-menu-submenu-group'
-      //   // (ctx) => {
-      //   //   ctx.match = group.id
-      //   //   return ctx.reply('submenu middleware' + group.id)
-      //   // }
-      // )
       range
         .text(group.name || group.id, async (ctx) => {
-          const link = await generateAdminLink(group)
-          return ctx.reply(`Configure your app here: ${link}`)
+          const { link, durationMs } = await generateAdminLink(group)
+          return ctx.reply(
+            `Configure your app here: ${link}\nThis link will expire in ${
+              durationMs / 1000 / 60 / 60
+            } hours. Do not share this link with anyone.`
+          )
         })
         .row()
     }

@@ -2,19 +2,50 @@
 import * as React from 'react'
 import { useRouter } from 'next/router'
 import { trpc } from 'utils/trpc'
-import { Group, ManageGroupCode } from '@microcosms/db'
+import { Group, GroupTokenGate, ManageGroupCode } from '@microcosms/db'
 import { GetGroup } from 'utils/types'
+import FrameBlock from 'components/FrameBlock'
+import { useRecoilState } from 'recoil'
+import { modalState as modalInitState } from 'state/Modal'
+import { EditOrCreateGroupTokenGateView } from 'components/views/EditOrCreateGroupTokenGateView'
+import { useCallback } from 'react'
 
-function ManagingActiveGroup({ group }: { group: GetGroup }) {
+function ManagingActiveGroup({
+  group,
+  onSave,
+}: {
+  group: GetGroup
+  onSave: () => Promise<void>
+}) {
   const router = useRouter()
-  // const [gates, setGates] = React.useState<
-  //   {
-  //     id: string | null
-  //     contractAddress: string
-  //     minTokens: number | null
-  //     maxTokens: number | null
-  //   }[]
-  // >(group.group.groupTokenGate)
+
+  const [modalState, setModalState] = useRecoilState(modalInitState)
+
+  const openEditModal = useCallback(
+    (rule?: GroupTokenGate) => {
+      setModalState((prev) => {
+        return {
+          ...prev,
+          isModalOpen: true,
+          modalChildren: (
+            <FrameBlock key={rule?.id || group.group.groupTokenGate.length}>
+              <EditOrCreateGroupTokenGateView
+                rule={rule}
+                manageGroup={group}
+                onSave={onSave}
+              />
+              {/*<DepositBlock*/}
+              {/*  address={address}*/}
+              {/*  token={token as any}*/}
+              {/*  onSubmitCb={updateBalance}*/}
+              {/*/>*/}
+            </FrameBlock>
+          ),
+        }
+      })
+    },
+    [setModalState, group]
+  )
   return (
     <>
       <h3>{group.group.name}</h3>
@@ -48,13 +79,16 @@ function ManagingActiveGroup({ group }: { group: GetGroup }) {
                     {/*  </button>*/}
                     {/*</div>*/}
                     <button
-                      onClick={() =>
-                        router.push(
-                          '/manage-group/' +
-                            router.query.code +
-                            '/edit/' +
-                            tokenGate.id
-                        )
+                      onClick={
+                        () => {
+                          openEditModal(tokenGate)
+                        }
+                        // router.push(
+                        //   '/manage-group/' +
+                        //     router.query.code +
+                        //     '/edit/' +
+                        //     tokenGate.id
+                        // )
                       }
                     >
                       <svg
@@ -64,9 +98,9 @@ function ManagingActiveGroup({ group }: { group: GetGroup }) {
                         aria-hidden="true"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         />
                       </svg>
                     </button>
@@ -75,6 +109,35 @@ function ManagingActiveGroup({ group }: { group: GetGroup }) {
               </li>
             )
           })}
+          <li className="relative flex justify-between gap-x-6 py-5">
+            <div className={'flex gap-x-4'}>
+              <div className="min-w-0 flex-auto">
+                <p className="text-sm font-semibold leading-6 text-gray-900">
+                  Add new access rule
+                </p>
+              </div>
+              <div className="flex items-center gap-x-4">
+                <button
+                  onClick={() => {
+                    openEditModal(undefined)
+                  }}
+                >
+                  <svg
+                    className="h-5 w-5 flex-none text-gray-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
       </div>
     </>
@@ -88,6 +151,9 @@ export const ManageGroup = () => {
     { code: router.query.code?.toString() as string },
     { enabled: !!router.query.code }
   )
+  const refretch = useCallback(async () => {
+    await group.refetch()
+  }, [group])
   if (group.isLoading) {
     return <div>Loading...</div>
   }
@@ -100,9 +166,10 @@ export const ManageGroup = () => {
   if (!group.data.group.active) {
     return null
   }
+
   return (
     <section className={'w-full'}>
-      <ManagingActiveGroup group={group.data} />
+      <ManagingActiveGroup group={group.data} onSave={refretch} />
     </section>
   )
 }
