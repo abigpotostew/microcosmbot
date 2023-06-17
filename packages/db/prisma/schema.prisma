@@ -66,6 +66,7 @@ model GroupTokenGate {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  name            String @default("") @db.VarChar(128)
   active          Boolean @default(true)
   contractAddress String
   minTokens       Int?

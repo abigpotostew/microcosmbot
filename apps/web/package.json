@@ -46,6 +46,7 @@
     "fathom-client": "^3.5.0",
     "flowbite": "^1.6.3",
     "flowbite-react": "^0.3.8",
+    "formik": "^2.4.2",
     "graphql": "^16.6.0",
     "graphql-request": "^5.2.0",
     "next": "^13.1.1",
@@ -55,11 +56,14 @@
     "react-text-mask": "^5.5.0",
     "recoil": "^0.7.6",
     "stargazejs": "0.13.0",
+    "superjson": "^1.12.3",
     "swr": "^2.1.0",
     "text-mask-addons": "^3.8.0",
+    "valtio": "^1.10.5",
     "wagmi": "^0.12.10",
     "yup": "^1.0.2",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zod-formik-adapter": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
