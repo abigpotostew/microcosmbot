@@ -44,7 +44,7 @@ function ManagingActiveGroup({
         }
       })
     },
-    [setModalState, group]
+    [setModalState, group, onSave]
   )
   return (
     <>
