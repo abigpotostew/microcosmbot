@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/cron/enqueue-all-entries",
+      "path": "/api/cron/cron-update-all-entries",
       "schedule": "*/30 * * * *"
     }
   ]
