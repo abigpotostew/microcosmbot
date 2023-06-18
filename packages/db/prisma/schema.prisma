@@ -19,6 +19,7 @@ model Account {
   wallets            Wallet[]
   pendingGroupMember PendingGroupMember[]
   GroupAdmin         GroupAdmin[]
+  GroupMember        GroupMember[]
 
   @@index([userId])
 }
@@ -33,8 +34,6 @@ model Wallet {
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
 
-  groupMembers GroupMember[]
-
   @@index([accountId])
   @@index([address])
 }
@@ -44,10 +43,10 @@ model Group {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name String @default("")
-  active Boolean @default(false)
+  name    String  @default("") @db.VarChar(256)
+  active  Boolean @default(false)
   // tg id
-  groupId String @unique
+  groupId String  @unique
 
   // creator   Account @relation(fields: [creatorId], references: [id])
   // creatorId String
@@ -66,7 +65,7 @@ model GroupTokenGate {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name            String @default("") @db.VarChar(128)
+  name            String  @default("") @db.VarChar(128)
   active          Boolean @default(true)
   contractAddress String
   minTokens       Int?
@@ -112,16 +111,16 @@ model GroupMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  group   Group   @relation(fields: [groupId], references: [id])
-  groupId String
-  active  Boolean @default(false)
+  active Boolean @default(false)
 
-  wallet   Wallet @relation(fields: [walletId], references: [id])
-  walletId String
+  group     Group   @relation(fields: [groupId], references: [id])
+  groupId   String
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
 
   groupMemberInviteLink GroupMemberInviteLink[]
 
-  @@unique([walletId, groupId], name: "GroupMember_walletId_groupId_unique")
+  @@unique([accountId, groupId], name: "GroupMember_accountId_groupId_unique")
   @@index([groupId])
 }
 

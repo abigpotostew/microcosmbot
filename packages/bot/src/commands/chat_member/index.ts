@@ -66,10 +66,8 @@ const chat_member: Middleware<MyContext> = async (
     const dbInviteLink = await prismaClient().groupMemberInviteLink.findFirst({
       where: {
         groupMember: {
-          wallet: {
-            account: {
-              userId: ctx.chatMember.new_chat_member.user.id.toString(),
-            },
+          account: {
+            userId: ctx.chatMember.new_chat_member.user.id.toString(),
           },
         },
       },
@@ -77,9 +75,9 @@ const chat_member: Middleware<MyContext> = async (
         groupMember: {
           include: {
             group: true,
-            wallet: {
+            account: {
               include: {
-                account: true,
+                wallets: true,
               },
             },
           },
@@ -124,14 +122,14 @@ const chat_member: Middleware<MyContext> = async (
         )
       }
     }
-    if (group?.id && dbInviteLink?.groupMember?.wallet?.id) {
+    if (group?.id && dbInviteLink?.groupMember?.account?.id) {
       lc.log('marking group member as active')
       upsertPromises.push(
         prismaClient().groupMember.upsert({
           where: {
-            GroupMember_walletId_groupId_unique: {
+            GroupMember_accountId_groupId_unique: {
               groupId: group.id,
-              walletId: dbInviteLink.groupMember.wallet.id,
+              accountId: dbInviteLink.groupMember.account.id,
             },
           },
           create: {
@@ -141,9 +139,9 @@ const chat_member: Middleware<MyContext> = async (
                 id: group.id,
               },
             },
-            wallet: {
+            account: {
               connect: {
-                id: dbInviteLink.groupMember.wallet.id,
+                id: dbInviteLink.groupMember.account.id,
               },
             },
           },
@@ -187,10 +185,8 @@ const chat_member: Middleware<MyContext> = async (
         group: {
           groupId: chatMember.chat.id.toString(),
         },
-        wallet: {
-          account: {
-            userId: ctx.chatMember.new_chat_member.user.id.toString(),
-          },
+        account: {
+          userId: ctx.chatMember.new_chat_member.user.id.toString(),
         },
         active: true,
       },

@@ -1,6 +1,7 @@
 import { CommandMiddleware, Middleware } from 'grammy'
 import { MyContext } from '../../bot'
 import { menuAdminConfig } from '../../menus'
+import { responseSettings } from '../../operations/settings'
 
 export const cmd_settings: CommandMiddleware<MyContext> = async (ctx) => {
   if (ctx.chat.type !== 'private') {
@@ -11,9 +12,7 @@ export const cmd_settings: CommandMiddleware<MyContext> = async (ctx) => {
     return
   }
 
-  return ctx.reply('Select a group to configure:', {
-    reply_markup: menuAdminConfig,
-  })
+  return responseSettings(ctx)
 
   // // build a menu list of groups
   // return ctx.reply(

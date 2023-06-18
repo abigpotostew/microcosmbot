@@ -1,7 +1,7 @@
-import { Context, HearsMiddleware } from 'grammy'
+import { CommandMiddleware, Context, HearsMiddleware } from 'grammy'
 import { MyContext } from '../../bot'
 
-const echo: HearsMiddleware<MyContext> = async (
+const echo: CommandMiddleware<MyContext> = async (
   ctx: MyContext
 ): Promise<void> => {
   console.log('echo chat is', ctx.chat)
