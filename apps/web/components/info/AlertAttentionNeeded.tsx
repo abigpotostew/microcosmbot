@@ -18,8 +18,8 @@ const AlertAttentionNeeded: React.FC<Props> = ({ children }: Props) => {
         </div>
         <div className="ml-3">
           <h3 className="text-sm font-medium text-yellow-800">Attention</h3>
-          <div className="mt-2 text-sm text-yellow-700">
-            <p>{children}</p>
+          <div className="mt-2 text-sm text-yellow-700 text-body4">
+            <p>Do not share this link with anyone</p>
           </div>
         </div>
       </div>

@@ -66,10 +66,10 @@ export const EditOrCreateGroupTokenGateView = ({
     <div className="space-y-10 divide-y divide-gray-900/10">
       <div className="bg-gray-100 grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
         <div className="px-4 py-4 sm:px-3 sm:py-3">
-          <h2 className="text-base font-semibold leading-7 text-gray-900">
+          <h2 className="text-base text-xl font-semibold leading-7 text-gray-900">
             Access Rule
           </h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
+          <p className="mt-1 text-sm leading-6 text-body1 text-gray-600">
             {rule && 'Configure an access rule'}
             {!rule && 'Create an access rule'}
           </p>
@@ -79,9 +79,13 @@ export const EditOrCreateGroupTokenGateView = ({
             name: rule?.name || '',
             contractAddress: rule?.contractAddress || '',
             minTokens:
-              typeof rule?.minTokens !== 'number' ? '' : rule.minTokens,
+              typeof rule?.minTokens !== 'number'
+                ? ''
+                : rule.minTokens.toString(),
             maxTokens:
-              typeof rule?.maxTokens !== 'number' ? '' : rule?.maxTokens,
+              typeof rule?.maxTokens !== 'number'
+                ? ''
+                : rule?.maxTokens.toString(),
           }}
           validate={toFormikValidate(Schema)}
           onSubmit={async (values, { setSubmitting }) => {
@@ -122,7 +126,7 @@ export const EditOrCreateGroupTokenGateView = ({
                 console.log('onSubmit', e)
                 handleSubmit(e)
               }}
-              className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+              className="text-body1 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
             >
               <div className="px-4 py-6 sm:p-8">
                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

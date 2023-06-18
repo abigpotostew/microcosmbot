@@ -1,1 +1,1 @@
-export * from './verify-wallet'
+export * from './verify-wallet-with-otp'

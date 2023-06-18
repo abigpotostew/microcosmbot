@@ -8,7 +8,13 @@ import type { AppProps, AppType } from 'next/app'
 import { WagmiConfig, configureChains, createClient } from 'wagmi'
 import { mainnet, goerli, arbitrum, optimism, polygon } from 'wagmi/chains'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
-import { Lexend_Deca, Roboto, Londrina_Solid } from '@next/font/google'
+import {
+  Lexend_Deca,
+  Roboto,
+  Londrina_Solid,
+  Patrick_Hand,
+  Amatic_SC,
+} from '@next/font/google'
 import LayoutWrapper from 'components/LayoutWrapper'
 import classNames from 'classnames'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -49,12 +55,12 @@ const client = createClient(
 )
 
 const lex = Lexend_Deca({ subsets: ['latin'] })
-const roboto = Roboto({
+const roboto = Patrick_Hand({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
+  weight: ['400'],
   variable: '--font-roboto',
 })
-const londrina = Londrina_Solid({
+const londrina = Amatic_SC({
   subsets: ['latin'],
   weight: ['400'],
   variable: '--font-londrina',

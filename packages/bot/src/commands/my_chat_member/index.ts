@@ -43,11 +43,13 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
   //   await ctx.reply('This bot only works in supergroups. Exiting group.')
   //   await ctx.api.leaveChat(ctx.myChatMember.chat.id)
   // }
+  //todo remove from db admin
   if (
     myChatMember.new_chat_member.status === 'left' ||
     myChatMember.new_chat_member.status === 'kicked'
   ) {
     //remove it from db?
+    //todo remove any admins or members...
     console.log('removed from group!')
     return
   }

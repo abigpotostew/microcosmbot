@@ -59,10 +59,12 @@ const VerifyView: React.FC = () => {
       },
     })
     if (!res.ok) {
-      throw new Error('failed to verify')
+      const body = await res.json()
+      throw new Error('Failed to verify: ' + body.message)
     }
     const body = await res.json()
     console.log('ITs SUCCESS body', body)
+    return body.link as string
   })
 
   return (
@@ -92,7 +94,9 @@ const VerifyView: React.FC = () => {
           {/*          </div>*/}
           {/*      ))}*/}
           {/*  </div>*/}
-          <div>OTP: {router.query.otp}</div>
+          <div>
+            <p className={'text-body4'}>OTP: {router.query.otp}</p>
+          </div>
         </div>
       </header>
       <div
@@ -102,9 +106,20 @@ const VerifyView: React.FC = () => {
       >
         <div className={'pt-8'}>
           {status !== 'Connected' && status !== 'Connecting' && (
-            <PrimaryButton classes="w-full lg:w-50" onClick={connect}>
-              Connect
-            </PrimaryButton>
+            <div className={' justify-center align-center'}>
+              <div className={'flex justify-center'}>
+                <PrimaryButton classes="w-full lg:w-50 " onClick={connect}>
+                  Connect
+                </PrimaryButton>
+              </div>
+              <div className={'flex justify-center'}>
+                <div className={'text-black col-span-1 max-w-md pt-4'}>
+                  <p className={'text-body4'}>
+                    Begin verification by connecting your wallet.
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
           {/*Disconnected = "Disconnected",*/}
           {/*Connecting = "Connecting",*/}
@@ -135,12 +150,32 @@ const VerifyView: React.FC = () => {
                   Disconnect
                 </PrimaryButton>
               </div>
+
               <div className={'text-black col-span-1 max-w-md pt-4'}>
-                To join a token gated telegram group, you must prove you owne
-                your account. Clicking on Proof Wallet Ownership will open Keplr
-                and request a signature. This is an off-chain signature used
-                only to verify you own your wallet for the bot. The signature
-                will be discarded after verification.
+                {loginMutation.error?.toString()}
+              </div>
+              <div className={'text-black col-span-1 max-w-md pt-4'}>
+                {loginMutation.isSuccess && (
+                  <span>
+                    {"You're verified! Check your DMs for your invite link "}
+                    <a
+                      href={loginMutation.data}
+                      target={'_blank'}
+                      rel={'noreferrer'}
+                    >
+                      {loginMutation.data}
+                    </a>
+                  </span>
+                )}
+              </div>
+              <div className={'col-span-1 max-w-md pt-4'}>
+                <p className={'text-body4 text-black'}>
+                  To join a token gated telegram group, you must prove you own
+                  your account. Clicking on Prove Wallet Ownership will open
+                  Keplr and request a signature. This is an off-chain signature
+                  only used to verify wallet ownership by the bot. The signature
+                  will be discarded after verification.
+                </p>
               </div>
             </div>
           )}

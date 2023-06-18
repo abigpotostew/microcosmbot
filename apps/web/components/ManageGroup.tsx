@@ -48,10 +48,16 @@ function ManagingActiveGroup({
   )
   return (
     <>
-      <h3>{group.group.name}</h3>
+      <h3 className={'text-body1'}>{group.group.name}</h3>
+      <h4 className={'text-body1 text-sm'}>
+        Create one or more Access Rules to gate your group.
+      </h4>
+
       <div className={'min-w-full w-full'}>
         {!group.group.groupTokenGate.length && (
-          <div>No token gates for this group.</div>
+          <div className={'pt-3 text-body1 text-sm text-gray-600'}>
+            No token gates for this group.
+          </div>
         )}
         <ul role="list" className="divide-y divide-gray-100">
           {group.group.groupTokenGate.map((tokenGate, index) => {
@@ -60,37 +66,38 @@ function ManagingActiveGroup({
                 key={index}
                 className="relative flex justify-between gap-x-6 py-5"
               >
-                <div className={'flex gap-x-4'}>
-                  <div className="min-w-0 flex-auto">
-                    <p className="text-sm font-semibold leading-6 text-gray-900">
-                      {tokenGate.name}
-                    </p>
-                    <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                      {tokenGate.contractAddress}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-x-4">
-                    {/*<div className="hidden sm:flex sm:flex-col sm:items-end">*/}
-                    {/*  <button*/}
-                    {/*    type="button"*/}
-                    {/*    className="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"*/}
-                    {/*  >*/}
-                    {/*    Button Edit*/}
-                    {/*  </button>*/}
-                    {/*</div>*/}
-                    <button
-                      onClick={
-                        () => {
-                          openEditModal(tokenGate)
-                        }
-                        // router.push(
-                        //   '/manage-group/' +
-                        //     router.query.code +
-                        //     '/edit/' +
-                        //     tokenGate.id
-                        // )
-                      }
-                    >
+                <button
+                  onClick={
+                    () => {
+                      openEditModal(tokenGate)
+                    }
+                    // router.push(
+                    //   '/manage-group/' +
+                    //     router.query.code +
+                    //     '/edit/' +
+                    //     tokenGate.id
+                    // )
+                  }
+                >
+                  <div className={'flex gap-x-4'}>
+                    <div className="min-w-0 flex-auto">
+                      <p className="text-left text-body1 text-sm font-semibold leading-6 text-gray-900">
+                        {tokenGate.name}
+                      </p>
+                      <p className="text-body1 mt-1 truncate text-xs leading-5 text-gray-500">
+                        {tokenGate.contractAddress}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-x-4">
+                      {/*<div className="hidden sm:flex sm:flex-col sm:items-end">*/}
+                      {/*  <button*/}
+                      {/*    type="button"*/}
+                      {/*    className="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"*/}
+                      {/*  >*/}
+                      {/*    Button Edit*/}
+                      {/*  </button>*/}
+                      {/*</div>*/}
+
                       <svg
                         className="h-5 w-5 flex-none text-gray-400"
                         viewBox="0 0 20 20"
@@ -103,25 +110,25 @@ function ManagingActiveGroup({
                           clipRule="evenodd"
                         />
                       </svg>
-                    </button>
+                    </div>
                   </div>
-                </div>
+                </button>
               </li>
             )
           })}
           <li className="relative flex justify-between gap-x-6 py-5">
-            <div className={'flex gap-x-4'}>
-              <div className="min-w-0 flex-auto">
-                <p className="text-sm font-semibold leading-6 text-gray-900">
-                  Add new access rule
-                </p>
-              </div>
-              <div className="flex items-center gap-x-4">
-                <button
-                  onClick={() => {
-                    openEditModal(undefined)
-                  }}
-                >
+            <button
+              onClick={() => {
+                openEditModal(undefined)
+              }}
+            >
+              <div className={'flex gap-x-4'}>
+                <div className="min-w-0 flex-auto">
+                  <p className="text-sm font-semibold leading-6 text-body1 text-gray-900 ">
+                    Add new access rule
+                  </p>
+                </div>
+                <div className="flex items-center gap-x-4">
                   <svg
                     className="h-5 w-5 flex-none text-gray-400"
                     viewBox="0 0 20 20"
@@ -134,9 +141,9 @@ function ManagingActiveGroup({
                       clipRule="evenodd"
                     />
                   </svg>
-                </button>
-              </div>
-            </div>
+                </div>
+              </div>{' '}
+            </button>
           </li>
         </ul>
       </div>

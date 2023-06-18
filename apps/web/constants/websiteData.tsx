@@ -6,7 +6,7 @@ import Composable from 'public/icons/composable.svg'
 import WTFImageSrc from 'public/images/wtf-image.png'
 import HeroImageSrc from 'public/images/hero-image.png'
 import ProcessImageSrc from 'public/images/form-process-image.png'
-import Logo from 'public/icons/logo.svg'
+import Logo from 'assets/icons/logo.svg'
 import { wtfList } from './wtf'
 
 export const websiteData: WebsiteData = {

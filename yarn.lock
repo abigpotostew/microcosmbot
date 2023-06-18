@@ -4517,6 +4517,17 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
+"@stargaze-zone/contracts@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@stargaze-zone/contracts/-/contracts-0.14.0.tgz#fdcfd3bf75e8a5b0b4a22bbcdca2f8295a6bd8f2"
+  integrity sha512-vIa1joT5tafFvimTm8RjyGowYmGgYtwJQLF/DlRyxXO0LCNATgJYxqmyQJz8/GmL66fvvl5qPEZoOoYt3kAkRw==
+  dependencies:
+    "@babel/runtime" "^7.19.4"
+    "@cosmjs/cosmwasm-stargate" "^0.29.5"
+    "@cosmjs/proto-signing" "0.29.5"
+    "@cosmjs/stargate" "0.29.5"
+    cosmwasm "1.1.1"
+
 "@svgr/babel-plugin-add-jsx-attribute@^6.5.1":
   version "6.5.1"
   resolved "https://registry.npmjs.org/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-6.5.1.tgz"
@@ -6712,7 +6723,7 @@ cosmjs-types@^0.7.1:
     long "^4.0.0"
     protobufjs "~6.11.2"
 
-cosmwasm@^1.1.1:
+cosmwasm@1.1.1, cosmwasm@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/cosmwasm/-/cosmwasm-1.1.1.tgz#02b22a269044c61714c85fa55e624b2f83f7c086"
   integrity sha512-tjpjwnRIQ6VEcTVB0Pq8+F+Xp6jdnC3BcXmcDHCJHIc5Gg4Mm++AA+6fTfR0yuiPbEAk6wYkokfLtv12I0sPNQ==
