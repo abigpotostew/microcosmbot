@@ -17,7 +17,8 @@
         "PORT",
         "BASEURL",
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
-        "TELEGRAM_BOT_KEY"
+        "TELEGRAM_BOT_KEY",
+        "QSTASH_URL"
       ]
     },
     "lint": {
@@ -33,7 +34,8 @@
         "PORT",
         "BASEURL",
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
-        "TELEGRAM_BOT_KEY"
+        "TELEGRAM_BOT_KEY",
+        "QSTASH_URL"
       ],
       "cache": false,
       "persistent": true
@@ -51,7 +53,8 @@
         "PORT",
         "BASEURL",
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
-        "TELEGRAM_BOT_KEY"
+        "TELEGRAM_BOT_KEY",
+        "QSTASH_URL"
       ]
     },
     "test:watch": {
@@ -64,7 +67,8 @@
         "PORT",
         "BASEURL",
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
-        "TELEGRAM_BOT_KEY"
+        "TELEGRAM_BOT_KEY",
+        "QSTASH_URL"
       ]
     }
   },
