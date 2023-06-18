@@ -6,6 +6,11 @@ export const zodStarsContractAddress = z
   .length(64)
   .refine((val) => isStarAddress(val), 'Invalid stars address')
 
+export const zodStarsAddress = z
+  .string()
+  .length(44)
+  .refine((val) => isStarAddress(val), 'Invalid stars address')
+
 export const isStarAddress = (addr: string) => {
   try {
     toStars(addr)

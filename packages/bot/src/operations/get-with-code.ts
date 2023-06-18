@@ -1,6 +1,17 @@
 import { prismaClient } from '@microcosms/db'
 
-//Grab the group only if the userId is a memeber
+export const getMemberAccountsAndWallets = (userId: string) => {
+  return prismaClient().account.findFirst({
+    where: {
+      userId: userId.toString(),
+    },
+    include: {
+      wallets: true,
+    },
+  })
+}
+
+//Grab the group and the member
 export const getCodeGroupUser = (code: string, userId: string) => {
   return prismaClient().pendingGroupMember.findFirst({
     where: {

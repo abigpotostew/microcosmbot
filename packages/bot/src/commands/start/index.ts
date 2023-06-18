@@ -44,16 +44,16 @@ const start: CommandMiddleware<MyContext> = async (
       where: {
         id: groupId,
         active: true,
-        groupMembers: {
-          some: {
-            active: true,
-            wallet: {
-              account: {
-                userId: ctx.from.id.toString(),
-              },
-            },
-          },
-        },
+        // groupMembers: {
+        //   some: {
+        //     active: true,
+        //     wallet: {
+        //       account: {
+        //         userId: ctx.from.id.toString(),
+        //       },
+        //     },
+        //   },
+        // },
       },
       include: {
         groupMembers: {

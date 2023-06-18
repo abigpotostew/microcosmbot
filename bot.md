@@ -288,3 +288,4 @@ https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 * get rid of max tokens, to simplify the flows-- nah
 * set max num token rules
 * logic to prevent duplciate addresses. unlink the address
+* edge case-- they verify wallet and get their link but do not click it for a while.
