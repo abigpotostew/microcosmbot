@@ -1,6 +1,7 @@
 import { prismaClient } from '@microcosms/db'
 import { Context, Middleware } from 'grammy'
 import { MyContext } from '../../bot'
+import { logContext } from '../../utils/context'
 
 const membershipInGroup = (
   status:
@@ -24,7 +25,8 @@ const membershipInGroup = (
 const chat_member: Middleware<MyContext> = async (
   ctx: MyContext
 ): Promise<void> => {
-  console.log('chat_member', JSON.stringify(ctx, null, 2))
+  const lc = logContext(ctx)
+  // lc.log('chat_member', JSON.stringify(ctx, null, 2))
   const chatMember = ctx.chatMember
   if (!chatMember) {
     return
@@ -32,7 +34,7 @@ const chat_member: Middleware<MyContext> = async (
   const date = new Date(chatMember.date * 1000)
   await prismaClient().auditLog.create({
     data: {
-      auditType: 'MY_CHAT_MEMBER',
+      auditType: 'CHAT_MEMBER',
       groupId: chatMember.chat.id,
       data: JSON.parse(JSON.stringify(chatMember)),
       updateDate: date,
@@ -43,7 +45,24 @@ const chat_member: Middleware<MyContext> = async (
   const oldDirection = membershipInGroup(chatMember.old_chat_member.status)
   const newDirection = membershipInGroup(chatMember.new_chat_member.status)
   //they joined the group
+  const [group, account] = await Promise.all([
+    prismaClient().group.findFirst({
+      where: {
+        groupId: chatMember.chat.id.toString(),
+      },
+    }),
+    prismaClient().account.findFirst({
+      where: {
+        userId: chatMember.new_chat_member.user.id.toString(),
+      },
+    }),
+  ])
+  lc.log(group ? 'found group ' + group.id : 'no group found')
+  lc.log(account ? 'found account ' + account.id : 'no account found')
+
+  //added to the group
   if (oldDirection === 'out' && newDirection === 'in') {
+    lc.log('added to group')
     const dbInviteLink = await prismaClient().groupMemberInviteLink.findFirst({
       where: {
         groupMember: {
@@ -70,6 +89,72 @@ const chat_member: Middleware<MyContext> = async (
         createdAt: 'desc',
       },
     })
+    lc.log(
+      'added to group with invite link id',
+      dbInviteLink?.id,
+      dbInviteLink?.inviteLink
+    )
+    let upsertPromises: Promise<any>[] = []
+    if (chatMember.new_chat_member.status === 'administrator') {
+      //todo upsert to admin table
+      if (group && account) {
+        lc.log('adding group admin')
+        upsertPromises.push(
+          prismaClient().groupAdmin.upsert({
+            where: {
+              groupId_accountId: {
+                groupId: group.id,
+                accountId: account.id,
+              },
+            },
+            create: {
+              group: {
+                connect: {
+                  id: group.id,
+                },
+              },
+              account: {
+                connect: {
+                  id: account.id,
+                },
+              },
+            },
+            update: {},
+          })
+        )
+      }
+    }
+    if (group?.id && dbInviteLink?.groupMember?.wallet?.id) {
+      lc.log('marking group member as active')
+      upsertPromises.push(
+        prismaClient().groupMember.upsert({
+          where: {
+            GroupMember_walletId_groupId_unique: {
+              groupId: group.id,
+              walletId: dbInviteLink.groupMember.wallet.id,
+            },
+          },
+          create: {
+            active: true,
+            group: {
+              connect: {
+                id: group.id,
+              },
+            },
+            wallet: {
+              connect: {
+                id: dbInviteLink.groupMember.wallet.id,
+              },
+            },
+          },
+          update: {
+            active: true,
+          },
+        })
+      )
+    }
+    await Promise.all(upsertPromises)
+
     if (
       chatMember.invite_link?.invite_link &&
       chatMember.invite_link?.invite_link === dbInviteLink?.inviteLink
@@ -79,24 +164,24 @@ const chat_member: Middleware<MyContext> = async (
         parseInt(dbInviteLink.groupMember.group.groupId),
         chatMember.invite_link.invite_link
       )
-      console.log('revoked chat link,', chatMember.invite_link.invite_link)
+      lc.log('revoked chat link,', chatMember.invite_link.invite_link)
       const name =
         chatMember.new_chat_member.user.username ||
         chatMember.new_chat_member.user.first_name +
           ' ' +
           chatMember.new_chat_member.user.last_name
+      // send welcome message to the group if they joined from the invite link
       await ctx.api.sendMessage(
         parseInt(dbInviteLink.groupMember.group.groupId),
         `@${name} has arrived`
       )
     }
-    //send welcome message to the group if they joined from the invite link
 
     // await ctx.reply('Welcome to the group!')
   } else if (oldDirection === 'in' && newDirection === 'out') {
     // they left the group
     // remove them from the group in the db
-    console.log('here to remove')
+    lc.log('here to remove')
     const res = await prismaClient().groupMember.updateMany({
       where: {
         group: {
@@ -107,20 +192,21 @@ const chat_member: Middleware<MyContext> = async (
             userId: ctx.chatMember.new_chat_member.user.id.toString(),
           },
         },
-        active: false,
+        active: true,
       },
       data: {
         active: false,
       },
     })
-    console.log(
-      'deleted group member from chat',
+    lc.log(
+      'deleted group member from chat id',
       chatMember.chat.id,
+      'member id',
       ctx.chatMember.new_chat_member.user.id,
-      res.count
+      'result: ',
+      res.count ? 'deleted' : 'no members to delete'
     )
   }
-  // const joined = ctx.chatMember.new_chat_member.status==='member'
 }
 
 export default chat_member

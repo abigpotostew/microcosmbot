@@ -11,15 +11,17 @@
     "dev": "echo nodemon"
   },
   "dependencies": {
-    "grammy": "^1.16.2",
-    "ts-node": "^10.9.1",
+    "@grammyjs/chat-members": "1.0.10",
+    "@microcosms/db": "*",
     "dotenv": "^10.0.0",
-    "@grammyjs/chat-members":"1.0.10",
-    "@microcosms/db": "*"
+    "grammy": "^1.16.2",
+    "tiny-async-pool": "^2.1.0",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
-    "nodemon": "^2.0.22",
-    "eslint-config-custom": "*"
+    "@types/tiny-async-pool": "^2.0.0",
+    "eslint-config-custom": "*",
+    "nodemon": "^2.0.22"
   }
 }

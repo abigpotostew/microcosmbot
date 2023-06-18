@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/enqueue-all-entries",
+      "schedule": "*/30 * * * *"
+    }
+  ]
+}

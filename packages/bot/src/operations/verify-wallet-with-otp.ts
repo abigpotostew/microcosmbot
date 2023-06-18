@@ -1,7 +1,11 @@
-import { Group, GroupTokenGate, Prisma, prismaClient } from '@microcosms/db'
+import { Group, GroupTokenGate, prismaClient, Wallet } from '@microcosms/db'
 import bot, { MyContext } from '../bot'
 import { botInfo } from '../botinfo'
-import { getCodeGroupUser, getGroupUserFromCode } from './get-with-code'
+import { getCodeGroupUser, getMemberAccountsAndWallets } from './get-with-code'
+import { tinyAsyncPoolAll } from '../utils/async'
+import { addWalletToGroup } from './add-wallet-to-group'
+import { logContext, LogContext } from '../utils/context'
+import { getOwnedCount } from './nft-ownership'
 
 export const verifyWalletWithOtp = async ({
   otp,
@@ -12,30 +16,35 @@ export const verifyWalletWithOtp = async ({
   resolveAddress: string
   setStatus: (status: number, body: any) => void
 }) => {
+  const cl = logContext('verifyWalletWithOtp:' + otp)
   const now = new Date()
-  console.log('verifying wallet', otp, resolveAddress)
+  cl.log('verifying wallet', otp, resolveAddress)
   const existing = await prismaClient().pendingGroupMember.findFirst({
     where: {
       code: otp,
     },
     include: {
-      group: true,
+      group: {
+        include: {
+          groupTokenGate: true,
+        },
+      },
       account: true,
     },
   })
   if (!existing) {
     setStatus(401, { message: 'unauthorized' })
-    console.log('no pending non-expired group member found')
+    cl.log('no pending non-expired group member found')
     return
   }
   if (existing.consumed) {
     setStatus(401, { message: 'Already verified against this OTP' })
-    console.log('pending group OTP already consumed')
+    cl.log('pending group OTP already consumed')
     return
   }
   if (existing.expiresAt < now) {
     setStatus(401, { message: 'OTP expired. Please request a new invite.' })
-    console.log('pending group OTP expired')
+    cl.log('pending group OTP expired')
     return
   }
   const count = await prismaClient().pendingGroupMember.updateMany({
@@ -49,25 +58,11 @@ export const verifyWalletWithOtp = async ({
   })
   if (count.count !== 1) {
     setStatus(401, { message: 'already verify with this OPT' })
-    console.log('pending group member already consumed')
+    cl.log('pending group member already consumed')
     return
   }
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2) // 2 days
-  // create a fresh invite link here for the user
-  const link = await bot.api.createChatInviteLink(
-    existing.group.groupId.toString(),
-    {
-      creates_join_request: false,
-      expire_date: Math.floor(expiresAt.getTime() / 1000),
-      member_limit: 1,
-    }
-  )
-  const inviteLink = link.invite_link
 
-  await bot.api.unbanChatMember(
-    existing.group.groupId.toString(),
-    Number(existing.account.userId)
-  )
+  // todo check if someone esle already registered this wallet
 
   const wallet = await prismaClient().wallet.upsert({
     where: {
@@ -81,46 +76,27 @@ export const verifyWalletWithOtp = async ({
         },
       },
     },
-    update: {},
+    update: {}, //empty on purpose
   })
+
+  //check if they qualify for the group with this wallet
+
+  const allowed = await checkAccessRules(cl, existing.group, [wallet])
+  if (!allowed) {
+    cl.log('wallet does not pass token rules')
+    await bot.api.sendMessage(
+      existing.account.userId.toString(),
+      `You have successfully verified your wallet address ${resolveAddress}. But your account does not pass the token rules for this group. Contact the group admin for more info.`
+    )
+    setStatus(200, { message: 'ok', link: `https://t.me/${botInfo.username}` })
+    return
+  }
   // Prisma.GroupMemberWhereUniqueInput
-  await prismaClient().groupMember.upsert({
-    where: {
-      GroupMember_walletId_groupId_unique: {
-        walletId: wallet.id,
-        groupId: existing.group.id,
-      },
-    },
-    create: {
-      active: true,
-      group: {
-        connect: {
-          id: existing.group.id,
-        },
-      },
-      wallet: {
-        connect: {
-          id: wallet.id,
-        },
-      },
-      groupMemberInviteLink: {
-        create: {
-          inviteLink,
-          expiresAt,
-        },
-      },
-    },
-    update: {
-      active: true,
-      groupMemberInviteLink: {
-        create: {
-          inviteLink,
-          expiresAt,
-        },
-      },
-    },
+  const { inviteLink } = await addWalletToGroup({
+    wallet,
+    account: existing.account,
+    group: existing.group,
   })
-  //todo verify the nfts here
 
   await bot.api.sendMessage(
     existing.account.userId.toString(),
@@ -144,8 +120,12 @@ export const verifyExistingWallet = async ({
   //check nfts against group access rules
   //stop if not allowed
   //create invite link if allowed
-  console.log('adfasdas')
-  const pendingCode = await getCodeGroupUser(code, userId.toString())
+  const walletsPromise = getMemberAccountsAndWallets(userId.toString())
+  const pendingCodePromise = getCodeGroupUser(code, userId.toString())
+  const [account, pendingCode] = await Promise.all([
+    walletsPromise,
+    pendingCodePromise,
+  ])
   if (!pendingCode) {
     return ctx.reply('Link expired. Please try the invite link again.')
   }
@@ -160,26 +140,35 @@ export const verifyExistingWallet = async ({
   }
   const group = pendingCode.group
 
-  if (!group?.groupMembers?.length) {
+  if (!account?.wallets?.length) {
     //they are not a member of the group
-    return null
+    return ctx.reply(
+      "You don't have any wallets yet. Try connecting a new wallet."
+    )
   }
-  const wallet = group.groupMembers[0].wallet
-  console.log('group', JSON.stringify(group))
-  for (const groupTokenGateElement of group.groupTokenGate) {
-    if (
-      !(await verifyWalletAgainstAccessRule({
-        address: wallet.address,
-        group,
-        tokenGate: groupTokenGateElement,
-      }))
-    ) {
-      console.log('wallet not allowed for rule', groupTokenGateElement)
-      return false
-    }
+  const wallets = account.wallets
+
+  const cl = logContext(ctx)
+
+  const fw = await checkAccessRules(cl, group, wallets)
+  if (!fw) {
+    return ctx.reply(
+      'None of your existing wallets are allowed to join this group. Did you connect a wallet that is allowed to join the group?'
+    )
   }
   console.log('wallet is authorized to group')
-  return true
+  //add the wallet to the group
+  const { inviteLink } = await addWalletToGroup({
+    wallet: fw,
+    account: account,
+    group,
+  })
+  return ctx.reply(
+    `You have successfully verified your wallet address ${fw.address}. Join the group. ${inviteLink}`
+  )
+}
+type Pointer<T> = {
+  value: T
 }
 
 interface TokensMsg {
@@ -200,9 +189,6 @@ export const verifyWalletAgainstAccessRule = async ({
   group: Group
   tokenGate: GroupTokenGate
 }) => {
-  //https://rest.stargaze-apis.com
-  let ownedCount = 0
-  const limit = 100
   const min = tokenGate.minTokens || 1
   const max = tokenGate.maxTokens
   const hasValidOwnedCount = (ownedCount: number) => {
@@ -211,29 +197,37 @@ export const verifyWalletAgainstAccessRule = async ({
     }
     return ownedCount >= min
   }
-  let start_after = undefined
-  do {
-    const msg = msgBase64({
-      owner: address,
-      limit,
-      start_after,
-    })
-    const url = `${'https://rest.stargaze-apis.com'}/cosmwasm/wasm/v1/contract/${
-      tokenGate.contractAddress
-    }/smart/${msg}`
-    console.log('url', url)
-    // return false
-    const res = await fetch(url)
-    if (!res.ok) {
-      throw new Error('failed to fetch tokens')
-    }
-    const json = await res.json()
-    const tokens = json.data?.tokens || []
-    ownedCount += tokens.length
-    if (tokens.length === 0 || tokens.length < limit) {
-      break
-    }
-  } while (!hasValidOwnedCount(ownedCount))
+  const ownedCount = await getOwnedCount({
+    contractAddress: tokenGate.contractAddress,
+    owner: address,
+  })
 
   return hasValidOwnedCount(ownedCount)
+}
+export const checkAccessRules = async (
+  cl: LogContext,
+  group: Group & { groupTokenGate: GroupTokenGate[] },
+  wallets: Wallet[]
+) => {
+  const foundWallet: Pointer<Wallet | null> = { value: null }
+  await tinyAsyncPoolAll(wallets, async (wallet) => {
+    if (foundWallet.value) {
+      return
+    }
+    for (const groupTokenGateElement of group.groupTokenGate) {
+      if (
+        !(await verifyWalletAgainstAccessRule({
+          address: wallet.address,
+          group,
+          tokenGate: groupTokenGateElement,
+        }))
+      ) {
+        cl.log('wallet not allowed for rule', groupTokenGateElement)
+        return
+      }
+    }
+    //they qualify for all rules
+    foundWallet.value = wallet
+  })
+  return foundWallet.value
 }

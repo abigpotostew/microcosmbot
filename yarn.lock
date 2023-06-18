@@ -5006,6 +5006,11 @@
     "@types/mime" "*"
     "@types/node" "*"
 
+"@types/tiny-async-pool@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/tiny-async-pool/-/tiny-async-pool-2.0.0.tgz#744d898af12958aefb199ab91c762464ee2b1b8d"
+  integrity sha512-GB+FG7JF6SPX9yuGmfmDTRYFMdS2Za+YiYvh6RJPfTMa0LaTDEtQ6ncw6NYrHnf9cloVJxgXd6WGRdRp54O1cQ==
+
 "@types/trusted-types@^2.0.2":
   version "2.0.3"
   resolved "https://registry.npmjs.org/@types/trusted-types/-/trusted-types-2.0.3.tgz"
@@ -11654,6 +11659,11 @@ thread-stream@^0.15.1:
   version "2.3.8"
   resolved "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
+
+tiny-async-pool@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tiny-async-pool/-/tiny-async-pool-2.1.0.tgz#3ec126568c18a7916912fb9fbecf812337ec6b84"
+  integrity sha512-ltAHPh/9k0STRQqaoUX52NH4ZQYAJz24ZAEwf1Zm+HYg3l9OXTWeqWKyYsHu40wF/F0rxd2N2bk5sLvX2qlSvg==
 
 tiny-case@^1.0.3:
   version "1.0.3"
