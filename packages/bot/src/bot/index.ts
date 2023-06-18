@@ -45,4 +45,10 @@ export const bot = new Bot<MyContext>(process.env.TELEGRAM_BOT_KEY || '', {
 // bot.on('message', (ctx) => {
 //   return ctx.reply('Got another message!')
 // })
+
+console.log(
+  'starting bot',
+  process.env.TELEGRAM_BOT_KEY,
+  JSON.stringify(botInfo)
+)
 export default bot
