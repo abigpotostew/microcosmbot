@@ -180,15 +180,18 @@ const msgBase64 = (msg: TokensMsg) => {
   return Buffer.from(JSON.stringify({ tokens: msg })).toString('base64')
 }
 
-export const verifyWalletAgainstAccessRule = async ({
-  address,
-  group,
-  tokenGate,
-}: {
-  address: string
-  group: Group
-  tokenGate: GroupTokenGate
-}) => {
+export const verifyWalletAgainstAccessRule = async (
+  {
+    address,
+    group,
+    tokenGate,
+  }: {
+    address: string
+    group: Group
+    tokenGate: GroupTokenGate
+  },
+  { useRemoteCache = false }: { useRemoteCache?: boolean } = {}
+) => {
   const min = tokenGate.minTokens || 1
   const max = tokenGate.maxTokens
   const hasValidOwnedCount = (ownedCount: number) => {
@@ -200,6 +203,7 @@ export const verifyWalletAgainstAccessRule = async ({
   const ownedCount = await getOwnedCount({
     contractAddress: tokenGate.contractAddress,
     owner: address,
+    useRemoteCache,
   })
 
   return hasValidOwnedCount(ownedCount)
@@ -207,7 +211,8 @@ export const verifyWalletAgainstAccessRule = async ({
 export const checkAccessRules = async (
   cl: LogContext,
   group: Group & { groupTokenGate: GroupTokenGate[] },
-  wallets: Wallet[]
+  wallets: Wallet[],
+  { useRemoteCache = false }: { useRemoteCache?: boolean } = {}
 ) => {
   const foundWallet: Pointer<Wallet | null> = { value: null }
   await tinyAsyncPoolAll(wallets, async (wallet) => {
@@ -216,11 +221,14 @@ export const checkAccessRules = async (
     }
     for (const groupTokenGateElement of group.groupTokenGate) {
       if (
-        !(await verifyWalletAgainstAccessRule({
-          address: wallet.address,
-          group,
-          tokenGate: groupTokenGateElement,
-        }))
+        !(await verifyWalletAgainstAccessRule(
+          {
+            address: wallet.address,
+            group,
+            tokenGate: groupTokenGateElement,
+          },
+          { useRemoteCache }
+        ))
       ) {
         cl.log('wallet not allowed for rule', groupTokenGateElement)
         return

@@ -108,7 +108,7 @@ const cmd_start: CommandMiddleware<MyContext> = async (
         },
       },
     })
-    let msg = 'Welcome to Microcosms Bot!'
+    let msg = `Hey and thanks for using MicroCosmBot! Connect a wallet to join '${group.name}'.`
     if (existingWallets.length > 0) {
       msg +=
         ' You have existing wallets. Would you like to use these wallets? Or connect a new wallet?'

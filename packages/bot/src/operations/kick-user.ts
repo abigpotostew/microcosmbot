@@ -9,7 +9,7 @@ import bot from '../bot'
 
 export const kickUser = async (
   group: Group,
-  groupMember: GroupMember & { wallet: Wallet & { account: Account } }
+  groupMember: GroupMember & { account: Account }
 ): Promise<void> => {
   await prismaClient().groupMember.update({
     where: {
@@ -21,10 +21,10 @@ export const kickUser = async (
   })
   await bot.api.banChatMember(
     group.groupId,
-    parseInt(groupMember.wallet.account.userId)
+    parseInt(groupMember.account.userId)
   )
   await bot.api.sendMessage(
-    parseInt(groupMember.wallet.account.userId),
-    `You have been kicked from the group ${group.name} because you no longer qualify for the group. Contact a group admin for more info.`
+    parseInt(groupMember.account.userId),
+    `You have been automatically removed from the group '${group.name}' because you no longer qualify for the group. Contact a group admin for more info.`
   )
 }

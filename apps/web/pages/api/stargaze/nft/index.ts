@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getOwnedCount } from '@microcosms/bot/src/operations/nft-ownership'
 import { z } from 'zod'
 import { zodStarsAddress, zodStarsContractAddress } from 'libs/stars'
+import { getOwnedCount } from '@microcosms/bot'
 
 const schema = z.object({
   contractAddress: zodStarsContractAddress,
