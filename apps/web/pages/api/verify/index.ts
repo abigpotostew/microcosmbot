@@ -7,7 +7,7 @@ import { Bech32Address, verifyADR36Amino } from '@keplr-wallet/cosmos'
 import { AccountData, StdSignature, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from 'libs/verify/build-mesage'
 import { prismaClient } from '@microcosms/db'
-import { verifyWallet } from '@microcosms/bot'
+import { verifyWalletWithOtp } from '@microcosms/bot'
 
 function sortedObject(obj: any): any {
   if (typeof obj !== 'object' || obj === null) {
@@ -106,7 +106,11 @@ export default async function handler(
   }
 
   try {
-    await verifyWallet({ otp, setStatus: setResponse(res), resolveAddress })
+    await verifyWalletWithOtp({
+      otp,
+      setStatus: setResponse(res),
+      resolveAddress,
+    })
   } catch (e) {
     console.error('unknown', e)
     res.status(500).json({ message: 'unknown' })

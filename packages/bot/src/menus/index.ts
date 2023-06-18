@@ -3,11 +3,12 @@ import { MyContext } from '../bot'
 import { Composer } from 'grammy'
 import { prismaClient } from '@microcosms/db'
 import { generateAdminLink } from '../operations/generate-admin-link'
+import { verifyExistingWallet } from '../operations'
 
 export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
   .text(
     {
-      text: async (ctx) => 'Connect Wallet: ',
+      text: async (ctx) => 'Connect New Wallet',
       payload: (ctx) => {
         // pass through the group id
         return typeof ctx.match === 'string' ? ctx.match : ''
@@ -31,9 +32,30 @@ export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
     }
   )
   .row()
-  .text('Use Existing Wallets', (ctx) => {
-    return ctx.reply('TODO!')
-  })
+  .text(
+    {
+      text: 'Use Existing Wallets',
+      payload: (ctx) => {
+        // pass through the group id
+        return typeof ctx.match === 'string' ? ctx.match : ''
+      },
+    },
+    async (ctx) => {
+      //verifyExistingWallet
+      // return ctx.reply('TODO! ' + ctx.match!)
+      //check if they already used the code
+      try {
+        await verifyExistingWallet({
+          code: ctx.match!,
+          userId: ctx.from.id,
+          ctx,
+        })
+        // return ctx.reply('verify nfts check: ' + res)
+      } catch (e) {
+        return ctx.reply('TODO error! ' + e)
+      }
+    }
+  )
 
 export const menuAdminConfig = new Menu<MyContext>('admin-config-menu').dynamic(
   async (ctx) => {

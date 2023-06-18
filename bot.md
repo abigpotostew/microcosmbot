@@ -282,3 +282,9 @@ when a user modifies the bot admin permissions:
 https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 
 ### generate a unique link for group owner to add their group
+
+## todo
+* maybe need a session for each button
+* get rid of max tokens, to simplify the flows-- nah
+* set max num token rules
+* logic to prevent duplciate addresses. unlink the address
