@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import { zodStarsAddress, zodStarsContractAddress } from 'libs/stars'
 import { prismaClient } from '@microcosms/db'
-import { LogContext, logContext } from '@microcosms/bot/src/utils/context'
-import { checkAccessRules } from '@microcosms/bot'
-import { RecoilLoadable } from 'recoil'
-import all = RecoilLoadable.all
-import { kickUser } from '@microcosms/bot/src/operations/kick-user'
+import {
+  kickUser,
+  checkAccessRules,
+  LogContext,
+  logContext,
+} from '@microcosms/bot'
 
 const schema = z.object({
   groupMemberId: z.string().cuid(),
@@ -21,8 +21,7 @@ export default async function handler(
   }
   let cl: LogContext
   if (req.url) {
-    const url = new URL(req.url)
-    cl = logContext(`${url.pathname}${url.search}`)
+    cl = logContext(req.url)
   } else {
     cl = logContext('unknown request path:')
   }
@@ -52,9 +51,9 @@ export default async function handler(
             id: parse.data.groupMemberId,
           },
           include: {
-            wallet: {
+            account: {
               include: {
-                account: true,
+                wallets: true,
               },
             },
           },
@@ -67,8 +66,12 @@ export default async function handler(
         .json({ message: 'could not find the group member. stopping' })
     }
     // it should only be 1 wallet
-    const wallets = groupWithMember.groupMembers.map((gm) => gm.wallet)
-    const allowed = await checkAccessRules(cl, groupWithMember, wallets)
+    const wallets = groupWithMember.groupMembers
+      .map((gm) => gm.account.wallets)
+      .flat()
+    const allowed = await checkAccessRules(cl, groupWithMember, wallets, {
+      useRemoteCache: true,
+    })
     if (!allowed) {
       //kick them from the group. deactivate in db.
       cl.log(

@@ -62,6 +62,15 @@ export const EditOrCreateGroupTokenGateView = ({
   })
 
   const { invalidate } = useInvalidateCode()
+  const initalizeValues = {
+    name: rule?.name || '',
+    contractAddress: rule?.contractAddress || '',
+    minTokens:
+      typeof rule?.minTokens !== 'number' ? '' : rule.minTokens.toString(),
+    maxTokens:
+      typeof rule?.maxTokens !== 'number' ? '' : rule?.maxTokens.toString(),
+  }
+  console.log('initalizeValues', initalizeValues)
   return (
     <div className="space-y-10 divide-y divide-gray-900/10">
       <div className="bg-gray-100 grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
@@ -75,26 +84,20 @@ export const EditOrCreateGroupTokenGateView = ({
           </p>
         </div>
         <Formik
-          initialValues={{
-            name: rule?.name || '',
-            contractAddress: rule?.contractAddress || '',
-            minTokens:
-              typeof rule?.minTokens !== 'number'
-                ? ''
-                : rule.minTokens.toString(),
-            maxTokens:
-              typeof rule?.maxTokens !== 'number'
-                ? ''
-                : rule?.maxTokens.toString(),
-          }}
+          initialValues={initalizeValues}
           validate={toFormikValidate(Schema)}
           onSubmit={async (values, { setSubmitting }) => {
+            console.log('submitted valued', values)
             try {
               await saveRule.mutateAsync({
                 id: rule?.id,
                 code: manageGroup.code,
                 updates: {
                   ...values,
+                  minToken: parseInt(values.minTokens.toString()),
+                  maxToken: values.maxTokens
+                    ? parseInt(values.maxTokens.toString())
+                    : null,
                 },
               })
             } catch (e) {
@@ -123,7 +126,6 @@ export const EditOrCreateGroupTokenGateView = ({
           }) => (
             <form
               onSubmit={(e) => {
-                console.log('onSubmit', e)
                 handleSubmit(e)
               }}
               className="text-body1 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"

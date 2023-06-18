@@ -29,7 +29,7 @@ const getOwnedCountRemote = async ({
   contractAddress: string
   owner: string
 }) => {
-  const url = new URL(process.env.BASEURL + '/stargaze/nft')
+  const url = new URL(process.env.BASEURL + '/api/stargaze/nft')
   url.searchParams.set('contractAddress', contractAddress)
   url.searchParams.set('owner', owner)
   const res = await fetch(url.href)
