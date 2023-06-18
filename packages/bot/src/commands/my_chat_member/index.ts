@@ -3,6 +3,7 @@ import { Middleware } from 'grammy'
 import { MyContext } from '../../bot'
 import { ChatMemberAdministrator } from '@grammyjs/types/manage'
 import { syncAdmins } from '../../operations/sync-admins'
+import { logContext } from '../../utils/context'
 
 const checkHasPermissions = (admin: ChatMemberAdministrator) => {
   if (!admin.can_manage_chat) {
@@ -26,7 +27,8 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
     // not a supergroup, exit the group
     return
   }
-  console.log('update Id', ctx.update.update_id)
+  const cl = logContext(ctx)
+  cl.log('update Id', ctx.update.update_id)
   const date = new Date(ctx.myChatMember.date * 1000)
   await prismaClient().auditLog.create({
     data: {
@@ -50,7 +52,7 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
   ) {
     //remove it from db?
     //todo remove any admins or members...
-    console.log('removed from group!')
+    cl.log('removed from group!')
     return
   }
   if (myChatMember.new_chat_member.status !== 'administrator') {
@@ -75,8 +77,8 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
     },
   })
   if (existingGroup?.active) {
-    console.log(
-      `group ${existingGroup.id}:${existingGroup.groupId} is already active in the db`
+    cl.log(
+      `Group ${existingGroup.id}:${existingGroup.groupId} is already active in the db`
     )
     return
   }
@@ -95,6 +97,7 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
     },
   })
   await syncAdmins(ctx, ctx.myChatMember.chat.id, group)
+  cl.log('admins synced')
   return ctx.reply('Group activated!')
   //new_chat_member old member
   //old_chat_member new member

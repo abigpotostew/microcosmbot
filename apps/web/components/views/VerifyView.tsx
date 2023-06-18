@@ -156,7 +156,7 @@ const VerifyView: React.FC = () => {
               </div>
               <div className={'text-black col-span-1 max-w-md pt-4'}>
                 {loginMutation.isSuccess && (
-                  <span>
+                  <span className={'text-body1 text-xl'}>
                     {"You're verified! Check your DMs for your invite link "}
                     <a
                       href={loginMutation.data}

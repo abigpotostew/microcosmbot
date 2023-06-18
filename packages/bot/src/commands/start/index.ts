@@ -2,17 +2,20 @@ import { Group, prismaClient } from '@microcosms/db'
 import { CommandMiddleware, Context, InlineKeyboard } from 'grammy'
 import { Chat } from 'grammy/types'
 import { MyContext } from '../../bot'
-import { menuUserResponse } from '../../menus'
+import { menuAdminConfig, menuUserResponse } from '../../menus'
 import * as crypto from 'crypto'
 import { registerAccountToPendingGroupMember } from '../../operations/register-account-to-pending-group-member'
+import { responseSettings } from '../../operations/settings'
 const users = {
   skymagic: 1445777026,
   stewdev01: 6100753315,
 }
 
-const start: CommandMiddleware<MyContext> = async (
+const cmd_start: CommandMiddleware<MyContext> = async (
   ctx: MyContext
 ): Promise<void> => {
+  //https://t.me/microcosmbotdotxyz_bot?start=true
+
   // console.log('setup', ctx)
   const chat = ctx.chat
   const type = chat?.type
@@ -38,6 +41,10 @@ const start: CommandMiddleware<MyContext> = async (
       )
       return
     }
+    if (ctx.match === 'true') {
+      //todo return the setting response
+      return responseSettings(ctx)
+    }
 
     //check if they're already a member
     const group = await prismaClient().group.findFirst({
@@ -59,14 +66,12 @@ const start: CommandMiddleware<MyContext> = async (
         groupMembers: {
           where: {
             active: true,
-            wallet: {
-              account: {
-                userId: ctx.from.id.toString(),
-              },
+            account: {
+              userId: ctx.from.id.toString(),
             },
           },
           include: {
-            wallet: true,
+            account: true,
           },
         },
       },
@@ -259,4 +264,4 @@ export const startUserVerifyFlow = (fromUserId: number, group: Group) => {
   })
 }
 
-export default start
+export default cmd_start

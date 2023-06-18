@@ -24,6 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
     res.status(404).json({ ok: false })
   }
+
   console.log('ding ding')
   await runMiddleware(req, res, webhookCallback(bot, 'next-js'))
   // return botWebhook(req, res)

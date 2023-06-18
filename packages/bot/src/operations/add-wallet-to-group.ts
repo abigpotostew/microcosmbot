@@ -32,8 +32,8 @@ export const addWalletToGroup = async ({
     inviteLink,
     groupMember: await prismaClient().groupMember.upsert({
       where: {
-        GroupMember_walletId_groupId_unique: {
-          walletId: wallet.id,
+        GroupMember_accountId_groupId_unique: {
+          accountId: account.id,
           groupId: group.id,
         },
       },
@@ -45,9 +45,9 @@ export const addWalletToGroup = async ({
             id: group.id,
           },
         },
-        wallet: {
+        account: {
           connect: {
-            id: wallet.id,
+            id: account.id,
           },
         },
         groupMemberInviteLink: {

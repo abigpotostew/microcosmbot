@@ -27,14 +27,12 @@ export const getCodeGroupUser = (code: string, userId: string) => {
           groupMembers: {
             where: {
               active: true,
-              wallet: {
-                account: {
-                  userId: userId.toString(),
-                },
+              account: {
+                userId: userId.toString(),
               },
             },
             include: {
-              wallet: true,
+              account: true,
             },
           },
         },
@@ -61,14 +59,12 @@ export const getGroupUserFromCode = (code: string, userId: string) => {
       groupMembers: {
         where: {
           active: true,
-          wallet: {
-            account: {
-              userId: userId.toString(),
-            },
+          account: {
+            userId: userId.toString(),
           },
         },
         include: {
-          wallet: true,
+          account: true,
         },
       },
     },
