@@ -15,7 +15,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'PUT') {
+  if (req.method !== 'POST') {
     res.status(404).json({ message: 'not found' })
     return
   }
