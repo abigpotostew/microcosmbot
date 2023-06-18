@@ -1,11 +1,9 @@
-# Nouns Stream
+# MicroCosmBot
 
 ### Apps and Packages
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `web3`: a [foundry](https://book.getfoundry.sh/) solidity app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
+- `web`: the NextJS web application that also runs the telegram bot
+- `bot`: all the bot logic
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 - `tailwind-config`: `tailwind.config.js`s used through `web` and `docs` application as well as `package/ui` components
