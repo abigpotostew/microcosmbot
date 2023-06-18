@@ -85,10 +85,13 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
       router.events.off('routeChangeComplete', onRouteChangeComplete)
     }
   }, [])
+
   const signerOptions: SignerOptions = {
+    // @ts-ignore
     signingStargate: (_chain: Chain) => {
       return getSigningCosmosClientOptions()
     },
+    // @ts-ignore
     signingCosmwasm: (chain: Chain) => {
       switch (chain.chain_name) {
         case 'stargaze':
