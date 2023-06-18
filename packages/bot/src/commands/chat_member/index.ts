@@ -96,6 +96,7 @@ const chat_member: Middleware<MyContext> = async (
   } else if (oldDirection === 'in' && newDirection === 'out') {
     // they left the group
     // remove them from the group in the db
+    console.log('here to remove')
     const res = await prismaClient().groupMember.updateMany({
       where: {
         group: {

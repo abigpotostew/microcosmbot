@@ -144,13 +144,18 @@ export const verifyExistingWallet = async ({
   //check nfts against group access rules
   //stop if not allowed
   //create invite link if allowed
+  console.log('adfasdas')
   const pendingCode = await getCodeGroupUser(code, userId.toString())
   if (!pendingCode) {
     return ctx.reply('Link expired. Please try the invite link again.')
   }
+  if (pendingCode.group?.groupMembers?.length) {
+    //they are a member of the group
+    return ctx.reply(`You're already a member of this group.`)
+  }
   if (pendingCode.consumed) {
-    if (pendingCode.group?.groupMembers.length) {
-    }
+    return ctx.reply('Link expired. Please try the invite link again.')
+  } else if (pendingCode.expiresAt < new Date()) {
     return ctx.reply('Link expired. Please try the invite link again.')
   }
   const group = pendingCode.group
@@ -162,7 +167,6 @@ export const verifyExistingWallet = async ({
   const wallet = group.groupMembers[0].wallet
   console.log('group', JSON.stringify(group))
   for (const groupTokenGateElement of group.groupTokenGate) {
-    //
     if (
       !(await verifyWalletAgainstAccessRule({
         address: wallet.address,

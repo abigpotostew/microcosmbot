@@ -16,7 +16,7 @@ const start: CommandMiddleware<MyContext> = async (
   // console.log('setup', ctx)
   const chat = ctx.chat
   const type = chat?.type
-
+  const groupId = ctx.match?.toString()
   if (!chat) {
     return
   }
@@ -39,10 +39,56 @@ const start: CommandMiddleware<MyContext> = async (
       return
     }
 
+    //check if they're already a member
+    const group = await prismaClient().group.findFirst({
+      where: {
+        id: groupId,
+        active: true,
+        groupMembers: {
+          some: {
+            active: true,
+            wallet: {
+              account: {
+                userId: ctx.from.id.toString(),
+              },
+            },
+          },
+        },
+      },
+      include: {
+        groupMembers: {
+          where: {
+            active: true,
+            wallet: {
+              account: {
+                userId: ctx.from.id.toString(),
+              },
+            },
+          },
+          include: {
+            wallet: true,
+          },
+        },
+      },
+    })
+
+    if (!group) {
+      await ctx.reply(
+        "This group hasn't registered yet. Please contact the group admin to register."
+      )
+      return
+    }
+    if (group.groupMembers.length > 0) {
+      await ctx.reply("You're already a member of this group.")
+      return
+    }
+
+    await startUserVerifyFlow(ctx.from.id, group)
     const otp = await registerAccountToPendingGroupMember({
       ctx,
       fromTgId: ctx.from.id,
-      groupJoinId: ctx.match!,
+      groupJoinId: groupId!,
+      group,
     })
     if (!otp) {
       return
