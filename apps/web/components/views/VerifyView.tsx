@@ -63,8 +63,11 @@ const VerifyView: React.FC = () => {
       throw new Error('Failed to verify: ' + body.message)
     }
     const body = await res.json()
-    console.log('ITs SUCCESS body', body)
-    return body.link as string
+    console.log('Its SUCCESS body', body)
+    return {
+      allowed: body.message !== 'not passing rules',
+      link: body.link as string,
+    }
   })
 
   return (
@@ -128,10 +131,16 @@ const VerifyView: React.FC = () => {
           {/*Rejected = "Rejected",*/}
           {/*Error = "Error"*/}
           {/*}*/}
-          {status === 'NotExist' && <div>Install a wallet to continue</div>}
-          {status === 'Connecting' && <div>Connecting...</div>}
-          {status === 'Rejected' && <div>rejected</div>}
-          {status === 'Error' && <div>error</div>}
+          {status === 'NotExist' && (
+            <div className={'text-body4'}>Install a wallet to continue</div>
+          )}
+          {status === 'Connecting' && (
+            <div className={'text-body4'}>Connecting...</div>
+          )}
+          {status === 'Rejected' && (
+            <div className={'text-body4'}>rejected</div>
+          )}
+          {status === 'Error' && <div className={'text-body4'}>error</div>}
           {status === 'Connected' && (
             <div className={'grid'}>
               <div className={'gap-3 justify-center items-center flex'}>
@@ -151,19 +160,23 @@ const VerifyView: React.FC = () => {
                 </PrimaryButton>
               </div>
 
-              <div className={'text-black col-span-1 max-w-md pt-4'}>
+              <div
+                className={'text-red-500 text-body1 col-span-1 max-w-md pt-4'}
+              >
                 {loginMutation.error?.toString()}
               </div>
               <div className={'text-black col-span-1 max-w-md pt-4'}>
                 {loginMutation.isSuccess && (
                   <span className={'text-body1 text-xl'}>
-                    {"You're verified! Check your DMs for your invite link "}
+                    {loginMutation.data.allowed
+                      ? "You're verified! Check your DMs for your invite link "
+                      : "You don't qualify to join this group. Check your DMs for more info."}
                     <a
-                      href={loginMutation.data}
+                      href={loginMutation.data.link}
                       target={'_blank'}
                       rel={'noreferrer'}
                     >
-                      {loginMutation.data}
+                      {loginMutation.data.link}
                     </a>
                   </span>
                 )}

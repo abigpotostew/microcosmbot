@@ -6,7 +6,6 @@ import { decodeSignature } from '@cosmjs/amino'
 import { Bech32Address, verifyADR36Amino } from '@keplr-wallet/cosmos'
 import { AccountData, StdSignature, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from 'libs/verify/build-mesage'
-import { prismaClient } from '@microcosms/db'
 import { verifyWalletWithOtp } from '@microcosms/bot'
 
 function sortedObject(obj: any): any {
