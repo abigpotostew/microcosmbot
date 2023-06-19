@@ -21,7 +21,6 @@
     "@cosmos-kit/keplr": "0.33.13",
     "@cosmos-kit/leap": "0.14.12",
     "@cosmos-kit/react": "1.3.11",
-    "@daokitchen/nouns-stream-sdk": "*",
     "@grammyjs/chat-members": "^1.0.10",
     "@grammyjs/menu": "^1.2.1",
     "@headlessui/react": "^1.7.11",
