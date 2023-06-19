@@ -34,8 +34,8 @@ model Wallet {
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
 
-  @@index([accountId])
   @@index([address])
+  @@unique([accountId, address])
 }
 
 model Group {
@@ -162,11 +162,11 @@ model AuditLog {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  updateId   BigInt
+  updateId   String?
   updateDate DateTime
 
   // tg id
-  groupId BigInt
+  groupId String?
 
   auditType AuditTypes
 
@@ -176,4 +176,5 @@ model AuditLog {
 enum AuditTypes {
   MY_CHAT_MEMBER
   CHAT_MEMBER
+  VERIFY_ATTEMPT
 }

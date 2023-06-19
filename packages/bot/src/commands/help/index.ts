@@ -11,7 +11,7 @@ To get started, add me to a group as an Admin. Then DM me /settings to configure
     )
     return
   } else if (ctx.chat?.type === 'group') {
-    await ctx.reply(`Enable Visible chat history to use me in this group.`)
+    await ctx.reply(`Enable 'Visible chat history' to use me in this group.`)
   } else if (ctx.chat?.type === 'channel') {
     await ctx.reply(`I can't do anything in channels.`)
   } else if (ctx.chat?.type === 'supergroup') {

@@ -285,7 +285,7 @@ https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 
 ## todo
 * maybe need a session for each button
-* set max num token rules
+* [x] set max num token rules
 * logic to prevent duplciate addresses. unlink the address
 * edge case-- they verify wallet and get their link but do not click it for a while.
 * [x] when the bot is kicked, deactivate the group and maybe also all the members

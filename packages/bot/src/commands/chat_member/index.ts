@@ -35,10 +35,10 @@ const chat_member: Middleware<MyContext> = async (
   await prismaClient().auditLog.create({
     data: {
       auditType: 'CHAT_MEMBER',
-      groupId: chatMember.chat.id,
+      groupId: chatMember.chat.id.toString(),
       data: JSON.parse(JSON.stringify(chatMember)),
       updateDate: date,
-      updateId: ctx.update.update_id,
+      updateId: ctx.update.update_id.toString(),
     },
   })
 
