@@ -7,3 +7,5 @@ export const prismaClient = () => {
   }
   return client
 }
+
+export const goforit = true
