@@ -4,6 +4,7 @@ import { MyContext } from '../../bot'
 import { menuAdminConfig } from '../../menus'
 
 export const cmd_me: CommandMiddleware<MyContext> = async (ctx) => {
+  console.log('cmd_me', ctx)
   if (ctx.chat.type !== 'private') {
     return ctx.reply('DM me to run this commands :)')
   }

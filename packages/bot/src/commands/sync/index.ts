@@ -9,7 +9,6 @@ import { logContext } from '../../utils'
 export const cmd_sync: CommandMiddleware<MyContext> = async (ctx) => {
   const cl = logContext(ctx, 'cmd_sync')
   cl.log('here')
-  console.log('here')
   if (ctx.chat.type !== 'group' && ctx.chat.type !== 'supergroup') {
     return ctx.reply('This command only works in a group chat.')
   }
@@ -44,5 +43,5 @@ export const cmd_sync: CommandMiddleware<MyContext> = async (ctx) => {
   }
 
   // build a menu list of groups
-  return ctx.reply(`Synced`)
+  return ctx.reply(`Synced :)`)
 }

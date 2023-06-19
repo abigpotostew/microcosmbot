@@ -15,6 +15,7 @@ const echo: CommandMiddleware<MyContext> = async (
   //     (ctx.msg?.text || '') + 'chatMember: ' + chatMember?.user?.id
   //   )
   // } else {
+  // console.log('me', JSON.stringify(ctx.me))
   await ctx.reply(ctx.msg?.text || '')
   // }
 }
