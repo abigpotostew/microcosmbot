@@ -8,11 +8,7 @@ import { useRecoilState } from 'recoil'
 import { modalState as modalInitState } from 'state/Modal'
 import { mobileMenuState as mobileMenuInitState } from 'state/MobileMenu'
 import Toaster from './Toaster'
-import MobileMenu from './MobileMenu'
-import { useNetwork } from 'wagmi'
-import { Token, tokenListState } from 'state/TokenList'
-import { useEffect } from 'react'
-import { tokenListUrls } from 'constants/tokenListUrls'
+import { tokenListState } from 'state/TokenList'
 
 interface LayoutWrapperProps {
   children: React.ReactNode
