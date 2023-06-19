@@ -24,7 +24,7 @@ const HeroSection: React.FC = () => {
   return (
     <section className="relative pt-4 pb-24 xl:pt-8 bg-olive-200 overflow-hidden">
       <div className="container flex flex-col px-6 items-center md:flex-row md:gap-14 justify-center xl:gap-32 2xl:gap-48">
-        <FrameBlock classes="w-250px max-w-full px-1 py-4 box-border bg-violet-100 xl:px-8 xl:py-1">
+        <FrameBlock classes="w-105 max-w-full px-1 py-4 box-border bg-violet-100 xl:px-8 xl:py-1">
           <div className="w-full">
             <div
               className={
