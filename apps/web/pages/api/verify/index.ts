@@ -7,6 +7,7 @@ import { Bech32Address, verifyADR36Amino } from '@keplr-wallet/cosmos'
 import { AccountData, StdSignature, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from 'libs/verify/build-mesage'
 import { verifyWalletWithOtp } from '@microcosms/bot'
+import { prismaClient } from '@microcosms/db'
 
 function sortedObject(obj: any): any {
   if (typeof obj !== 'object' || obj === null) {
@@ -59,12 +60,13 @@ export default async function handler(
     return
   }
 
-  console.log('')
   let { strategy } = req.body
   strategy = strategy || 'SIGNAMINO'
 
+  const date = new Date()
+
   let resolveAddress: string
-  let verified = false
+  let verified: boolean | 'unauthorized' = false
   const { otp } = req.body
   if (!otp) {
     res.status(401).json({ message: 'unauthorized' })
@@ -76,12 +78,12 @@ export default async function handler(
     const publicKey = account.pubkey
     const valid = await isValidSignature(signed, signature, publicKey)
     if (!valid) {
-      res.status(401).json({ message: 'unauthorized' })
-      return
+      verified = 'unauthorized'
+      resolveAddress = account.address
+    } else {
+      verified = await isCorrectOtp(otp, signed)
+      resolveAddress = account.address
     }
-
-    verified = await isCorrectOtp(otp, signed)
-    resolveAddress = account.address
   } else {
     const { signature, address, otp } = req.body as SignArbitraryVerification
     const { pubkey: decodedPubKey, signature: decodedSignature } =
@@ -99,25 +101,51 @@ export default async function handler(
     resolveAddress = address
   }
 
-  if (!verified) {
-    res.status(403).json({ message: 'forbidden' })
+  if (!verified || verified === 'unauthorized') {
+    let status = 401
+    if (verified === 'unauthorized') {
+      res.status(401).json({ message: 'unauthorized' })
+    } else {
+      status = 403
+      res.status(403).json({ message: 'forbidden' })
+    }
+    await prismaClient().auditLog.create({
+      data: {
+        auditType: 'VERIFY_ATTEMPT',
+        data: { strategy, resolveAddress, verified, status },
+        updateDate: date,
+      },
+    })
     return
   }
 
   try {
+    let status: number = 200
+    const setResponseWrapped = (res: NextApiResponse) => {
+      const fn = setResponse(res)
+      return (_status: number, body: any) => {
+        status = _status
+        fn(_status, body)
+      }
+    }
     await verifyWalletWithOtp({
       otp,
-      setStatus: setResponse(res),
+      setStatus: setResponseWrapped(res),
       resolveAddress,
+      overwrite: req.query.overwrite === 'true',
+    })
+    await prismaClient().auditLog.create({
+      data: {
+        auditType: 'VERIFY_ATTEMPT',
+        data: { strategy, resolveAddress, verified, status },
+        updateDate: date,
+      },
     })
   } catch (e) {
     console.error('unknown', e)
     res.status(500).json({ message: 'unknown' })
     return
   }
-
-  // issueToCookie(resolveAddress, req, res)
-  //return success message
 }
 
 const isValidSignature = async (

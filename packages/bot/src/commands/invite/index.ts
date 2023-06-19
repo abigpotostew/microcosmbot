@@ -21,6 +21,6 @@ export const cmd_invite: CommandMiddleware<MyContext> = async (ctx) => {
     )
   }
   return ctx.reply(
-    `Invite users to this group with the following link: https://t.me/${botInfo.username}?start=${group.id}`
+    `Invite users here by giving them this link: https://t.me/${botInfo.username}?start=${group.id}. Only users that pass your token rules will be able to join.`
   )
 }

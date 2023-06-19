@@ -6,20 +6,33 @@ import { tinyAsyncPoolAll } from '../utils/async'
 import { addWalletToGroup } from './add-wallet-to-group'
 import { logContext, LogContext } from '../utils/context'
 import { getOwnedCount } from './nft-ownership'
+import { kickUser } from './kick-user'
 
 export const verifyWalletWithOtp = async ({
   otp,
   resolveAddress,
   setStatus,
+  overwrite = false,
 }: {
   otp: string
   resolveAddress: string
   setStatus: (status: number, body: any) => void
+  overwrite?: boolean
 }) => {
   const cl = logContext('verifyWalletWithOtp:' + otp)
+
   const now = new Date()
   cl.log('verifying wallet', otp, resolveAddress)
-  const existing = await prismaClient().pendingGroupMember.findFirst({
+  //comapre the resolveaddress account to the otp group account
+  const addressAccountPromise = prismaClient().wallet.findFirst({
+    where: {
+      address: resolveAddress,
+    },
+    include: {
+      account: true,
+    },
+  })
+  const existingPromise = prismaClient().pendingGroupMember.findFirst({
     where: {
       code: otp,
     },
@@ -32,10 +45,61 @@ export const verifyWalletWithOtp = async ({
       account: true,
     },
   })
+  const [existing, addressAccount] = await Promise.all([
+    existingPromise,
+    addressAccountPromise,
+  ])
   if (!existing) {
     setStatus(401, { message: 'unauthorized' })
     cl.log('no pending non-expired group member found')
     return
+  }
+  //duplicate wallet check
+  if (
+    addressAccount?.accountId &&
+    addressAccount.accountId !== existing.account.id &&
+    !existing.consumed
+  ) {
+    if (!overwrite) {
+      //this wallet is already registered to another TG account
+      setStatus(200, { message: 'duplicate wallet' })
+      return
+    } else {
+      //remove the wallet from the other account and continue
+      //kick from all groups!!
+      const groups = await prismaClient().groupMember.findMany({
+        where: {
+          accountId: addressAccount.accountId,
+          active: false,
+        },
+        include: {
+          group: true,
+          account: true,
+        },
+      })
+      for (let groupMember of groups) {
+        try {
+          await kickUser(groupMember.group, groupMember)
+          cl.log(
+            'Kicked user from group',
+            groupMember.id,
+            groupMember.group.groupId
+          )
+        } catch (e) {
+          cl.error('error kicking user', groupMember.id, e)
+        }
+      }
+
+      const count = await prismaClient().groupMember.updateMany({
+        where: {
+          accountId: addressAccount.accountId,
+        },
+        data: {
+          active: false,
+        },
+      })
+      cl.log('unlinked wallet from other accounts count:', count.count)
+    }
   }
   if (existing.consumed) {
     setStatus(401, { message: 'Already verified against this OTP' })
@@ -103,7 +167,7 @@ export const verifyWalletWithOtp = async ({
 
   await bot.api.sendMessage(
     existing.account.userId.toString(),
-    `You have successfully verified your wallet address ${resolveAddress}. Join the group. ${inviteLink}`
+    `You have successfully verified your wallet address ${resolveAddress}. Join the chat with your unique invite link ${inviteLink}`
   )
   setStatus(200, { message: 'ok', link: `https://t.me/${botInfo.username}` })
 }
@@ -167,7 +231,7 @@ export const verifyExistingWallet = async ({
     group,
   })
   return ctx.reply(
-    `You have successfully verified your wallet address ${fw.address}. Join the group. ${inviteLink}`
+    `You have successfully verified your wallet address ${fw.address}. Join the chat with your unique invite link ${inviteLink}`
   )
 }
 type Pointer<T> = {

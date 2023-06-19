@@ -26,8 +26,14 @@ export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
           code: ctx.match,
         },
       })
+      if (otp?.consumed || (otp?.expiresAt && otp.expiresAt < new Date())) {
+        //
+        return ctx.reply(
+          'This link has expired. Use the invite link to restart your wallet verification.'
+        )
+      }
       return ctx.reply(
-        `Your one time password is \`${otp?.code}\`.\n\nOpen this URL and verify the password is the same in your browser before signing the verification message:\n\n${process.env.BASEURL}/verify/${otp?.code}`
+        `Your verification code is ${otp?.code}.\n\nOpen this URL and verify the password is the same in your browser before signing the verification message:\n\n${process.env.BASEURL}/verify/${otp?.code}`
       )
     }
   )
