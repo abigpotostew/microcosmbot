@@ -5,10 +5,7 @@ import { PageSEO } from 'components/SEO'
 import { websiteMetadata } from 'constants/index'
 import { IPayoutsStats } from 'libs/types'
 import { useRouter } from 'next/router'
-import StreamSection from 'components/sections/StreamSection'
-import StatsBlock from 'components/StatsBlock'
 import dynamic from 'next/dynamic'
-import VerifyView from 'components/views/VerifyView'
 import ManageGroupView from 'components/views/ManageGroupView'
 
 const statsMock: IPayoutsStats = {
