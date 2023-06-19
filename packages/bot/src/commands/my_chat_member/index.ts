@@ -4,8 +4,10 @@ import { MyContext } from '../../bot'
 import { ChatMemberAdministrator } from '@grammyjs/types/manage'
 import { syncAdmins } from '../../operations/sync-admins'
 import { logContext } from '../../utils/context'
+import { membershipInGroup } from '../chat_member'
+import { deactivateChatGroup } from '../../operations/deactivate-group'
 
-const checkHasPermissions = (admin: ChatMemberAdministrator) => {
+export const checkHasPermissions = (admin: ChatMemberAdministrator) => {
   if (!admin.can_manage_chat) {
     return false
   }
@@ -19,16 +21,13 @@ const checkHasPermissions = (admin: ChatMemberAdministrator) => {
   return true
 }
 export const my_chat_member: Middleware<MyContext> = async (ctx) => {
+  const cl = logContext(ctx, 'my_chat_member')
+  cl.log('update Id', ctx.update.update_id)
   const myChatMember = ctx.myChatMember
   if (!myChatMember) {
     return //ignore
   }
-  if (myChatMember.chat.type !== 'supergroup') {
-    // not a supergroup, exit the group
-    return
-  }
-  const cl = logContext(ctx)
-  cl.log('update Id', ctx.update.update_id)
+
   const date = new Date(ctx.myChatMember.date * 1000)
   await prismaClient().auditLog.create({
     data: {
@@ -40,27 +39,55 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
     },
   })
 
+  const newDirection = membershipInGroup(myChatMember.new_chat_member.status)
+  const oldDirection = membershipInGroup(myChatMember.old_chat_member.status)
+
+  if (myChatMember.chat.type !== 'supergroup') {
+    // not a supergroup, exit the group
+    //if it's being added, show message and remove self
+    if (newDirection === 'in') {
+      await ctx.reply(
+        `This group isn't configured for me yet. Set 'Chat history for new members' to 'Visible' and invite me again.`
+      )
+      await ctx.api.leaveChat(ctx.myChatMember.chat.id)
+    }
+    return
+  }
+
+  //todo check if permissions have been demoted from admin to member
+
   // if (myChatMember.chat.type !== 'supergroup') {
   //   // not a supergroup, exit the group
   //   await ctx.reply('This bot only works in supergroups. Exiting group.')
   //   await ctx.api.leaveChat(ctx.myChatMember.chat.id)
   // }
+  const groupChatId = ctx.myChatMember.chat.id.toString()
+
   //todo remove from db admin
-  if (
-    myChatMember.new_chat_member.status === 'left' ||
-    myChatMember.new_chat_member.status === 'kicked'
-  ) {
+  if (newDirection === 'out') {
+    //todo deactivate the group
+
     //remove it from db?
     //todo remove any admins or members...
     cl.log('removed from group!')
+    await deactivateChatGroup(groupChatId)
     return
   }
+
   if (myChatMember.new_chat_member.status !== 'administrator') {
-    await ctx.reply('Please promote me to group administrator.')
+    //todo deactivate the group
+    await deactivateChatGroup(groupChatId)
+    await ctx.reply(
+      'Please promote me to group administrator to token gate this group.'
+    )
     return
   }
+
   if (!checkHasPermissions(myChatMember.new_chat_member)) {
-    await ctx.reply('Please give me the correct permissions.')
+    await deactivateChatGroup(groupChatId)
+    await ctx.reply(
+      'I need invite and remove member permissions to manage this chat.'
+    )
     return
   }
 
@@ -74,6 +101,11 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
   const existingGroup = await prismaClient().group.findFirst({
     where: {
       groupId: ctx.myChatMember.chat.id.toString(),
+    },
+    select: {
+      id: true,
+      groupId: true,
+      active: true,
     },
   })
   if (existingGroup?.active) {
