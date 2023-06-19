@@ -125,6 +125,19 @@ const saveRule = procedure
     if (!codeDb) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
+    const count = await prismaClient().groupTokenGate.count({
+      where: {
+        group: {
+          id: codeDb.group.id,
+        },
+      },
+    })
+    if (count >= 15) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Max 15 rules per group',
+      })
+    }
     if (!input.id) {
       return prismaClient().groupTokenGate.create({
         data: {

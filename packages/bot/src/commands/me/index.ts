@@ -6,7 +6,7 @@ import { menuAdminConfig } from '../../menus'
 export const cmd_me: CommandMiddleware<MyContext> = async (ctx) => {
   console.log('cmd_me', ctx)
   if (ctx.chat.type !== 'private') {
-    return ctx.reply('DM me to run this commands :)')
+    return ctx.reply('DM me to run this command :)')
   }
   const from = ctx.from
   if (!from) {
