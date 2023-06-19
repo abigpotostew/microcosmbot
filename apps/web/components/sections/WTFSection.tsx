@@ -3,6 +3,7 @@
 import WTFItem from 'components/WTFItem'
 import { websiteData } from 'constants/index'
 import WTFImage from 'public/icons/wtf-image.svg'
+import Image from 'next/image'
 
 const WTFSection: React.FC = () => {
   return (
@@ -15,7 +16,15 @@ const WTFSection: React.FC = () => {
           src={websiteData.wtfSection.imageSrc}
           alt="WTF? section image"
         /> */}
-        <WTFImage className="w-570px max-w-full" />
+        {/*<WTFImage className="w-570px max-w-full" />*/}
+        <div className={'flex justify-center flex-col items-center '}>
+          <Image
+            className="image w-570px max-w-full"
+            src={websiteData.heroSection.imageSrc}
+            alt="MicroCosm hero image"
+            priority
+          />
+        </div>
         <div className="flex flex-col xl:w-123 mb-12">
           <h2 className="text-title1 mb-7">{websiteData.wtfSection.title}</h2>
           <p className="text-subtitle mb-4 xl:w-106">

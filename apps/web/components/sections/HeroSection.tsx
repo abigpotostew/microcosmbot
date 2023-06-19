@@ -27,17 +27,8 @@ const HeroSection: React.FC = () => {
 
   return (
     <section className="relative pt-4 pb-24 xl:pt-8 bg-olive-200 overflow-hidden">
-      <div className="container flex flex-col px-6 items-center md:flex-row md:gap-14  justify-center xl:gap-32 2xl:gap-48">
-        <div className="image-container flex w-80 h-89 md:w-95 md:h-105  lg:w-116 lg:h-129">
-          <Image
-            fill
-            className="image flex"
-            src={websiteData.heroSection.imageSrc}
-            alt="Nouns Stream hero image"
-            priority
-          />
-        </div>
-        <FrameBlock classes="w-500px max-w-full px-6 py-4 box-border bg-violet-100	 xl:px-10 xl:py-5">
+      <div className="container flex flex-col px-6 items-center md:flex-row md:gap-14 justify-center xl:gap-32 2xl:gap-48">
+        <FrameBlock classes="w-250px max-w-full px-1 py-4 box-border bg-violet-100 xl:px-8 xl:py-1">
           {/*<nav*/}
           {/*  className="relative flex w-full border-b border-gray-900"*/}
           {/*  aria-label="Tabs"*/}
@@ -66,11 +57,11 @@ const HeroSection: React.FC = () => {
           <div className="w-full">
             <div
               className={
-                'flex justify-center items-center text-center flex-col'
+                'pt-4 pb-4 flex justify-center items-center text-center flex-col'
               }
             >
               <div>
-                <h1>Create a token gated telegram group in seconds.</h1>
+                <h2>Create a token gated telegram group in seconds.</h2>
               </div>
               <div className={'pt-8'}>
                 <a
@@ -88,6 +79,15 @@ const HeroSection: React.FC = () => {
             {/*{tab === tabs[1].val && <IntervalsForm />}*/}
           </div>
         </FrameBlock>
+        <div className="image-container flex w-133 h-89 md:w-95 md:h-105  lg:w-116 lg:h-129">
+          <Image
+            fill
+            className="image flex"
+            src={websiteData.heroSection.imageSrc}
+            alt="MicroCosm hero image"
+            priority
+          />
+        </div>
       </div>
       <HeroBg className="absolute w-300 min-w-full xl:w-full bottom-0 left-0" />
     </section>
