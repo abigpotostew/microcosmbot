@@ -286,10 +286,10 @@ https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 ## todo
 * maybe need a session for each button
 * [x] set max num token rules
-* logic to prevent duplciate addresses. unlink the address
-* edge case-- they verify wallet and get their link but do not click it for a while.
+* [x] logic to prevent duplciate addresses. unlink the address
+* [x] edge case-- they verify wallet and get their link but do not click it for a while. Fixed by adding member only when they actually join
 * [x] when the bot is kicked, deactivate the group and maybe also all the members
 * first time group setup, links to https://t.me/microcosmbotdotxyz_bot?start=true which shows settings
 * terms of service
-* verify page check if the otp is already used.
-* todo /help cmd, on DM and in group
+* [x] verify page check if the otp is already used.
+* [x] todo /help cmd, on DM and in group

@@ -32,7 +32,7 @@ module.exports = {
         'size-title3': '2rem',
         'size-title4': '1.375rem',
         'size-title5': '1.25rem',
-        'xxs': '0.625rem',
+        xxs: '0.625rem',
         '13px': '0.8125rem',
       },
       lineHeight: {
@@ -87,7 +87,7 @@ module.exports = {
         green: {
           DEFAULT: '#3CC07B',
           500: '#3CC07B',
-        }
+        },
       },
       spacing: {
         '1px': '1px',
@@ -103,7 +103,7 @@ module.exports = {
       },
       borderRadius: {
         '4xl': '2rem',
-        'lx': '0.625rem',
+        lx: '0.625rem',
       },
       minWidth: {
         192: '12rem',
@@ -112,7 +112,7 @@ module.exports = {
         28: '7rem',
       },
       maxWidth: {
-        'desktop': '71.25rem',
+        desktop: '71.25rem',
         'docs-desktop': '82rem',
         33: '8.25rem',
         125: '33.333rem',
@@ -124,7 +124,7 @@ module.exports = {
         30: '7.5rem',
       },
       width: {
-        'desktop': '71.25rem',
+        desktop: '71.25rem',
         'docs-desktop': '82rem',
         13: '3.125rem',
         22: '5.5rem',
@@ -148,6 +148,7 @@ module.exports = {
         '150px': '9.375rem',
         152: '38rem',
         233: '58.25rem',
+        '250px': '15.625rem',
         '570px': '35.625rem',
       },
       height: {
@@ -162,7 +163,5 @@ module.exports = {
     fill: [],
     extend: {},
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [require('@tailwindcss/typography')],
 }
