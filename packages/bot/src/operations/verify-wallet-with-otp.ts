@@ -86,9 +86,12 @@ export const verifyWalletWithOtp = async ({
     cl.log('wallet does not pass token rules')
     await bot.api.sendMessage(
       existing.account.userId.toString(),
-      `You have successfully verified your wallet address ${resolveAddress}. But your account does not pass the token rules for this group. Contact the group admin for more info.`
+      `You have successfully verified your wallet address ${resolveAddress}. But your account does not pass the token rules for '${existing.group.name}'. Contact the group admin for more info.`
     )
-    setStatus(200, { message: 'ok', link: `https://t.me/${botInfo.username}` })
+    setStatus(200, {
+      message: 'not passing rules',
+      link: `https://t.me/${botInfo.username}`,
+    })
     return
   }
   // Prisma.GroupMemberWhereUniqueInput

@@ -40,15 +40,15 @@ const Footer: React.FC = () => (
         </div>
         <div className="flex flex-col gap-4 justify-between border-t border-gray-200 pt-6 mt-8 md:gap-0 md:flex-row xl:pr-9">
           <span className="text-body3 text-xs text-gray-300 md:text-sm">
-            A public good by skymagic.
+            By skymagic.
           </span>
           <div className="flex gap-16 xl:gap-28">
-            <Link
-              href={'/terms-of-service'}
-              className="text-body3 text-xs text-gray-300 transition-colors hover:text-gray-900 md:text-sm"
-            >
-              Terms of Service
-            </Link>
+            {/*<Link*/}
+            {/*  href={'/terms-of-service'}*/}
+            {/*  className="text-body3 text-xs text-gray-300 transition-colors hover:text-gray-900 md:text-sm"*/}
+            {/*>*/}
+            {/*  Terms of Service*/}
+            {/*</Link>*/}
             {/*<Link*/}
             {/*  href={'/protocol-disclaimer'}*/}
             {/*  className="text-body3 text-xs text-gray-300 transition-colors hover:text-gray-900 md:text-sm"*/}

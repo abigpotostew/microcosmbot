@@ -20,6 +20,12 @@
       "utils/*": ["utils/*"],
       "state/*": ["state/*"],
       "server/*": ["server/*"],
+      "@microcosms/bot/*": ["../../packages/bot/src/*"],
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../packages/bot"
+    }
+  ]
 }

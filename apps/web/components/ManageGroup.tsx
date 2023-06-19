@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil'
 import { modalState as modalInitState } from 'state/Modal'
 import { EditOrCreateGroupTokenGateView } from 'components/views/EditOrCreateGroupTokenGateView'
 import { useCallback } from 'react'
+import { PlusIcon } from '@heroicons/react/20/solid'
 
 function ManagingActiveGroup({
   group,
@@ -20,6 +21,10 @@ function ManagingActiveGroup({
   const router = useRouter()
 
   const [modalState, setModalState] = useRecoilState(modalInitState)
+
+  //https://t.me/microcosmbotdotxyz_bot?settings=true
+
+  const groupInviteLink = `https://t.me/microcosmbotdotxyz_bot?start=${group.id}`
 
   const openEditModal = useCallback(
     (rule?: GroupTokenGate) => {
@@ -48,15 +53,22 @@ function ManagingActiveGroup({
   )
   return (
     <>
-      <h3 className={'text-body1'}>{group.group.name}</h3>
-      <h4 className={'text-body1 text-sm'}>
-        Create one or more Access Rules to gate your group.
-      </h4>
-
       <div className={'min-w-full w-full'}>
+        <div className={'pt-4'}>
+          <span className={'pt-4'}>
+            <h3 className={'text-body1 text-sxl  inline'}>Access Rules</h3>
+            {' - '}
+            <h3 className={'text-body1 text-gray-600 pt-6 inline'}>
+              {group.group.name}
+            </h3>
+          </span>
+          <p className={'text-body1 text-sm pt-2 text-gray-500'}>
+            Add one or more Access Rules to gate your group.
+          </p>
+        </div>
         {!group.group.groupTokenGate.length && (
           <div className={'pt-3 text-body1 text-sm text-gray-600'}>
-            No token gates for this group.
+            No access rules for this group.
           </div>
         )}
         <ul role="list" className="divide-y divide-gray-100">
@@ -122,25 +134,26 @@ function ManagingActiveGroup({
                 openEditModal(undefined)
               }}
             >
-              <div className={'flex gap-x-4'}>
+              <div className={'flex gap-x-2'}>
+                <PlusIcon className="h-5 w-5 " />
                 <div className="min-w-0 flex-auto">
                   <p className="text-sm font-semibold leading-6 text-body1 text-gray-900 ">
-                    Add new access rule
+                    <span>Add access rule</span>
                   </p>
                 </div>
                 <div className="flex items-center gap-x-4">
-                  <svg
-                    className="h-5 w-5 flex-none text-gray-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  {/*<svg*/}
+                  {/*  className="h-5 w-5 flex-none text-gray-400"*/}
+                  {/*  viewBox="0 0 20 20"*/}
+                  {/*  fill="currentColor"*/}
+                  {/*  aria-hidden="true"*/}
+                  {/*>*/}
+                  {/*  <path*/}
+                  {/*    fillRule="evenodd"*/}
+                  {/*    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"*/}
+                  {/*    clipRule="evenodd"*/}
+                  {/*  />*/}
+                  {/*</svg>*/}
                 </div>
               </div>{' '}
             </button>

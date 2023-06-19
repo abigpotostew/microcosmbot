@@ -292,3 +292,5 @@ https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 * when the bot is kicked, deactivate the group and maybe also all the members
 * have a group member join with account instead of wallet to support multi wallet
 * first time group setup, links to https://t.me/microcosmbotdotxyz_bot?start=true which shows settings
+* terms of service
+* verify page check if the otp is already used.

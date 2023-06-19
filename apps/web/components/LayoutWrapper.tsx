@@ -106,7 +106,7 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
       )}
     >
       <Header />
-      <MobileMenu />
+      {/*<MobileMenu />*/}
       <main className="relative flex-grow flex-shrink-0 basis-auto">
         {children}
       </main>
