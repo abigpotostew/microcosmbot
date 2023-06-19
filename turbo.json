@@ -7,7 +7,7 @@
       "outputs": ["node_modules/.prisma/**"]
     },
     "build": {
-      "dependsOn": ["clean", "test", "^build", "^prepare"],
+      "dependsOn": ["clean", "test", "^prepare", "^build"],
       "outputs": ["dist/**", ".next/**"],
       "env": [
         "NEXT_PUBLIC_ALCHEMY_ID",
