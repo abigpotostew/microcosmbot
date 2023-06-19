@@ -21,8 +21,7 @@ commands.command('sync', cmd_sync)
 commands.command('me', cmd_me)
 commands.command('invite', cmd_invite)
 commands.command('echo', echo)
-
 commands.on('chat_member', chat_member)
-commands.on('message:new_chat_title', filterNewChatTitle)
 commands.on('my_chat_member', my_chat_member)
+commands.on('message:new_chat_title', filterNewChatTitle)
 export default commands
