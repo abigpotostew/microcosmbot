@@ -3,6 +3,7 @@
   "globalDependencies": [".env"],
   "pipeline": {
     "prepare": {
+      "cache": false,
       "dependsOn": ["^prepare"],
       "outputs": ["node_modules/.prisma/**"]
     },

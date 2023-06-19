@@ -1,14 +1,9 @@
 import { useRouter } from 'next/router'
 import { websiteData } from 'constants/websiteData'
-import classNames from 'classnames'
 import { PrimaryButton } from '@nouns-stream/ui'
 import { useMutation } from '@tanstack/react-query'
-import { getSigningPublicawesomeClient } from 'stargazejs'
 import { useChain } from '@cosmos-kit/react'
-import {
-  signLoginMessageWithAmino,
-  signLoginMessageWithArbitrary,
-} from 'libs/verify/keplr'
+import { signLoginMessageWithAmino } from 'libs/verify/keplr'
 import { useCallback, useState } from 'react'
 import { trpc } from 'utils/trpc'
 
