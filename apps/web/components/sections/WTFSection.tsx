@@ -18,8 +18,8 @@ const WTFSection: React.FC = () => {
         {/*<WTFImage className="w-570px max-w-full" />*/}
         <div className={'flex justify-center flex-col items-center '}>
           <Image
-            className="image w-570px max-w-full"
-            src={websiteData.heroSection.imageSrc}
+            className="image w-233 max-w-full"
+            src={websiteData.wtfSection.imageSrc}
             alt="MicroCosm hero image"
             priority
           />
