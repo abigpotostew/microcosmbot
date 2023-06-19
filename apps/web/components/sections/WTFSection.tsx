@@ -2,7 +2,6 @@
 
 import WTFItem from 'components/WTFItem'
 import { websiteData } from 'constants/index'
-import WTFImage from 'public/icons/wtf-image.svg'
 import Image from 'next/image'
 
 const WTFSection: React.FC = () => {
