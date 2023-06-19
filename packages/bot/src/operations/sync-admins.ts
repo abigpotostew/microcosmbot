@@ -64,4 +64,5 @@ export const syncAdmins = async (
       },
     })
   }
+  return admins
 }

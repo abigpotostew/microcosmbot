@@ -3,7 +3,7 @@ import { Context, Middleware } from 'grammy'
 import { MyContext } from '../../bot'
 import { logContext } from '../../utils/context'
 
-const membershipInGroup = (
+export const membershipInGroup = (
   status:
     | 'creator'
     | 'administrator'
