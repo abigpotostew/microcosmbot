@@ -20,7 +20,6 @@ export const cmd_invite: CommandMiddleware<MyContext> = async (ctx) => {
       `Please complete configuration of this group before inviting users.`
     )
   }
-
   return ctx.reply(
     `Invite users to this group with the following link: https://t.me/${botInfo.username}?start=${group.id}`
   )

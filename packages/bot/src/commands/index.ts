@@ -11,6 +11,7 @@ import { cmd_settings } from './settings'
 import { cmd_sync } from './sync'
 import { cmd_me } from './me'
 import { filterNewChatTitle } from '../filters/newChatTitle'
+import cmd_help from './help'
 
 export const commands = new Composer<MyContext>()
 
@@ -21,6 +22,7 @@ commands.command('sync', cmd_sync)
 commands.command('me', cmd_me)
 commands.command('invite', cmd_invite)
 commands.command('echo', echo)
+commands.command('help', cmd_help)
 commands.on('chat_member', chat_member)
 commands.on('my_chat_member', my_chat_member)
 commands.on('message:new_chat_title', filterNewChatTitle)
