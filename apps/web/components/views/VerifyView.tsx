@@ -6,6 +6,7 @@ import { useChain } from '@cosmos-kit/react'
 import { signLoginMessageWithAmino } from 'libs/verify/keplr'
 import { useCallback, useState } from 'react'
 import { trpc } from 'utils/trpc'
+import { SpinningCircles } from 'react-loading-icons'
 
 //todo client side render to grab the OTP, and group.
 const chainName = 'stargaze'
@@ -186,6 +187,7 @@ const VerifyView: React.FC = () => {
                   >
                     Prove Wallet Ownership{' '}
                     {loginMutation.data?.duplicate && '(continue anyway)'}
+                    {loginMutation.isLoading && <SpinningCircles />}
                   </PrimaryButton>
                   <PrimaryButton
                     disabled={loginMutation.isLoading}

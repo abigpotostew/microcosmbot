@@ -293,3 +293,4 @@ https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 * terms of service
 * [x] verify page check if the otp is already used.
 * [x] todo /help cmd, on DM and in group
+* prevent multipl pending invite links

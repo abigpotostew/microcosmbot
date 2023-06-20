@@ -65,6 +65,7 @@ export default async function handler(
         .status(200)
         .json({ message: 'could not find the group member. stopping' })
     }
+
     // it should only be 1 wallet
     const wallets = groupWithMember.groupMembers
       .map((gm) => gm.account.wallets)
