@@ -1,14 +1,17 @@
 import { Account, Group, prismaClient, Wallet } from '@microcosms/db'
 import bot from '../bot'
+import { LogContext } from '../utils'
 
 export const addWalletToGroup = async ({
   wallet,
   group,
   account,
+  cl,
 }: {
   wallet: Wallet
   group: Group
   account: Account
+  cl: LogContext
 }) => {
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2) // 2 days
   let inviteLinkExisting = await prismaClient().groupMemberInviteLink.findFirst(
@@ -42,10 +45,27 @@ export const addWalletToGroup = async ({
       member_limit: 1,
     })
     inviteLink = link.invite_link
-    await bot.api.unbanChatMember(
-      group.groupId.toString(),
-      Number(account.userId)
-    )
+    const isAdmin = prismaClient().groupAdmin.findFirst({
+      where: {
+        group: {
+          id: group.id,
+        },
+        account: {
+          id: account.id,
+        },
+      },
+    })
+    if (!isAdmin) {
+      try {
+        await bot.api.unbanChatMember(
+          group.groupId.toString(),
+          Number(account.userId)
+        )
+      } catch (e) {
+        //
+        cl.error("Couldn't unban user", e)
+      }
+    }
   }
 
   // create a fresh invite link here for the user
