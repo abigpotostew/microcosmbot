@@ -2,7 +2,12 @@ import { UserFromGetMe } from '@grammyjs/types/manage'
 import { z } from 'zod'
 
 const getBotInfoFromEnv = (): UserFromGetMe => {
-  const info = JSON.stringify(process.env.GETME_BOT_INFO || '{}')
+  let info: any = {}
+  try {
+    info = JSON.parse(process.env.NEXT_PUBLIC_GETME_BOT_INFO || '{}')
+  } catch (e) {
+    // ignore
+  }
   const infoParsed = z
     .object({
       id: z.number(),
@@ -15,12 +20,12 @@ const getBotInfoFromEnv = (): UserFromGetMe => {
     })
     .safeParse(info)
   if (!infoParsed.success) {
-    console.warn('GETME_BOT_INFO is not valid getMe JSON format')
+    console.warn('NEXT_PUBLIC_GETME_BOT_INFO is not valid getMe JSON format')
     return {
       id: 1,
       is_bot: true,
-      first_name: 'MissingConfig-GETME_BOT_INFO',
-      username: 'MissingConfig-GETME_BOT_INFO',
+      first_name: 'MissingConfig-NEXT_PUBLIC_GETME_BOT_INFO',
+      username: 'MissingConfig-NEXT_PUBLIC_GETME_BOT_INFO',
       can_join_groups: true,
       can_read_all_group_messages: true,
       supports_inline_queries: false,
@@ -31,8 +36,8 @@ const getBotInfoFromEnv = (): UserFromGetMe => {
     return {
       id: 1,
       is_bot: true,
-      first_name: 'MissingConfig-GETME_BOT_INFO',
-      username: 'MissingConfig-GETME_BOT_INFO',
+      first_name: 'MissingConfig-NEXT_PUBLIC_GETME_BOT_INFO',
+      username: 'MissingConfig-NEXT_PUBLIC_GETME_BOT_INFO',
       can_join_groups: true,
       can_read_all_group_messages: true,
       supports_inline_queries: false,
@@ -43,8 +48,8 @@ const getBotInfoFromEnv = (): UserFromGetMe => {
     return {
       id: 0,
       is_bot: true,
-      first_name: 'MissingConfig-GETME_BOT_INFO',
-      username: 'MissingConfig-GETME_BOT_INFO',
+      first_name: 'MissingConfig-NEXT_PUBLIC_GETME_BOT_INFO',
+      username: 'MissingConfig-NEXT_PUBLIC_GETME_BOT_INFO',
       can_join_groups: true,
       can_read_all_group_messages: true,
       supports_inline_queries: false,

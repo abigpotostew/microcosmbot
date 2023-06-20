@@ -4,6 +4,7 @@ import Link from 'next/link'
 import FooterBg from 'public/icons/footer-bg.svg'
 import FrameBlock from './FrameBlock'
 import { FOOTER_LINKS, websiteData } from 'constants/index'
+import Image from 'next/image'
 
 const Footer: React.FC = () => (
   <footer className="relative pb-20 overflow-hidden">
@@ -11,7 +12,15 @@ const Footer: React.FC = () => (
       <FrameBlock classes="py-6 px-5 xl:py-6 ml:px-10 bg-white">
         <div className="flex flex-col justify-between items-start md:flex-row md:gap-10">
           <Link href={'/'} className="mb-8">
-            {websiteData.logo}
+            {/*{websiteData.logo}*/}
+            <div className={'w-20'}>
+              <Image
+                width={360}
+                height={170}
+                src={websiteData.logoUrl}
+                alt={'logo'}
+              />
+            </div>
           </Link>
           {/*<nav className="flex flex-wrap w-full items-start gap-16 md:w-128 md:justify-between md:flex-nowrap lg:w-144 xl:gap-0 xl:pr-9">*/}
           {/*  {FOOTER_LINKS.map((t, i) => (*/}

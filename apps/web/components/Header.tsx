@@ -8,6 +8,7 @@ import { mobileMenuState as mobileMenuInitState } from 'state/MobileMenu'
 import classNames from 'classnames'
 import CloseIcon from 'public/icons/close-icon.svg'
 import MenuIcon from 'public/icons/menu-icon.svg'
+import Image from 'next/image'
 
 const Header: React.FC = () => {
   const [mobileMenuState, setMobileMenuState] =
@@ -26,8 +27,16 @@ const Header: React.FC = () => {
     <header className="w-full z-10 bg-olive-200">
       <div className="container flex items-center justify-between gap-2 px-6 py-5 xl:py-6">
         <div className="flex items-center gap-5 xl:gap-6">
-          <Link href={'/'} className="w-20">
-            {websiteData.logo}
+          <Link href={'/'}>
+            <div className={'w-50'}>
+              <Image
+                width={360}
+                height={170}
+                src={websiteData.logoUrl}
+                alt={'logo'}
+              />
+            </div>
+            {/*  {websiteData.logo}*/}
           </Link>
         </div>
         {/*<nav className="hidden lg:flex xl:flex" aria-label="Global">*/}

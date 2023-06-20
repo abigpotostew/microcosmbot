@@ -13,6 +13,7 @@ import { botInfo } from '@microcosms/bot/botinfo'
 
 export const websiteData: WebsiteData = {
   logo: <Logo className="w-20" />,
+  logoUrl: '/icons/logo-larger.png',
   heroSection: {
     imageSrc: HeroImageSrc,
     processImageSrc: ProcessImageSrc,

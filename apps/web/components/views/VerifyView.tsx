@@ -187,7 +187,7 @@ const VerifyView: React.FC = () => {
                   >
                     Prove Wallet Ownership{' '}
                     {loginMutation.data?.duplicate && '(continue anyway)'}
-                    {loginMutation.isLoading && <SpinningCircles />}
+                    {loginMutation.isLoading && <SpinningCircles width={18} />}
                   </PrimaryButton>
                   <PrimaryButton
                     disabled={loginMutation.isLoading}

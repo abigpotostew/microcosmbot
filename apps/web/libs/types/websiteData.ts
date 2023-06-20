@@ -14,6 +14,7 @@ export interface IBenefitItem {
 
 export interface WebsiteData {
   logo: JSX.Element
+  logoUrl: string
   heroSection: {
     imageSrc: StaticImageData
     processImageSrc: StaticImageData

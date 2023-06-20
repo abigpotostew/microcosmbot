@@ -21,7 +21,7 @@
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
         "NODE_ENV",
-        "GETME_BOT_INFO",
+        "NEXT_PUBLIC_GETME_BOT_INFO",
         "DISABLE_AUDIT_LOGS"
       ]
     },
@@ -41,7 +41,7 @@
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
         "NODE_ENV",
-        "GETME_BOT_INFO",
+        "NEXT_PUBLIC_GETME_BOT_INFO",
         "DISABLE_AUDIT_LOGS"
       ],
       "cache": false,
@@ -63,7 +63,7 @@
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
         "NODE_ENV",
-        "GETME_BOT_INFO",
+        "NEXT_PUBLIC_GETME_BOT_INFO",
         "DISABLE_AUDIT_LOGS"
       ]
     },
@@ -80,7 +80,7 @@
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
         "NODE_ENV",
-        "GETME_BOT_INFO",
+        "NEXT_PUBLIC_GETME_BOT_INFO",
         "DISABLE_AUDIT_LOGS"
       ]
     }
