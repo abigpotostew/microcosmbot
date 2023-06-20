@@ -126,8 +126,6 @@ export const verifyWalletWithOtp = async ({
     return
   }
 
-  // todo check if someone esle already registered this wallet
-
   const wallet = await prismaClient().wallet.upsert({
     where: {
       address: resolveAddress,
@@ -144,7 +142,6 @@ export const verifyWalletWithOtp = async ({
   })
 
   //check if they qualify for the group with this wallet
-
   const allowed = await checkAccessRules(cl, existing.group, [wallet])
   if (!allowed) {
     cl.log('wallet does not pass token rules')
@@ -158,7 +155,7 @@ export const verifyWalletWithOtp = async ({
     })
     return
   }
-  // Prisma.GroupMemberWhereUniqueInput
+
   const { inviteLink } = await addWalletToGroup({
     wallet,
     account: existing.account,
@@ -173,6 +170,10 @@ export const verifyWalletWithOtp = async ({
   setStatus(200, { message: 'ok', link: `https://t.me/${botInfo.username}` })
 }
 
+//get existing wallets,
+//check nfts against group access rules
+//stop if not allowed
+//create invite link if allowed
 export const verifyExistingWallet = async ({
   ctx,
   code,
@@ -184,10 +185,6 @@ export const verifyExistingWallet = async ({
   userId: number
   // setStatus: (status: number, body: any) => void
 }) => {
-  //get existing wallets,
-  //check nfts against group access rules
-  //stop if not allowed
-  //create invite link if allowed
   const walletsPromise = getMemberAccountsAndWallets(userId.toString())
   const pendingCodePromise = getCodeGroupUser(code, userId.toString())
   const [account, pendingCode] = await Promise.all([

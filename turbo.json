@@ -20,7 +20,8 @@
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
-        "NODE_ENV"
+        "NODE_ENV",
+        "GETME_BOT_INFO"
       ]
     },
     "lint": {
@@ -38,7 +39,8 @@
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
-        "NODE_ENV"
+        "NODE_ENV",
+        "GETME_BOT_INFO"
       ],
       "cache": false,
       "persistent": true
@@ -58,7 +60,8 @@
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
-        "NODE_ENV"
+        "NODE_ENV",
+        "GETME_BOT_INFO"
       ]
     },
     "test:watch": {
@@ -73,7 +76,8 @@
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
-        "NODE_ENV"
+        "NODE_ENV",
+        "GETME_BOT_INFO"
       ]
     }
   },

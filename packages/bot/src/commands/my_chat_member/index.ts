@@ -54,28 +54,15 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
     return
   }
 
-  //todo check if permissions have been demoted from admin to member
-
-  // if (myChatMember.chat.type !== 'supergroup') {
-  //   // not a supergroup, exit the group
-  //   await ctx.reply('This bot only works in supergroups. Exiting group.')
-  //   await ctx.api.leaveChat(ctx.myChatMember.chat.id)
-  // }
   const groupChatId = ctx.myChatMember.chat.id.toString()
 
-  //todo remove from db admin
   if (newDirection === 'out') {
-    //todo deactivate the group
-
-    //remove it from db?
-    //todo remove any admins or members...
     cl.log('removed from group!')
     await deactivateChatGroup(groupChatId)
     return
   }
 
   if (myChatMember.new_chat_member.status !== 'administrator') {
-    //todo deactivate the group
     await deactivateChatGroup(groupChatId)
     await ctx.reply(
       'Please promote me to group administrator to token gate this group.'

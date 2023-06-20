@@ -7,7 +7,6 @@ import {
 import { MyContext } from '../bot'
 import { startUserVerifyFlow } from '../commands/start'
 
-//todo call this from the connect new wallet button
 export const registerAccountToPendingGroupMember = async ({
   fromTgId,
   group,

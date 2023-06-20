@@ -100,7 +100,6 @@ const chat_member: Middleware<MyContext> = async (
     )
     let upsertPromises: Promise<any>[] = []
     if (chatMember.new_chat_member.status === 'administrator') {
-      //todo upsert to admin table
       if (group && account) {
         lc.log('adding group admin')
         upsertPromises.push(
