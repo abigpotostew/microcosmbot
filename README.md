@@ -10,6 +10,22 @@
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
+### Development Setup
+
+* Setup a https://planetscale.com/ database. Copy the connection string to your env. Run `npx prisma db push` from the `packages/db` directory to deploy the schema. You can use another db, but you will need to modify the file `packages/db/prisma/prisma.schema` file appropriately.
+* Acquire a telegram bot token from @BotFather
+* Enable bot group settings.
+* Create a webhook to your localhost web port. I can recommend https://tunnelmole.com/ -- `tmole 3000`. Set this tunnel url to your BASEURL env variable.
+* Copy `apps/web/.env.sample` to `apps/web/.env` and fill in the values.
+* Run your bot locally with `turbo dev` in the `apps/web` directory.
+* Call the config api to tell the bot where to send updates. `curl -X GET  http://localhost:3000/api/bot/<your bot key>/config`
+* You will now receive bot updates from telegram to your local machine.
+
+### Deployment
+
+* Setup `https://console.upstash.com/qstash` which is used for the cron job to periodically check nft token ownership. Copy the key to your env.
+* Deploy to vercel through the git integration.
+
 ### Utilities
 
 This turborepo has some additional tools already setup for you:

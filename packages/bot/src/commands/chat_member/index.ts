@@ -32,15 +32,17 @@ const chat_member: Middleware<MyContext> = async (
     return
   }
   const date = new Date(chatMember.date * 1000)
-  await prismaClient().auditLog.create({
-    data: {
-      auditType: 'CHAT_MEMBER',
-      groupId: chatMember.chat.id.toString(),
-      data: JSON.parse(JSON.stringify(chatMember)),
-      updateDate: date,
-      updateId: ctx.update.update_id.toString(),
-    },
-  })
+  if (process.env.DISABLE_AUDIT_LOGS !== 'true') {
+    await prismaClient().auditLog.create({
+      data: {
+        auditType: 'CHAT_MEMBER',
+        groupId: chatMember.chat.id.toString(),
+        data: JSON.parse(JSON.stringify(chatMember)),
+        updateDate: date,
+        updateId: ctx.update.update_id.toString(),
+      },
+    })
+  }
 
   const oldDirection = membershipInGroup(chatMember.old_chat_member.status)
   const newDirection = membershipInGroup(chatMember.new_chat_member.status)
