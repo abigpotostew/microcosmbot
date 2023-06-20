@@ -163,6 +163,7 @@ export const verifyWalletWithOtp = async ({
     wallet,
     account: existing.account,
     group: existing.group,
+    cl,
   })
 
   await bot.api.sendMessage(
@@ -229,6 +230,7 @@ export const verifyExistingWallet = async ({
     wallet: fw,
     account: account,
     group,
+    cl,
   })
   return ctx.reply(
     `You have successfully verified your wallet address ${fw.address}. Join the chat with your unique invite link ${inviteLink}`

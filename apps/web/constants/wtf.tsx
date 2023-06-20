@@ -11,10 +11,10 @@ export const wtfList: WTFList[] = [
   },
   {
     title: 'How do I setup a token gated telegram chat?',
-    text: `First create a private telegram group and configure "Chat history for new members" to visible. Now invite @${botInfo.username} to your group as an admin. You can use this link https://t.me/microcosmbotdotxyz_bot?startgroup=true`,
+    text: `First create a private telegram group and configure "Chat history for new members" to visible. Now invite @${botInfo.username} to your group as an admin by following this link https://t.me/microcosmbotdotxyz_bot?startgroup=true`,
   },
   {
-    title: 'Who has built MicroCosmBot?',
+    title: 'Who built MicroCosmBot?',
     text: `skymagic, a genesis stargaze artist and creator of https://publicworks.art.`,
   },
 ]
