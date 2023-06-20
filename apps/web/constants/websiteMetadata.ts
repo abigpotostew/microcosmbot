@@ -6,5 +6,5 @@ export const websiteMetadata = {
   language: 'en-us',
   siteUrl: 'https://www.microcosmbot.xyz',
   locale: 'en-US',
-  socialBanner: 'https://www.microcosmbot.xyz/images/hero.png',
+  socialBanner: `${process.env.BASEURL}/images/hero.png`,
 }
