@@ -6,5 +6,5 @@ export const websiteMetadata = {
   language: 'en-us',
   siteUrl: 'https://www.microcosmbot.xyz',
   locale: 'en-US',
-  socialBanner: '/images/hero.png',
+  socialBanner: 'https://www.microcosmbot.xyz/images/hero.png',
 }
