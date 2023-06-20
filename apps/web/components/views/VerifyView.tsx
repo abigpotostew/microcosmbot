@@ -96,6 +96,17 @@ const VerifyView: React.FC = () => {
     loginMutation.reset()
   }, [setSig, loginMutation, disconnect])
 
+  const DisconnectedButton = () => {
+    return (
+      <PrimaryButton
+        disabled={loginMutation.isLoading}
+        classes="w-full lg:w-50 bg-gray-400"
+        onClick={disconnectWallet}
+      >
+        Disconnect
+      </PrimaryButton>
+    )
+  }
   return (
     <>
       <header className="relative z-50 bg-olive-200 pt-16 pb-8 lg:pb-9">
@@ -171,11 +182,19 @@ const VerifyView: React.FC = () => {
               <div className={'text-body4'}>Install a wallet to continue</div>
             )}
             {status === 'Connecting' && (
-              <div className={'text-body4'}>Connecting...</div>
+              <div>
+                <div className={'text-body4'}>Connecting...</div>
+                <DisconnectedButton />
+              </div>
             )}
             {status === 'Rejected' && (
-              <div className={'text-body4'}>rejected</div>
+              <div>
+                <div className={'text-body4'}>rejected</div>
+                <div className={'text-body4'}>Connecting...</div>
+                <DisconnectedButton />
+              </div>
             )}
+
             {status === 'Error' && <div className={'text-body4'}>error</div>}
             {status === 'Connected' && (
               <div className={'grid'}>
@@ -189,13 +208,7 @@ const VerifyView: React.FC = () => {
                     {loginMutation.data?.duplicate && '(continue anyway)'}
                     {loginMutation.isLoading && <SpinningCircles width={18} />}
                   </PrimaryButton>
-                  <PrimaryButton
-                    disabled={loginMutation.isLoading}
-                    classes="w-full lg:w-50 bg-gray-400"
-                    onClick={disconnectWallet}
-                  >
-                    Disconnect
-                  </PrimaryButton>
+                  <DisconnectedButton />
                 </div>
 
                 <div
