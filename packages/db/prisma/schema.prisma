@@ -151,8 +151,9 @@ model GroupMemberInviteLink {
   groupMember   GroupMember @relation(fields: [groupMemberId], references: [id])
   groupMemberId String
 
-  inviteLink String
+  inviteLink String @unique
   expiresAt  DateTime
+  consumedAt DateTime?
 
   @@index([groupMemberId, createdAt(sort: Desc)])
 }

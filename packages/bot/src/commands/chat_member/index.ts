@@ -1,6 +1,6 @@
 import { prismaClient } from '@microcosms/db'
 import { Context, Middleware } from 'grammy'
-import { MyContext } from '../../bot'
+import { bot, MyContext } from '../../bot'
 import { logContext } from '../../utils/context'
 
 export const membershipInGroup = (
@@ -45,16 +45,22 @@ const chat_member: Middleware<MyContext> = async (
   const oldDirection = membershipInGroup(chatMember.old_chat_member.status)
   const newDirection = membershipInGroup(chatMember.new_chat_member.status)
   //they joined the group
+
   const [group, account] = await Promise.all([
     prismaClient().group.findFirst({
       where: {
         groupId: chatMember.chat.id.toString(),
       },
     }),
-    prismaClient().account.findFirst({
+    // get or create account in case someone gets added to a group through invite link sharing
+    prismaClient().account.upsert({
       where: {
         userId: chatMember.new_chat_member.user.id.toString(),
       },
+      create: {
+        userId: chatMember.new_chat_member.user.id.toString(),
+      },
+      update: {},
     }),
   ])
   lc.log(group ? 'found group ' + group.id : 'no group found')
@@ -162,6 +168,14 @@ const chat_member: Middleware<MyContext> = async (
         parseInt(dbInviteLink.groupMember.group.groupId),
         chatMember.invite_link.invite_link
       )
+      await prismaClient().groupMemberInviteLink.updateMany({
+        where: {
+          inviteLink: chatMember.invite_link.invite_link,
+        },
+        data: {
+          consumedAt: new Date(),
+        },
+      })
       lc.log('revoked chat link,', chatMember.invite_link.invite_link)
       const name =
         chatMember.new_chat_member.user.username ||

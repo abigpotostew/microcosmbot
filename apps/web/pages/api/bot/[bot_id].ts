@@ -25,7 +25,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(404).json({ ok: false })
   }
 
-  console.log('ding ding', JSON.stringify(req.body))
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ding ding', JSON.stringify(req.body))
+  }
   await runMiddleware(req, res, webhookCallback(bot, 'next-js'))
   // return botWebhook(req, res)
 }
