@@ -7,7 +7,7 @@ const cmd_help: CommandMiddleware<MyContext> = async (
   if (ctx.chat?.type === 'private') {
     await ctx.reply(
       `Welcome to MicroCosmBot!\n
-To get started, add me to a group as an Admin. Then DM me /settings to configure the group access rules. Afterwards, ask me for the group /invite link to share with others. I'll take care of the rest.\n\nTo join a token gated group, ask a group admin for an invite link.`
+To get started, add me to a group as an Admin. Then DM me /settings to configure the group access rules. Afterwards, ask me for the group /invite link to share with others. I'll take care of the rest.\n\nTo join a token gated group, ask a group admin for an invite link. For additional help, dm @abigpotostew on telegram.`
     )
     return
   } else if (ctx.chat?.type === 'group') {

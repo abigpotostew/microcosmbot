@@ -26,11 +26,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await bot.api.setMyCommands([
     { command: 'start', description: 'Start verification to join a group' },
-    { command: 'help', description: 'Show help text TODO' },
+    { command: 'help', description: 'Show help text' },
     // { command: 'settings', description: 'Open settings' },
-    { command: 'echo', description: 'echo input ' },
-    { command: 'invite', description: 'Get Invite Link' },
-    { command: 'me', description: 'Get registered accounts' },
+    // { command: 'echo', description: 'echo input ' },
+    { command: 'invite', description: "Get your group's invite link" },
+    { command: 'me', description: 'Show registered accounts' },
     { command: 'settings', description: 'Configure your group' },
     { command: 'sync', description: 'Sync group admins' },
   ])
