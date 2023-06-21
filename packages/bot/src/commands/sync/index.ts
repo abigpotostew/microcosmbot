@@ -9,7 +9,6 @@ import { MyContext } from '../../bot/context'
 
 export const cmd_sync: CommandMiddleware<MyContext> = async (ctx) => {
   const cl = logContext(ctx, 'cmd_sync')
-  cl.log('here')
   if (ctx.chat.type !== 'group' && ctx.chat.type !== 'supergroup') {
     return ctx.reply('This command only works in a group chat.')
   }

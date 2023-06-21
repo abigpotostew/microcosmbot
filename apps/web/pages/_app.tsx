@@ -94,10 +94,10 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
     },
   }
 
-  console.log(
-    'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID',
-    process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-  )
+  // console.log(
+  //   'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID',
+  //   process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+  // )
   return (
     <>
       <QueryClientProvider client={queryClient}>
@@ -116,7 +116,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
                 signClient: {
                   projectId: process.env
                     .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,
-                  relayUrl: 'wss://relay.walletconnect.org',
+                  relayUrl: 'wss://relay.walletconnect.com',
                   metadata: {
                     name: 'MicroCosmBot',
                     description:

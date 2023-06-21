@@ -57,10 +57,8 @@ const VerifyView: React.FC = () => {
     let inputSig = sig
     if (!inputSig) {
       const account = await getAccount()
-      const signingCosmWasmClient = await getSigningCosmWasmClient()
       const res1 = await signLoginMessageWithAmino(otp, address, signAmino)
 
-      // const res = await signLoginMessageWithArbitrary(otp, signArbitrary)
       console.log('res', res1)
       inputSig =
         sig || JSON.stringify({ ...res1.signature, otp, account: account })
@@ -192,7 +190,7 @@ const VerifyView: React.FC = () => {
             )}
             {status === 'Rejected' && (
               <div>
-                <div className={'text-body4'}>rejected</div>
+                <div className={'text-body4'}>Wallet rejected request</div>
                 <div className={'text-body4'}>Connecting...</div>
                 <DisconnectedButton />
               </div>
@@ -217,7 +215,17 @@ const VerifyView: React.FC = () => {
                 <div
                   className={'text-red-500 text-body1 col-span-1 max-w-md pt-4'}
                 >
-                  {loginMutation.error?.toString()}
+                  <>
+                    {typeof loginMutation.error === 'string' &&
+                      loginMutation.error}
+                    {!!loginMutation.error &&
+                      typeof loginMutation.error === 'object' &&
+                      'message' in loginMutation.error &&
+                      loginMutation.error.message}
+                    {!!loginMutation.error &&
+                      typeof loginMutation.error === 'string' &&
+                      loginMutation.error}
+                  </>
                 </div>
                 <div className={'text-black col-span-1 max-w-md pt-4'}>
                   {loginMutation.isSuccess && loginMutation.data.duplicate && (
