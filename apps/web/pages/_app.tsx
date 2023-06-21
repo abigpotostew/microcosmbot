@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import '@nouns-stream/ui/styles.css'
+import '@microcosmbot/ui/styles.css'
 import 'styles/globals.css'
 
 import { RecoilRoot } from 'recoil'
@@ -8,13 +8,7 @@ import type { AppProps, AppType } from 'next/app'
 import { WagmiConfig, configureChains, createClient } from 'wagmi'
 import { mainnet, goerli, arbitrum, optimism, polygon } from 'wagmi/chains'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
-import {
-  Lexend_Deca,
-  Roboto,
-  Londrina_Solid,
-  Patrick_Hand,
-  Amatic_SC,
-} from '@next/font/google'
+import { Lexend_Deca, Patrick_Hand, Amatic_SC } from '@next/font/google'
 import LayoutWrapper from 'components/LayoutWrapper'
 import classNames from 'classnames'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -100,6 +94,10 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
     },
   }
 
+  console.log(
+    'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID',
+    process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+  )
   return (
     <>
       <QueryClientProvider client={queryClient}>
@@ -120,10 +118,10 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
                     .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,
                   relayUrl: 'wss://relay.walletconnect.org',
                   metadata: {
-                    name: 'MicroCosms Bot',
+                    name: 'MicroCosmBot',
                     description:
-                      'MicroCosms bot creates token gated telegram groups.',
-                    url: 'https://microcosmbot.xyz',
+                      'MicroCosmbot creates token gated telegram groups.',
+                    url: 'https://www.microcosmbot.xyz',
                     icons: [
                       'https://www.microcosmbot.xyz/icons/logo-larger.png',
                     ],

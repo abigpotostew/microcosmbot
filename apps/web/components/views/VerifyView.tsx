@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { websiteData } from 'constants/websiteData'
-import { PrimaryButton } from '@nouns-stream/ui'
+import { PrimaryButton } from '@microcosmbot/ui'
 import { useMutation } from '@tanstack/react-query'
 import { useChain } from '@cosmos-kit/react'
 import { signLoginMessageWithAmino } from 'libs/verify/keplr'

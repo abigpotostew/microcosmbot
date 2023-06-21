@@ -1,5 +1,5 @@
 {
-  "name": "@nouns-stream/ui",
+  "name": "@microcosmbot/ui",
   "version": "0.0.0",
   "sideEffects": [
     "**/*.css"

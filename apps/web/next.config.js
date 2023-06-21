@@ -1,6 +1,6 @@
 module.exports = {
   reactStrictMode: true,
-  transpilePackages: ['@nouns-stream/ui', '@microcosms/bot', '@microcosms/db'],
+  transpilePackages: ['@microcosmbot/ui', '@microcosms/bot', '@microcosms/db'],
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

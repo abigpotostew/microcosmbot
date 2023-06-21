@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import { Input } from '@nouns-stream/ui'
+import { Input } from '@microcosmbot/ui'
 import SearchIcon from 'public/icons/explorer-icon.svg'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
