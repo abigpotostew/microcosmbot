@@ -1,11 +1,11 @@
 import { prismaClient } from '@microcosms/db'
 import { Middleware } from 'grammy'
-import { MyContext } from '../../bot'
 import { ChatMemberAdministrator } from '@grammyjs/types/manage'
 import { syncAdmins } from '../../operations/sync-admins'
 import { logContext } from '../../utils/context'
 import { membershipInGroup } from '../chat_member'
 import { deactivateChatGroup } from '../../operations/deactivate-group'
+import { MyContext } from '../../bot/context'
 
 export const checkHasPermissions = (admin: ChatMemberAdministrator) => {
   if (!admin.can_manage_chat) {

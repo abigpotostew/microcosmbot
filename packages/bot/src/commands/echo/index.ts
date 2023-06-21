@@ -1,5 +1,6 @@
 import { CommandMiddleware, Context, HearsMiddleware } from 'grammy'
-import { MyContext } from '../../bot'
+
+import { MyContext } from '../../bot/context'
 
 const echo: CommandMiddleware<MyContext> = async (
   ctx: MyContext

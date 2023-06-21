@@ -1,5 +1,6 @@
 import { Group, prismaClient } from '@microcosms/db'
-import { MyContext } from '../bot'
+
+import { MyContext } from '../bot/context'
 
 export const syncAdmins = async (
   ctx: MyContext,

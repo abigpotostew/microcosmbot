@@ -1,6 +1,6 @@
 import { prismaClient } from '@microcosms/db'
-import { MyContext } from '../bot'
 import { logContext } from '../utils/context'
+import { MyContext } from '../bot/context'
 
 export const filterNewChatTitle = async (ctx: MyContext) => {
   if (!ctx?.message?.new_chat_title || !ctx.message.chat?.id) {

@@ -1,7 +1,7 @@
 import { prismaClient } from '@microcosms/db'
 import { CommandMiddleware, Middleware } from 'grammy'
-import { MyContext } from '../../bot'
 import { menuAdminConfig } from '../../menus'
+import { MyContext } from '../../bot/context'
 
 export const cmd_me: CommandMiddleware<MyContext> = async (ctx) => {
   console.log('cmd_me', ctx)

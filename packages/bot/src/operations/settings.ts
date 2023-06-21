@@ -1,6 +1,6 @@
 import { menuAdminConfig } from '../menus'
-import { MyContext } from '../bot'
 import { logContext } from '../utils'
+import { MyContext } from '../bot/context'
 
 export const responseSettings = async (ctx: MyContext): Promise<void> => {
   const cl = logContext(ctx)

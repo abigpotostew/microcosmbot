@@ -28,8 +28,6 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { ChainProvider } from '@cosmos-kit/react'
 import { chains, assets } from 'chain-registry'
 import { wallets as keplrWallets } from '@cosmos-kit/keplr'
-import { wallets as cosmostationWallets } from '@cosmos-kit/cosmostation'
-import { wallets as leapWallets } from '@cosmos-kit/leap'
 import { SignerOptions } from '@cosmos-kit/core'
 import { Chain } from '@chain-registry/types'
 import { getSigningCosmosClientOptions } from 'stargazejs'
@@ -70,9 +68,9 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
 
   useEffect(() => {
-    Fathom.load('RYFJCHST', {
-      includedDomains: ['www.nouns.stream'],
-    })
+    // Fathom.load('RYFJCHST', {
+    //   includedDomains: ['www.nouns.stream'],
+    // })
 
     function onRouteChangeComplete() {
       Fathom.trackPageview()
@@ -114,6 +112,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
                 ...keplrWallets,
                 // ...cosmostationWallets,
                 // ...leapWallets,
+                // ...wcWallets,
               ]}
               walletConnectOptions={{
                 signClient: {
@@ -124,8 +123,10 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
                     name: 'MicroCosms Bot',
                     description:
                       'MicroCosms bot creates token gated telegram groups.',
-                    url: 'https://microcosmsbot.tunnelmole.com',
-                    icons: [],
+                    url: 'https://microcosmbot.xyz',
+                    icons: [
+                      'https://www.microcosmbot.xyz/icons/logo-larger.png',
+                    ],
                   },
                 },
               }}

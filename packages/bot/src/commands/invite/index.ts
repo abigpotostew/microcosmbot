@@ -1,7 +1,7 @@
 import { prismaClient } from '@microcosms/db'
 import { CommandMiddleware } from 'grammy'
-import { MyContext } from '../../bot'
 import { botInfo } from '../../botinfo'
+import { MyContext } from '../../bot/context'
 
 export const cmd_invite: CommandMiddleware<MyContext> = async (ctx) => {
   if (ctx.chat.type !== 'supergroup') {

@@ -1,9 +1,10 @@
-import { MyContext } from '../bot'
+import { MyContext } from '../bot/context'
 
 export interface LogContext {
   log: (...args: any[]) => void
   error: (...args: any[]) => void
 }
+
 export const logContext = (
   ctx: MyContext | string,
   tag?: string

@@ -1,11 +1,6 @@
-import {
-  Account,
-  Group,
-  PendingGroupMember,
-  prismaClient,
-} from '@microcosms/db'
-import { MyContext } from '../bot'
+import { Account, Group, PendingGroupMember } from '@microcosms/db'
 import { startUserVerifyFlow } from '../commands/start'
+import { MyContext } from '../bot/context'
 
 export const registerAccountToPendingGroupMember = async ({
   fromTgId,

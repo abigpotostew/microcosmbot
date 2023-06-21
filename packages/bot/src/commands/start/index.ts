@@ -1,16 +1,11 @@
 import { Group, prismaClient } from '@microcosms/db'
 import { CommandMiddleware, Context, InlineKeyboard } from 'grammy'
-import { Chat } from 'grammy/types'
-import { MyContext } from '../../bot'
-import { menuAdminConfig, menuUserResponse } from '../../menus'
+import { menuUserResponse } from '../../menus'
 import * as crypto from 'crypto'
 import { registerAccountToPendingGroupMember } from '../../operations/register-account-to-pending-group-member'
 import { responseSettings } from '../../operations/settings'
-import { logContext } from 'utils'
-const users = {
-  skymagic: 1445777026,
-  stewdev01: 6100753315,
-}
+import { logContext } from '../../utils/context'
+import { MyContext } from '../../bot/context'
 
 // https://t.me/microcosmbotdotxyz_bot?start=true
 const cmd_start: CommandMiddleware<MyContext> = async (

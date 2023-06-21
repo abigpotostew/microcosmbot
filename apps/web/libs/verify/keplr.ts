@@ -39,26 +39,23 @@ export const signLoginMessageWithArbitrary = async (
 
 export const signLoginMessageWithAmino = async (
   otp: string,
+  userAddress: string,
   signAmino: (
     signer: string,
     signDoc: StdSignDoc,
     signOptions?: SignOptions | undefined
   ) => Promise<AminoSignResponse>
 ) => {
-  const keplrWindow = <Window>window
-  const keplr = keplrWindow.keplr
-  if (!keplr) {
-    throw new Error('Keplr not installed')
-  }
+  // const keplrWindow = <Window>window
+  // const keplr = keplrWindow.keplr
+  // if (!keplr) {
+  //   throw new Error('Keplr not installed')
+  // }
   const chainId = 'stargaze-1'
-  const key = await keplr.getKey(chainId)
+  // const key = await keplr.getKey(chainId)
 
-  const userAddress = key.bech32Address
-  // const signature = await keplr.signArbitrary(
-  //   chainId,
-  //   userAddress,
-  //   JSON.stringify(buildMessage(otp))
-  // )
+  // const userAddress = key.bech32Address
+
   const messageToSign = JSON.stringify(buildMessage(otp))
   const signDoc = {
     msgs: [

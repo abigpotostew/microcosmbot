@@ -49,13 +49,16 @@ const VerifyView: React.FC = () => {
     if (!otp) {
       throw new Error('no otp')
     }
+    if (!address) {
+      throw new Error('no address connected')
+    }
 
     const overwrite = !!sig
     let inputSig = sig
     if (!inputSig) {
       const account = await getAccount()
       const signingCosmWasmClient = await getSigningCosmWasmClient()
-      const res1 = await signLoginMessageWithAmino(otp, signAmino)
+      const res1 = await signLoginMessageWithAmino(otp, address, signAmino)
 
       // const res = await signLoginMessageWithArbitrary(otp, signArbitrary)
       console.log('res', res1)

@@ -3,7 +3,6 @@ import { Composer } from 'grammy'
 import cmd_start from './start'
 import echo from './echo'
 import chat_member from './chat_member'
-import { bot, MyContext } from '../bot'
 import { my_chat_member } from './my_chat_member'
 import { registerMenus } from '../menus'
 import { cmd_invite } from './invite'
@@ -12,6 +11,7 @@ import { cmd_sync } from './sync'
 import { cmd_me } from './me'
 import { filterNewChatTitle } from '../filters/newChatTitle'
 import cmd_help from './help'
+import { MyContext } from '../bot/context'
 
 export const commands = new Composer<MyContext>()
 

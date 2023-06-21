@@ -1,7 +1,8 @@
 import { prismaClient } from '@microcosms/db'
 import { Context, Middleware } from 'grammy'
-import { bot, MyContext } from '../../bot'
+import { bot } from '../../bot'
 import { logContext } from '../../utils/context'
+import { MyContext } from '../../bot/context'
 
 export const membershipInGroup = (
   status:

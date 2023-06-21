@@ -1,10 +1,10 @@
 import { Menu, MenuRange } from '@grammyjs/menu'
-import { MyContext } from '../bot'
 import { Composer } from 'grammy'
 import { prismaClient } from '@microcosms/db'
 import { generateAdminLink } from '../operations/generate-admin-link'
 import { verifyExistingWallet } from '../operations'
 import { logContext } from '../utils'
+import { MyContext } from '../bot/context'
 
 export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
   .text(

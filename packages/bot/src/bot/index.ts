@@ -1,8 +1,7 @@
-import { Bot, type Context } from 'grammy'
-import { type ChatMembersFlavor } from '@grammyjs/chat-members'
+import { Bot } from 'grammy'
+// import { type ChatMembersFlavor } from '@grammyjs/chat-members'
 import { botInfo } from '../botinfo'
-
-export type MyContext = Context & ChatMembersFlavor
+import { MyContext } from './context'
 
 export const bot = new Bot<MyContext>(process.env.TELEGRAM_BOT_KEY || '', {
   client: {},

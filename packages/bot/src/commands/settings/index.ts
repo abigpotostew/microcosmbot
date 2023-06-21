@@ -1,7 +1,7 @@
 import { CommandMiddleware, Middleware } from 'grammy'
-import { MyContext } from '../../bot'
 import { menuAdminConfig } from '../../menus'
 import { responseSettings } from '../../operations/settings'
+import { MyContext } from '../../bot/context'
 
 export const cmd_settings: CommandMiddleware<MyContext> = async (ctx) => {
   if (ctx.chat.type !== 'private') {

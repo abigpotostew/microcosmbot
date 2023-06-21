@@ -1,5 +1,5 @@
 import { Group, GroupTokenGate, prismaClient, Wallet } from '@microcosms/db'
-import bot, { MyContext } from '../bot'
+import bot from '../bot'
 import { botInfo } from '../botinfo'
 import { getCodeGroupUser, getMemberAccountsAndWallets } from './get-with-code'
 import { tinyAsyncPoolAll } from '../utils/async'
@@ -7,6 +7,7 @@ import { addWalletToGroup } from './add-wallet-to-group'
 import { logContext, LogContext } from '../utils/context'
 import { getOwnedCount } from './nft-ownership'
 import { kickUser } from './kick-user'
+import { MyContext } from '../bot/context'
 
 export const verifyWalletWithOtp = async ({
   otp,

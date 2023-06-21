@@ -60,6 +60,7 @@ export default async function handler(
     return
   }
 
+  console.log('here')
   let { strategy } = req.body
   strategy = strategy || 'SIGNAMINO'
 

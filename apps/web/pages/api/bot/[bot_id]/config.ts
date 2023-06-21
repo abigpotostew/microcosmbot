@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { bot } from '@microcosms/bot'
+import { bot } from '@microcosms/bot/bot'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {

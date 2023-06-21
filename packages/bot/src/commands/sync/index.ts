@@ -1,10 +1,11 @@
 import { prismaClient } from '@microcosms/db'
 import { CommandMiddleware } from 'grammy'
-import { bot, MyContext } from '../../bot'
+import { bot } from '../../bot'
 import { syncAdmins } from '../../operations/sync-admins'
 import { checkHasPermissions } from '../my_chat_member'
 import { deactivateChatGroup } from '../../operations/deactivate-group'
-import { logContext } from '../../utils'
+import { logContext } from '../../utils/context'
+import { MyContext } from '../../bot/context'
 
 export const cmd_sync: CommandMiddleware<MyContext> = async (ctx) => {
   const cl = logContext(ctx, 'cmd_sync')
