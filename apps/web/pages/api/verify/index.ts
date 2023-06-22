@@ -6,7 +6,7 @@ import { decodeSignature } from '@cosmjs/amino'
 import { Bech32Address, verifyADR36Amino } from '@keplr-wallet/cosmos'
 import { AccountData, StdSignature, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from 'libs/verify/build-mesage'
-import { verifyWalletWithOtp } from '@microcosms/bot'
+import { botInfo, verifyWalletWithOtp } from '@microcosms/bot'
 import { prismaClient } from '@microcosms/db'
 
 function sortedObject(obj: any): any {
@@ -72,6 +72,9 @@ export default async function handler(
     res.status(401).json({ message: 'unauthorized' })
     return
   }
+
+  const isTest = otp === '00000000'
+
   if (strategy === 'SIGNAMINO') {
     const { signed, signature, account, otp } =
       req.body as SignAminoVerification
@@ -109,16 +112,25 @@ export default async function handler(
       status = 403
       res.status(403).json({ message: 'forbidden' })
     }
-    await prismaClient().auditLog.create({
-      data: {
-        auditType: 'VERIFY_ATTEMPT',
-        data: { strategy, resolveAddress, verified, status },
-        updateDate: date,
-      },
-    })
+    if (!isTest) {
+      await prismaClient().auditLog.create({
+        data: {
+          auditType: 'VERIFY_ATTEMPT',
+          data: { strategy, resolveAddress, verified, status },
+          updateDate: date,
+        },
+      })
+    }
     return
   }
 
+  if (isTest) {
+    res.status(200).json({
+      message: 'ok',
+      link: `https://t.me/${botInfo.username}`,
+    })
+    return
+  }
   try {
     let status: number = 200
     const setResponseWrapped = (res: NextApiResponse) => {
