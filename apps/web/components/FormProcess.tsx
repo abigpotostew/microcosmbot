@@ -9,7 +9,6 @@ import ArrowIcon from 'public/icons/arrow-icon.svg'
 import Link from 'next/link'
 import { useRecoilState } from 'recoil'
 import { transactionState as transactionInitState } from 'state/TransactionsState'
-import { useNetwork } from 'wagmi'
 import {
   toasterState as toasterInitState,
   ToasterStateProps,
@@ -26,7 +25,8 @@ type FormType = {
 const FormProcess: React.FC<FormType> = ({ closeModal }) => {
   const [transactionState] = useRecoilState(transactionInitState)
   const [streamAddress, setStreamAddress] = useState(undefined)
-  const { chain } = useNetwork()
+  // const { chain } = useNetwork()
+  const chain = { name: 'sdfsa' }
 
   const isProcessing = Object.values(transactionState.steps).some(
     (v) => v.status === 'pending'

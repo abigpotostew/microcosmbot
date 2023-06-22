@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import Link from 'next/link'
-import { ConnectKitButton } from 'connectkit'
 import { useRecoilState } from 'recoil'
 import { mobileMenuState as mobileMenuInitState } from 'state/MobileMenu'
 import { NAV_LINKS } from 'constants/navLinks'
@@ -42,7 +41,7 @@ const MobileMenu: React.FC = () => {
             </li>
           ))}
           <li className="flex justify-center">
-            <ConnectKitButton theme="nouns" label="Connect" />
+            {/*<ConnectKitButton theme="nouns" label="Connect" />*/}
           </li>
         </ul>
       </nav>

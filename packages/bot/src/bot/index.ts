@@ -1,5 +1,4 @@
 import { Bot } from 'grammy'
-// import { type ChatMembersFlavor } from '@grammyjs/chat-members'
 import { botInfo } from '../botinfo'
 import { MyContext } from './context'
 

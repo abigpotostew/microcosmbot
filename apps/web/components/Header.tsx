@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import Link from 'next/link'
-import { ConnectKitButton } from 'connectkit'
 import { NAV_LINKS, websiteData } from 'constants/index'
 import { useRecoilState } from 'recoil'
 import { mobileMenuState as mobileMenuInitState } from 'state/MobileMenu'
