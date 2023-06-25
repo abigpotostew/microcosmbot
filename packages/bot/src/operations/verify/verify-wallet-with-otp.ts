@@ -6,6 +6,25 @@ import { addAccountToGroup } from '../account/add-account-to-group'
 import { prismaClient } from '@microcosms/db'
 import { checkAccessRules } from '../access/access-rules'
 
+export const verifyConnectNewWalletMenu = async ({
+  code,
+}: {
+  code: string
+}) => {
+  //
+  const otp = await prismaClient().pendingGroupMember.findFirst({
+    where: {
+      code,
+    },
+  })
+  if (otp?.consumed || (otp?.expiresAt && otp.expiresAt < new Date())) {
+    //
+
+    return 'This link has expired. Use the invite link to restart your wallet verification.'
+  }
+  return `Your verification code is ${otp?.code}.\n\nOpen this URL and verify the password is the same in your browser before signing the verification message:\n\n${process.env.BASEURL}/verify/${otp?.code}\n\nDo not share this link with anyone.`
+}
+
 export const verifyWalletWithOtp = async ({
   otp,
   resolveAddress,

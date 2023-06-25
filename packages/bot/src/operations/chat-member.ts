@@ -148,11 +148,10 @@ export const addMemberToGroup = async ({
         ' ' +
         chatMember.new_chat_member.user.last_name
     // send welcome message to the group if they joined from the invite link
-    const o = await ctx.api.sendMessage(
+    await ctx.api.sendMessage(
       parseInt(dbInviteLink.groupMember.group.groupId),
       getRandomGreeting(name)
     )
-    lc.log('sent welcome message', o)
   }
 }
 

@@ -1,10 +1,11 @@
 import { Menu, MenuRange } from '@grammyjs/menu'
 import { Composer } from 'grammy'
-import { prismaClient } from '@microcosms/db'
 import { generateAdminLink } from '../operations/generate-admin-link'
 import { logContext } from '../utils'
 import { MyContext } from '../bot/context'
 import { verifyExistingWallet } from '../operations/verify/verify-existing-wallet'
+import { verifyConnectNewWalletMenu } from '../operations/verify/verify-wallet-with-otp'
+import { getAdminGroups } from '../operations/admin/admin-groups'
 
 export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
   .text(
@@ -22,20 +23,8 @@ export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
           'I dont understand this command input. Invite me to a group to start.'
         )
       }
-      const otp = await prismaClient().pendingGroupMember.findFirst({
-        where: {
-          code: ctx.match,
-        },
-      })
-      if (otp?.consumed || (otp?.expiresAt && otp.expiresAt < new Date())) {
-        //
-        return ctx.reply(
-          'This link has expired. Use the invite link to restart your wallet verification.'
-        )
-      }
-      return ctx.reply(
-        `Your verification code is ${otp?.code}.\n\nOpen this URL and verify the password is the same in your browser before signing the verification message:\n\n${process.env.BASEURL}/verify/${otp?.code}`
-      )
+      const reply = await verifyConnectNewWalletMenu({ code: ctx.match })
+      return ctx.reply(reply)
     }
   )
   .row()
@@ -66,37 +55,18 @@ export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
 export const menuAdminConfig = new Menu<MyContext>('admin-config-menu').dynamic(
   async (ctx) => {
     const range = new MenuRange<MyContext>()
-    const from = ctx.from?.id?.toString()
+    const from = ctx.from
     if (!from) {
       await ctx.reply('You must be logged in to use this command.')
       return
     }
-    const groups = await prismaClient().group.findMany({
-      where: {
-        groupAdmins: {
-          some: {
-            account: {
-              userId: from,
-            },
-          },
-        },
-      },
-      include: {
-        groupAdmins: {
-          where: {
-            account: {
-              userId: from,
-            },
-          },
-        },
-      },
-    })
+    const groups = await getAdminGroups({ userId: from.id })
     for (let group of groups) {
       range
         .text(group.name || group.id, async (ctx) => {
           const { link, durationMs } = await generateAdminLink(group)
           return ctx.reply(
-            `Configure your app here: ${link}\nThis link will expire in ${
+            `Configure this group on your admin console:\n\n${link}\n\nThis link will expire in ${
               durationMs / 1000 / 60 / 60
             } hours. Do not share this link with anyone.`
           )
@@ -123,16 +93,4 @@ export const registerMenus = (bot: Composer<MyContext>) => {
   for (let menu of rootMenus) {
     bot.use(menu)
   }
-
-  //this is for when we're not using the menu plugin
-  // Wait for click events with specific callback data.
-  // bot.callbackQuery('a-payload', async (ctx) => {
-  //   await ctx.answerCallbackQuery({
-  //     text: 'You were curious, indeed!',
-  //   })
-  // })
-  // bot.on('callback_query:data', async (ctx) => {
-  //   console.log('Unknown button event with payload', ctx.callbackQuery.data)
-  //   await ctx.answerCallbackQuery() // remove loading animation
-  // })
 }
