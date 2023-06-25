@@ -148,12 +148,35 @@ export const addMemberToGroup = async ({
         ' ' +
         chatMember.new_chat_member.user.last_name
     // send welcome message to the group if they joined from the invite link
-    await ctx.api.sendMessage(
+    const o = await ctx.api.sendMessage(
       parseInt(dbInviteLink.groupMember.group.groupId),
-      `@${name} has arrived`
+      getRandomGreeting(name)
     )
+    lc.log('sent welcome message', o)
   }
 }
+
+const getRandomGreeting = (name: string) => {
+  const greeting =
+    randomGreetings[Math.floor(Math.random() * randomGreetings.length)]
+  return greeting.replace('%%NAME%%', `@${name}`)
+}
+
+const randomGreetings = [
+  'Welcome %%NAME%% to the chat',
+  '%%NAME%% has arrived',
+  '%%NAME%% has joined the chat',
+  '%%NAME%% has entered the chat',
+  '%%NAME%% has joined the group',
+  '%%NAME%% has entered the group',
+  '%%NAME%% has joined the party',
+  '%%NAME%% has entered the party',
+  '%%NAME%% has joined the conversation',
+  '%%NAME%% has entered the conversation',
+  '%%NAME%% has joined the room',
+  '%%NAME%% has entered the room',
+  '%%NAME%% has joined the channel',
+]
 
 /**
  * Remove a member from a group

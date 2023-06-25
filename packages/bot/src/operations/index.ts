@@ -1,3 +1,5 @@
-export * from './verify-wallet-with-otp'
 export * from './kick-user'
 export * from './token-ownership/nft-ownership'
+export { verifyWalletWithOtp } from './verify/verify-wallet-with-otp'
+export { checkAccessRules } from './access/access-rules'
+export { verifyWalletAgainstAccessRule } from './access/access-rules'

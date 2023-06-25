@@ -2,9 +2,9 @@ import { Menu, MenuRange } from '@grammyjs/menu'
 import { Composer } from 'grammy'
 import { prismaClient } from '@microcosms/db'
 import { generateAdminLink } from '../operations/generate-admin-link'
-import { verifyExistingWallet } from '../operations'
 import { logContext } from '../utils'
 import { MyContext } from '../bot/context'
+import { verifyExistingWallet } from '../operations/verify/verify-existing-wallet'
 
 export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
   .text(
@@ -50,14 +50,15 @@ export const menuUserResponse = new Menu<MyContext>('user-pm-menu')
     async (ctx) => {
       const cl = logContext(ctx)
       try {
-        await verifyExistingWallet({
+        const reply = await verifyExistingWallet({
+          cl,
           code: ctx.match!,
           userId: ctx.from.id,
-          ctx,
         })
+        return ctx.reply(reply)
       } catch (e) {
         cl.log('something went wrong. error', e)
-        return ctx.reply('Something went wrong. Try again.')
+        return ctx.reply('Something went wrong. Try the invite link again.')
       }
     }
   )
