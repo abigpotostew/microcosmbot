@@ -1,6 +1,6 @@
 Initial interaction:
 User navigates to this link to invite the bot (from the web frontent)
-https://telegram.me/stargateway_bot?startgroup=true
+https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 
 user selects the channel
 
