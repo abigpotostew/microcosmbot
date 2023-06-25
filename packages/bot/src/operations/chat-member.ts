@@ -161,11 +161,15 @@ export const addMemberToGroup = async ({
  * @param groupChatId
  * @param lc
  */
-export const removeMemberToGroup = async (
-  userId: number,
-  groupChatId: number,
+export const removeMemberToGroup = async ({
+  userId,
+  groupChatId,
+  lc,
+}: {
+  userId: number
+  groupChatId: number
   lc: LogContext
-) => {
+}) => {
   // they left the group
   // remove them from the group in the db
   lc.log('here to remove')

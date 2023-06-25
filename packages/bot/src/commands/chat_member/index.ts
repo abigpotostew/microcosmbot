@@ -58,11 +58,11 @@ const on_chat_member: Middleware<MyContext> = async (
     })
     return
   } else if (oldDirection === 'in' && newDirection === 'out') {
-    await removeMemberToGroup(
-      chatMember.new_chat_member.user.id,
-      chatMember.chat.id,
-      lc
-    )
+    await removeMemberToGroup({
+      userId: chatMember.new_chat_member.user.id,
+      groupChatId: chatMember.chat.id,
+      lc,
+    })
   }
 }
 
