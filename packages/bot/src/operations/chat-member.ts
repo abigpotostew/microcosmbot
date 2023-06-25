@@ -3,12 +3,17 @@ import { LogContext } from '../utils'
 import { MyContext } from '../bot/context'
 import { ChatMemberUpdated } from 'grammy/types'
 
-export const addMemberToGroup = async (
-  ctx: MyContext,
-  groupChatId: number,
-  chatMember: ChatMemberUpdated,
+export const addMemberToGroup = async ({
+  ctx,
+  groupChatId,
+  chatMember,
+  lc,
+}: {
+  ctx: MyContext
+  groupChatId: number
+  chatMember: ChatMemberUpdated
   lc: LogContext
-) => {
+}) => {
   const [group, account] = await Promise.all([
     prismaClient().group.findFirst({
       where: {
@@ -136,7 +141,7 @@ export const addMemberToGroup = async (
         consumedAt: new Date(),
       },
     })
-    lc.log('revoked chat link,', chatMember.invite_link.invite_link)
+    lc.log('chat link consumed', chatMember.invite_link.invite_link)
     const name =
       chatMember.new_chat_member.user.username ||
       chatMember.new_chat_member.user.first_name +
