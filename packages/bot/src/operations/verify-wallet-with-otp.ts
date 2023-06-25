@@ -5,9 +5,11 @@ import { getCodeGroupUser, getMemberAccountsAndWallets } from './get-with-code'
 import { tinyAsyncPoolAll } from '../utils/async'
 import { addWalletToGroup } from './add-wallet-to-group'
 import { logContext, LogContext } from '../utils/context'
-import { getOwnedCount } from './nft-ownership'
+import { getOwnedCount } from './token-ownership/nft-ownership'
 import { kickUser } from './kick-user'
 import { MyContext } from '../bot/context'
+import { PointerValue } from '../utils'
+import { Pointer } from '../utils/pointer'
 
 export const verifyWalletWithOtp = async ({
   otp,
@@ -184,7 +186,6 @@ export const verifyExistingWallet = async ({
   ctx: MyContext
   code: string
   userId: number
-  // setStatus: (status: number, body: any) => void
 }) => {
   const walletsPromise = getMemberAccountsAndWallets(userId.toString())
   const pendingCodePromise = getCodeGroupUser(code, userId.toString())
@@ -222,7 +223,7 @@ export const verifyExistingWallet = async ({
       'None of your existing wallets are allowed to join this group. Did you connect a wallet that is allowed to join the group?'
     )
   }
-  console.log('wallet is authorized to group')
+  cl.log('wallet is authorized to group')
   //add the wallet to the group
   const { inviteLink } = await addWalletToGroup({
     wallet: fw,
@@ -234,15 +235,13 @@ export const verifyExistingWallet = async ({
     `You have successfully verified your wallet address ${fw.address}. Join the chat with your unique invite link ${inviteLink}`
   )
 }
-type Pointer<T> = {
-  value: T
-}
 
 interface TokensMsg {
   owner: String
   start_after?: string
   limit: number
 }
+
 const msgBase64 = (msg: TokensMsg) => {
   return Buffer.from(JSON.stringify({ tokens: msg })).toString('base64')
 }
@@ -275,13 +274,14 @@ export const verifyWalletAgainstAccessRule = async (
 
   return hasValidOwnedCount(ownedCount)
 }
+
 export const checkAccessRules = async (
   cl: LogContext,
   group: Group & { groupTokenGate: GroupTokenGate[] },
   wallets: Wallet[],
   { useRemoteCache = false }: { useRemoteCache?: boolean } = {}
-) => {
-  const foundWallet: Pointer<Wallet | null> = { value: null }
+): Promise<Wallet | null> => {
+  const foundWallet: Pointer<Wallet | null> = new Pointer(null)
   await tinyAsyncPoolAll(wallets, async (wallet) => {
     if (foundWallet.value) {
       return

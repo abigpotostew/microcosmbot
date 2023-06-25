@@ -11,7 +11,7 @@ export const getMemberAccountsAndWallets = (userId: string) => {
   })
 }
 
-//Grab the group and the member
+// Grab the group and the member
 export const getCodeGroupUser = (code: string, userId: string) => {
   return prismaClient().pendingGroupMember.findFirst({
     where: {
@@ -47,10 +47,6 @@ export const getGroupUserFromCode = (code: string, userId: string) => {
       pendingGroupMembers: {
         some: {
           code,
-          // consumed: false,
-          // expiresAt: {
-          //   gt: new Date(),
-          // },
         },
       },
     },

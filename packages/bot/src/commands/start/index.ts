@@ -6,8 +6,17 @@ import { registerAccountToPendingGroupMember } from '../../operations/register-a
 import { responseSettings } from '../../operations/settings'
 import { logContext } from '../../utils/context'
 import { MyContext } from '../../bot/context'
+import { z } from 'zod'
 
-// https://t.me/microcosmbotdotxyz_bot?start=true
+const cuidSchema = z.object({
+  groupId: z.string(),
+})
+/**
+ * Starts the verify flow for a user.
+ *
+ * Normally this is done by the link
+ * @param ctx
+ */
 const cmd_start: CommandMiddleware<MyContext> = async (
   ctx: MyContext
 ): Promise<void> => {
@@ -17,22 +26,24 @@ const cmd_start: CommandMiddleware<MyContext> = async (
   if (!chat) {
     return
   }
-  // todo store audit here
 
   if (chat.type === 'private') {
     if (!ctx.from || ctx.from.is_bot) {
       cl.log('unknown users or bot, skipping')
-      return //dunno who it's coming from
-    }
-    //check if they are trying to start the bot on their wallet
-    if (typeof ctx.match !== 'string') {
-      await ctx.reply(
-        "I don't understand this command input. Invite me to a group to start."
-      )
       return
     }
+
     if (ctx.match === 'true') {
       return responseSettings(ctx)
+    }
+
+    //check if they are trying to start the bot on their wallet
+    const { success } = cuidSchema.safeParse({ groupId })
+    if (!success) {
+      await ctx.reply(
+        'Invalid invite link. Please contact the group admin to get a new invite link.'
+      )
+      return
     }
 
     //check if they're already a member
@@ -78,6 +89,7 @@ const cmd_start: CommandMiddleware<MyContext> = async (
       return
     }
 
+    // pass the otp code through to the menu
     ctx.match = otp.code
 
     const existingWallets = await prismaClient().wallet.findMany({
@@ -98,8 +110,9 @@ const cmd_start: CommandMiddleware<MyContext> = async (
       reply_markup: menuUserResponse,
     })
   } else if (chat.type !== 'supergroup') {
-    // not a supergroup, exit the group
-    await ctx.reply('This bot only works in supergroups. Exiting group.')
+    await ctx.reply(
+      "I only works in supergroups. Enable 'Chat history for new members' then invite me again."
+    )
     await ctx.api.leaveChat(chat.id)
   }
 

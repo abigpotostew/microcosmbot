@@ -1,13 +1,9 @@
 import { prismaClient } from '@microcosms/db'
-import { CommandMiddleware } from 'grammy'
-import { botInfo } from '../../botinfo'
-import { MyContext } from '../../bot/context'
+import { MyContext } from '../bot/context'
+import { botInfo } from '../botinfo'
+import { CommandContext } from 'grammy'
 
-/**
- * Retrieves the invite link for the group.
- * @param ctx
- */
-export const cmd_invite: CommandMiddleware<MyContext> = async (ctx) => {
+export const fetchInviteLink = async (ctx: CommandContext<MyContext>) => {
   if (ctx.chat.type !== 'supergroup') {
     return ctx.reply('Invite only works in groups.')
   }

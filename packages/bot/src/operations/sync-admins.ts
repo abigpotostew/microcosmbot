@@ -2,6 +2,12 @@ import { Group, prismaClient } from '@microcosms/db'
 
 import { MyContext } from '../bot/context'
 
+/**
+ * Store admins in db. Create accounts for admins if needed
+ * @param ctx
+ * @param chatId
+ * @param group
+ */
 export const syncAdmins = async (
   ctx: MyContext,
   chatId: number,
@@ -9,8 +15,7 @@ export const syncAdmins = async (
 ) => {
   //
   const admins = await ctx.api.getChatAdministrators(chatId)
-  //store admins in db
-  ///create accounts for admins if neded
+
   const accounts = await prismaClient().account.createMany({
     data: admins.map((a) => ({
       userId: a.user.id.toString(),

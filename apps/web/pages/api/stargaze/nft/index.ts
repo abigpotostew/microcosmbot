@@ -7,6 +7,12 @@ const schema = z.object({
   contractAddress: zodStarsContractAddress,
   owner: zodStarsAddress,
 })
+/**
+ * API endpoint to get the number of NFTs owned by an address and cache it in vercel so that during
+ * batch processing, we don't have to hit the blockchain for each account for every NFT collection.
+ * @param req
+ * @param res
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

@@ -1,24 +1,16 @@
-import { CommandMiddleware, Context, HearsMiddleware } from 'grammy'
+import { CommandMiddleware } from 'grammy'
 
 import { MyContext } from '../../bot/context'
 
-const echo: CommandMiddleware<MyContext> = async (
+/**
+ * Echoes back the text sent to the bot. For debug purposes.
+ * @param ctx
+ */
+const cmd_echo: CommandMiddleware<MyContext> = async (
   ctx: MyContext
 ): Promise<void> => {
-  console.log('echo chat is', ctx.chat)
-  // if (ctx.chat?.id && ctx.from?.id && ctx.chatMembers?.getChatMember) {
-  //   const chatMember = await ctx.chatMembers.getChatMember(
-  //     ctx.chat.id,
-  //     ctx.from.id
-  //   )
-  //   console.log('chatMember', chatMember)
-  //   await ctx.reply(
-  //     (ctx.msg?.text || '') + 'chatMember: ' + chatMember?.user?.id
-  //   )
-  // } else {
-  // console.log('me', JSON.stringify(ctx.me))
+  console.log('Echo chat is', ctx.chat)
   await ctx.reply(ctx.msg?.text || '')
-  // }
 }
 
-export default echo
+export default cmd_echo

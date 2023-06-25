@@ -1,8 +1,11 @@
 import { prismaClient } from '@microcosms/db'
-import { CommandMiddleware, Middleware } from 'grammy'
-import { menuAdminConfig } from '../../menus'
+import { CommandMiddleware } from 'grammy'
 import { MyContext } from '../../bot/context'
 
+/**
+ * Retrieves the verified wallets for a telegram user.
+ * @param ctx
+ */
 export const cmd_me: CommandMiddleware<MyContext> = async (ctx) => {
   console.log('cmd_me', ctx)
   if (ctx.chat.type !== 'private') {
@@ -39,9 +42,4 @@ export const cmd_me: CommandMiddleware<MyContext> = async (ctx) => {
       .map((w) => w.address)
       .join('\n')}`
   )
-
-  // // build a menu list of groups
-  // return ctx.reply(
-  //   `Invite users to this group with the following link: https://t.me/${botInfo.username}?start=${group.id}`
-  // )
 }

@@ -8,6 +8,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// A telegram account
 model Account {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -24,6 +25,7 @@ model Account {
   @@index([userId])
 }
 
+// A wallet that has been verified with the bot.
 model Wallet {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -38,6 +40,7 @@ model Wallet {
   @@unique([accountId, address])
 }
 
+// A telegram group that has been registered with the bot.
 model Group {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -48,9 +51,6 @@ model Group {
   // tg id
   groupId String  @unique
 
-  // creator   Account @relation(fields: [creatorId], references: [id])
-  // creatorId String
-
   groupMembers        GroupMember[]
   manageGroupCodes    ManageGroupCode[]
   pendingGroupMembers PendingGroupMember[]
@@ -60,6 +60,7 @@ model Group {
   @@index([groupId])
 }
 
+// A group token gate rule.
 model GroupTokenGate {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -77,6 +78,7 @@ model GroupTokenGate {
   @@index([groupId])
 }
 
+// Session that allows anyone with this code to access the dashboard without logging in.
 model ManageGroupCode {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -92,6 +94,7 @@ model ManageGroupCode {
   @@index([code])
 }
 
+// Group admin cache
 model GroupAdmin {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -124,6 +127,7 @@ model GroupMember {
   @@index([groupId])
 }
 
+// A telegram account that is pending wallet verification
 model PendingGroupMember {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -143,6 +147,7 @@ model PendingGroupMember {
   @@index([code])
 }
 
+// Unique invite link for a telegram account that has verified their wallet.
 model GroupMemberInviteLink {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())

@@ -1,6 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { bot } from '@microcosms/bot/bot'
 
+/**
+ * API endpoint to configure the bot. This should be called once by the bot owner whenever the BASEURL or
+ * any webhook config or commands change.
+ * @param req
+ * @param res
+ */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
     res.status(404).json({ ok: false })
@@ -27,8 +33,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await bot.api.setMyCommands([
     { command: 'start', description: 'Start verification to join a group' },
     { command: 'help', description: 'Show help text' },
-    // { command: 'settings', description: 'Open settings' },
-    // { command: 'echo', description: 'echo input ' },
     { command: 'invite', description: "Get your group's invite link" },
     { command: 'me', description: 'Show registered accounts' },
     { command: 'settings', description: 'Configure your group' },

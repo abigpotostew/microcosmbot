@@ -1,10 +1,4 @@
-import {
-  Account,
-  Group,
-  GroupMember,
-  prismaClient,
-  Wallet,
-} from '@microcosms/db'
+import { Account, Group, GroupMember, prismaClient } from '@microcosms/db'
 import bot from '../bot'
 
 export const kickUser = async (

@@ -32,45 +32,30 @@ export const addWalletToGroup = async ({
       },
     }
   )
-  // inviteLinkExisting = null
-  // const inviteLinkExisting: { inviteLink: string } | null = null
-  let inviteLink: string | null = null
+
   if (inviteLinkExisting) {
-    inviteLink = inviteLinkExisting.inviteLink
-  } else {
-    // create a fresh invite link here for the user
-    const link = await bot.api.createChatInviteLink(group.groupId.toString(), {
-      creates_join_request: false,
-      expire_date: Math.floor(expiresAt.getTime() / 1000),
-      member_limit: 1,
-    })
-    inviteLink = link.invite_link
-    const isAdmin = prismaClient().groupAdmin.findFirst({
-      where: {
-        group: {
-          id: group.id,
-        },
-        account: {
-          id: account.id,
-        },
-      },
-    })
-    if (!isAdmin) {
-      try {
-        await bot.api.unbanChatMember(
-          group.groupId.toString(),
-          Number(account.userId)
-        )
-      } catch (e) {
-        //
-        cl.error("Couldn't unban user", e)
-      }
+    cl.log('revoking existing invite link:', inviteLinkExisting.inviteLink)
+    try {
+      await bot.api.revokeChatInviteLink(
+        group.groupId.toString(),
+        inviteLinkExisting.inviteLink
+      )
+    } catch (e) {
+      cl.log("Couldn't revoke invite link", e)
     }
   }
 
   // create a fresh invite link here for the user
+  const link = await bot.api.createChatInviteLink(group.groupId.toString(), {
+    creates_join_request: false,
+    expire_date: Math.floor(expiresAt.getTime() / 1000),
+    member_limit: 1,
+  })
+  const inviteLink = link.invite_link
+
+  // create a fresh invite link here for the user
   // store in the db
-  //the user will be added with chat_members callback when they actually join
+  // the user will be added with chat_members callback when they actually join
 
   return {
     expiresAt,

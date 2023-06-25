@@ -3,11 +3,13 @@ import { Middleware } from 'grammy'
 import { ChatMemberAdministrator } from '@grammyjs/types/manage'
 import { syncAdmins } from '../../operations/sync-admins'
 import { logContext } from '../../utils/context'
-import { membershipInGroup } from '../chat_member'
+import { isMemberInGroup } from '../chat_member'
 import { deactivateChatGroup } from '../../operations/deactivate-group'
 import { MyContext } from '../../bot/context'
+import { insertAudit } from '../../operations/audit'
+import { saveActiveGroup } from '../../operations/group/save-active-group'
 
-export const checkHasPermissions = (admin: ChatMemberAdministrator) => {
+export const isBotHasManagePermissions = (admin: ChatMemberAdministrator) => {
   if (!admin.can_manage_chat) {
     return false
   }
@@ -20,8 +22,13 @@ export const checkHasPermissions = (admin: ChatMemberAdministrator) => {
 
   return true
 }
-export const my_chat_member: Middleware<MyContext> = async (ctx) => {
-  const cl = logContext(ctx, 'my_chat_member')
+
+/**
+ * Handles updates to the bot's chat member status for when it is added, removed from a group, or promoted/demoted.
+ * @param ctx
+ */
+export const on_my_chat_member: Middleware<MyContext> = async (ctx) => {
+  const cl = logContext(ctx, 'on_my_chat_member')
   cl.log('update Id', ctx.update.update_id)
   const myChatMember = ctx.myChatMember
   if (!myChatMember) {
@@ -29,20 +36,17 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
   }
 
   const date = new Date(ctx.myChatMember.date * 1000)
-  if (process.env.DISABLE_AUDIT_LOGS !== 'true') {
-    await prismaClient().auditLog.create({
-      data: {
-        auditType: 'MY_CHAT_MEMBER',
-        groupId: myChatMember.chat.id.toString(),
-        data: JSON.parse(JSON.stringify(myChatMember)),
-        updateDate: date,
-        updateId: ctx.update.update_id.toString(),
-      },
-    })
-  }
 
-  const newDirection = membershipInGroup(myChatMember.new_chat_member.status)
-  const oldDirection = membershipInGroup(myChatMember.old_chat_member.status)
+  await insertAudit({
+    auditType: 'MY_CHAT_MEMBER',
+    groupId: myChatMember.chat.id.toString(),
+    data: myChatMember,
+    updateDate: date,
+    updateId: ctx.update.update_id.toString(),
+  })
+
+  const newDirection = isMemberInGroup(myChatMember.new_chat_member.status)
+  const oldDirection = isMemberInGroup(myChatMember.old_chat_member.status)
 
   if (myChatMember.chat.type !== 'supergroup') {
     // not a supergroup, exit the group
@@ -72,7 +76,7 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
     return
   }
 
-  if (!checkHasPermissions(myChatMember.new_chat_member)) {
+  if (!isBotHasManagePermissions(myChatMember.new_chat_member)) {
     await deactivateChatGroup(groupChatId)
     await ctx.reply(
       'I need invite and remove member permissions to manage this chat.'
@@ -80,46 +84,21 @@ export const my_chat_member: Middleware<MyContext> = async (ctx) => {
     return
   }
 
-  // const admins = await ctx.getChatAdministrators()
-  // const isAdmin = admins.filter((a) => a.user.id === myChatMember.from.id)
-  // if (!isAdmin) {
-  //   //invited by non admin
-  //   //we cannot associate the group creator
-  // }
-  //create or activate the group
-  const existingGroup = await prismaClient().group.findFirst({
-    where: {
+  // create or activate the group
+  const group = await saveActiveGroup(
+    {
       groupId: ctx.myChatMember.chat.id.toString(),
+      title: myChatMember.chat.title,
     },
-    select: {
-      id: true,
-      groupId: true,
-      active: true,
-    },
-  })
-  if (existingGroup?.active) {
-    cl.log(
-      `Group ${existingGroup.id}:${existingGroup.groupId} is already active in the db`
-    )
+    cl
+  )
+
+  if (!group) {
+    // the group already exists and is active
     return
   }
-  const group = await prismaClient().group.upsert({
-    where: {
-      groupId: ctx.myChatMember.chat.id.toString(),
-    },
-    create: {
-      name: myChatMember.chat.title,
-      groupId: ctx.myChatMember.chat.id.toString(),
-      active: true,
-    },
-    update: {
-      name: myChatMember.chat.title,
-      active: true,
-    },
-  })
+
   await syncAdmins(ctx, ctx.myChatMember.chat.id, group)
   cl.log('admins synced')
   return ctx.reply('Group activated!')
-  //new_chat_member old member
-  //old_chat_member new member
 }

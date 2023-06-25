@@ -1,4 +1,4 @@
-import { CommandMiddleware, Context, HearsMiddleware } from 'grammy'
+import { CommandMiddleware } from 'grammy'
 
 import { MyContext } from '../../bot/context'
 

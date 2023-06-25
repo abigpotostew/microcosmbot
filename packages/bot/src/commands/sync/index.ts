@@ -1,12 +1,15 @@
 import { prismaClient } from '@microcosms/db'
 import { CommandMiddleware } from 'grammy'
-import { bot } from '../../bot'
 import { syncAdmins } from '../../operations/sync-admins'
-import { checkHasPermissions } from '../my_chat_member'
+import { isBotHasManagePermissions } from '../my_chat_member'
 import { deactivateChatGroup } from '../../operations/deactivate-group'
 import { logContext } from '../../utils/context'
 import { MyContext } from '../../bot/context'
 
+/**
+ * Syncs the group's admins and settings with the database.
+ * @param ctx
+ */
 export const cmd_sync: CommandMiddleware<MyContext> = async (ctx) => {
   const cl = logContext(ctx, 'cmd_sync')
   if (ctx.chat.type !== 'group' && ctx.chat.type !== 'supergroup') {
@@ -23,7 +26,7 @@ export const cmd_sync: CommandMiddleware<MyContext> = async (ctx) => {
   const meAdmin = admins.find((a) => a.user.id === ctx.me.id)
 
   if (meAdmin?.status === 'administrator') {
-    if (!checkHasPermissions(meAdmin)) {
+    if (!isBotHasManagePermissions(meAdmin)) {
       await deactivateChatGroup(chatId.toString())
     }
   } else {
