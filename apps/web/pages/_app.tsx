@@ -90,6 +90,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
           ]}
           walletConnectOptions={{
             signClient: {
+              logger: 'debug',
               projectId: process.env
                 .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,
               relayUrl: 'wss://relay.walletconnect.com',
