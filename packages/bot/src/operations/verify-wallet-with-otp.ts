@@ -3,7 +3,7 @@ import bot from '../bot'
 import { botInfo } from '../botinfo'
 import { getCodeGroupUser, getMemberAccountsAndWallets } from './get-with-code'
 import { tinyAsyncPoolAll } from '../utils/async'
-import { addWalletToGroup } from './add-wallet-to-group'
+import { addAccountToGroup } from './account/add-account-to-group'
 import { logContext, LogContext } from '../utils/context'
 import { getOwnedCount } from './token-ownership/nft-ownership'
 import { kickUser } from './kick-user'
@@ -159,7 +159,7 @@ export const verifyWalletWithOtp = async ({
     return
   }
 
-  const { inviteLink } = await addWalletToGroup({
+  const { inviteLink } = await addAccountToGroup({
     wallet,
     account: existing.account,
     group: existing.group,
@@ -225,7 +225,7 @@ export const verifyExistingWallet = async ({
   }
   cl.log('wallet is authorized to group')
   //add the wallet to the group
-  const { inviteLink } = await addWalletToGroup({
+  const { inviteLink } = await addAccountToGroup({
     wallet: fw,
     account: account,
     group,

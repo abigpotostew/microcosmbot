@@ -1,14 +1,19 @@
-import { Account, Group, prismaClient, Wallet } from '@microcosms/db'
-import bot from '../bot'
-import { LogContext } from '../utils'
+import { Account, Group, prismaClient } from '@microcosms/db'
+import bot from '../../bot'
+import { LogContext } from '../../utils'
 
-export const addWalletToGroup = async ({
-  wallet,
+/**
+ * Create a fresh invite link for a user to join a group, and send it to them.
+ * The user will be added with chat_members callback when they actually join
+ * @param group
+ * @param account
+ * @param cl logger
+ */
+export const addAccountToGroup = async ({
   group,
   account,
   cl,
 }: {
-  wallet: Wallet
   group: Group
   account: Account
   cl: LogContext
@@ -51,11 +56,8 @@ export const addWalletToGroup = async ({
     expire_date: Math.floor(expiresAt.getTime() / 1000),
     member_limit: 1,
   })
-  const inviteLink = link.invite_link
 
-  // create a fresh invite link here for the user
-  // store in the db
-  // the user will be added with chat_members callback when they actually join
+  const inviteLink = link.invite_link
 
   return {
     expiresAt,
