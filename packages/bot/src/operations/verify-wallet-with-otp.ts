@@ -8,7 +8,6 @@ import { logContext, LogContext } from '../utils/context'
 import { getOwnedCount } from './token-ownership/nft-ownership'
 import { kickUser } from './kick-user'
 import { MyContext } from '../bot/context'
-import { PointerValue } from '../utils'
 import { Pointer } from '../utils/pointer'
 
 export const verifyWalletWithOtp = async ({
@@ -160,16 +159,21 @@ export const verifyWalletWithOtp = async ({
   }
 
   const { inviteLink } = await addAccountToGroup({
-    wallet,
     account: existing.account,
     group: existing.group,
     cl,
   })
-
-  await bot.api.sendMessage(
-    existing.account.userId.toString(),
-    `You have successfully verified your wallet address ${resolveAddress}. Join the chat with your unique invite link ${inviteLink}`
-  )
+  if (inviteLink) {
+    await bot.api.sendMessage(
+      existing.account.userId.toString(),
+      `You have successfully verified your wallet address ${resolveAddress}. Join the chat with your unique invite link ${inviteLink}`
+    )
+  } else {
+    return bot.api.sendMessage(
+      existing.account.userId.toString(),
+      `You're already a member of this group.`
+    )
+  }
   setStatus(200, { message: 'ok', link: `https://t.me/${botInfo.username}` })
 }
 
@@ -226,14 +230,17 @@ export const verifyExistingWallet = async ({
   cl.log('wallet is authorized to group')
   //add the wallet to the group
   const { inviteLink } = await addAccountToGroup({
-    wallet: fw,
     account: account,
     group,
     cl,
   })
-  return ctx.reply(
-    `You have successfully verified your wallet address ${fw.address}. Join the chat with your unique invite link ${inviteLink}`
-  )
+  if (inviteLink) {
+    return ctx.reply(
+      `You have successfully verified your wallet address ${fw.address}. Join the chat with your unique invite link ${inviteLink}`
+    )
+  } else {
+    return ctx.reply(`You're already a member of this group.`)
+  }
 }
 
 interface TokensMsg {

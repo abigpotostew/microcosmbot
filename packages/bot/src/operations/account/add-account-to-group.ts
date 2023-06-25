@@ -38,6 +38,23 @@ export const addAccountToGroup = async ({
     }
   )
 
+  //if a user is already a member, just tell them to go to the group
+  const existing = await prismaClient().groupMember.findFirst({
+    where: {
+      groupId: group.id,
+      accountId: account.id,
+      active: true,
+    },
+  })
+  if (existing) {
+    cl.log('user is already a member of group')
+    return {
+      groupMember: existing,
+      inviteLink: null,
+      expiresAt: null,
+    }
+  }
+
   if (inviteLinkExisting) {
     cl.log('revoking existing invite link:', inviteLinkExisting.inviteLink)
     try {

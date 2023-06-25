@@ -51,6 +51,13 @@ export interface SignAminoVerification extends SignatureVerify {
 const setResponse = (res: NextApiResponse) => (status: number, body: any) => {
   res.status(status).json(body)
 }
+
+/**
+ * Verify the signature, and invite to group is correct. When `overwrite` is true, any other TG accounts will be
+ * unlinked from this wallet.
+ * @param req
+ * @param res
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
