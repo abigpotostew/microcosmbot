@@ -51,7 +51,6 @@ const on_chat_member: Middleware<MyContext> = async (
   //added to the group
   if (oldDirection === 'out' && newDirection === 'in') {
     await addMemberToGroup({
-      ctx,
       groupChatId: chatMember.chat.id,
       chatMember,
       lc,

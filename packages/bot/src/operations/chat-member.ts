@@ -1,15 +1,13 @@
 import { prismaClient } from '@microcosms/db'
 import { LogContext } from '../utils'
-import { MyContext } from '../bot/context'
 import { ChatMemberUpdated } from 'grammy/types'
+import { bot } from '../bot'
 
 export const addMemberToGroup = async ({
-  ctx,
   groupChatId,
   chatMember,
   lc,
 }: {
-  ctx: MyContext
   groupChatId: number
   chatMember: ChatMemberUpdated
   lc: LogContext
@@ -129,7 +127,7 @@ export const addMemberToGroup = async ({
     chatMember.invite_link?.invite_link === dbInviteLink?.inviteLink
   ) {
     // revoke any invite links if it's in the db
-    await ctx.api.revokeChatInviteLink(
+    await bot.api.revokeChatInviteLink(
       parseInt(dbInviteLink.groupMember.group.groupId),
       chatMember.invite_link.invite_link
     )
@@ -148,7 +146,7 @@ export const addMemberToGroup = async ({
         ' ' +
         chatMember.new_chat_member.user.last_name
     // send welcome message to the group if they joined from the invite link
-    await ctx.api.sendMessage(
+    await bot.api.sendMessage(
       parseInt(dbInviteLink.groupMember.group.groupId),
       getRandomGreeting(name)
     )
