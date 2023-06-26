@@ -2,7 +2,7 @@ import { prismaClient } from '@microcosms/db'
 import { CommandMiddleware } from 'grammy'
 import { botInfo } from '../../botinfo'
 import { MyContext } from '../../bot/context'
-import { fetchInviteLink } from '../../operations/fetch-invite-link'
+import { fetchInviteLink } from '../../operations/invite/fetch-invite-link'
 
 /**
  * Retrieves the invite link for the group.
