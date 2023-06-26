@@ -8,7 +8,7 @@ import { cmd_invite } from './invite'
 import { cmd_settings } from './settings'
 import { cmd_sync } from './sync'
 import { cmd_me } from './me'
-import { filterNewChatTitle } from '../filters/newChatTitle'
+import { filterNewChatTitle } from '../operations/filters/newChatTitle'
 import cmd_help from './help'
 import { MyContext } from '../bot/context'
 
