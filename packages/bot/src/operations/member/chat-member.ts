@@ -1,7 +1,7 @@
-import { prismaClient } from '@microcosms/db'
-import { LogContext } from '../utils'
+import { LogContext } from '../../utils'
 import { ChatMemberUpdated } from 'grammy/types'
-import { bot } from '../bot'
+import { bot } from '../../bot'
+import { prismaClient } from '@microcosms/db'
 
 export const addMemberToGroup = async ({
   groupChatId,

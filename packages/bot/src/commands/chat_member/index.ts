@@ -5,7 +5,7 @@ import { insertAudit } from '../../operations/audit'
 import {
   addMemberToGroup,
   removeMemberToGroup,
-} from '../../operations/chat-member'
+} from '../../operations/member/chat-member'
 
 type MemberInOrOut = 'in' | 'out'
 export const isMemberInGroup = (
