@@ -1,6 +1,6 @@
 import { addAccountToGroup } from '../account/add-account-to-group'
 import { LogContext } from '../../utils'
-import { getCodeGroupUser, getMemberAccountsAndWallets } from '../get-with-code'
+import { getCodeGroupUser, getMemberAccountsAndWallets } from '../member/get-with-code'
 
 import {checkAccessRules} from "../access/access-rules";
 
