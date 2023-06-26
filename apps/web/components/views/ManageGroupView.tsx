@@ -2,8 +2,6 @@ import { websiteData } from 'constants/websiteData'
 import { ManageGroup } from 'components/ManageGroup'
 import AlertAttentionNeeded from 'components/info/AlertAttentionNeeded'
 
-//todo client side render to grab the OTP, and group.
-const chainName = 'stargaze'
 const ManageGroupView: React.FC = () => {
   return (
     <>

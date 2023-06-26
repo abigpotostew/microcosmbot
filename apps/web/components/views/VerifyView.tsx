@@ -7,9 +7,9 @@ import { signLoginMessageWithAmino } from 'libs/verify/keplr'
 import { useCallback, useState } from 'react'
 import { trpc } from 'utils/trpc'
 import { SpinningCircles } from 'react-loading-icons'
+import { config } from '@microcosms/bot/config'
 
 //todo client side render to grab the OTP, and group.
-const chainName = 'stargaze'
 const VerifyView: React.FC = () => {
   const router = useRouter()
 
@@ -40,7 +40,7 @@ const VerifyView: React.FC = () => {
     signAmino,
     getAccount,
     getSigningCosmWasmClient,
-  } = useChain(chainName)
+  } = useChain(config.chainName)
 
   const [sig, setSig] = useState<string | null>(null)
 

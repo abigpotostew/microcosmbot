@@ -1,11 +1,15 @@
+import { config } from '../../config'
+
 interface TokensMsg {
   owner: String
   start_after?: string
   limit: number
 }
+
 const msgBase64 = (msg: TokensMsg) => {
   return Buffer.from(JSON.stringify({ tokens: msg })).toString('base64')
 }
+
 export const getOwnedCount = async ({
   contractAddress,
   owner,
@@ -59,7 +63,7 @@ const getOwnedCountDirect = async ({
       limit,
       start_after,
     })
-    const url = `${'https://rest.stargaze-apis.com'}/cosmwasm/wasm/v1/contract/${contractAddress}/smart/${msg}`
+    const url = `${config.chainRestUrl}/cosmwasm/wasm/v1/contract/${contractAddress}/smart/${msg}`
     // return false
     const res = await fetch(url)
     if (!res.ok) {

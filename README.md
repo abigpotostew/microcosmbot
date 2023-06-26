@@ -1,5 +1,7 @@
 # MicroCosmBot
 
+MicroCosmBot is a telegram bot for creating token gated telegram group chats for stargaze NFTs.
+
 ### Apps and Packages
 
 - `web`: the NextJS web application that also runs the telegram bot
@@ -117,3 +119,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Contributor wish list:
 * Internationalization - help me make this bot available in other languages! See https://grammy.dev/plugins/i18n.html#usage
+* Multi chain support - help me make this bot available on other chains!

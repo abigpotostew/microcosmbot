@@ -13,15 +13,16 @@
         "NEXT_PUBLIC_ALCHEMY_ID",
         "NEXT_PUBLIC_BOT_DAO",
         "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
-        "PORT",
         "BASEURL",
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
         "TELEGRAM_BOT_KEY",
         "QSTASH_URL",
         "NODE_ENV",
         "NEXT_PUBLIC_GETME_BOT_INFO",
-        "DISABLE_AUDIT_LOGS"
+        "DISABLE_AUDIT_LOGS",
+        "NEXT_PUBLIC_CHAINNAME",
+        "NEXT_PUBLIC_CHAINRESTURL",
+        "NEXT_PUBLIC_CHAINID"
       ]
     },
     "lint": {
@@ -33,7 +34,6 @@
         "NEXT_PUBLIC_ALCHEMY_ID",
         "NEXT_PUBLIC_BOT_DAO",
         "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
         "PORT",
         "BASEURL",
         "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
@@ -41,48 +41,17 @@
         "QSTASH_URL",
         "NODE_ENV",
         "NEXT_PUBLIC_GETME_BOT_INFO",
-        "DISABLE_AUDIT_LOGS"
+        "DISABLE_AUDIT_LOGS",
+        "NEXT_PUBLIC_CHAINNAME",
+        "NEXT_PUBLIC_CHAINRESTURL",
+        "NEXT_PUBLIC_CHAINID"
       ],
       "cache": false,
       "persistent": true
     },
     "clean": {
       "cache": false
-    },
-    "test": {
-      "dependsOn": ["clean"],
-      "env": [
-        "NEXT_PUBLIC_ALCHEMY_ID",
-        "NEXT_PUBLIC_BOT_DAO",
-        "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
-        "PORT",
-        "BASEURL",
-        "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
-        "TELEGRAM_BOT_KEY",
-        "QSTASH_URL",
-        "NODE_ENV",
-        "NEXT_PUBLIC_GETME_BOT_INFO",
-        "DISABLE_AUDIT_LOGS"
-      ]
-    },
-    "test:watch": {
-      "cache": false,
-      "env": [
-        "NEXT_PUBLIC_ALCHEMY_ID",
-        "NEXT_PUBLIC_BOT_DAO",
-        "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAINALYSIS_API_KEY",
-        "PORT",
-        "BASEURL",
-        "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
-        "TELEGRAM_BOT_KEY",
-        "QSTASH_URL",
-        "NODE_ENV",
-        "NEXT_PUBLIC_GETME_BOT_INFO",
-        "DISABLE_AUDIT_LOGS"
-      ]
     }
   },
-  "globalEnv": ["GOLD_SKY_API_KEY"]
+  "globalEnv": []
 }

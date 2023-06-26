@@ -3,6 +3,7 @@ import { SigningCosmWasmClient, StdSignDoc } from 'cosmwasm'
 import { buildMessage } from './build-mesage'
 import { AminoSignResponse, StdSignature } from '@cosmjs/amino'
 import { SignOptions } from '@cosmos-kit/core'
+import { config } from '@microcosms/bot/config'
 
 export const signLoginMessageWithArbitrary = async (
   otp: string,
@@ -16,7 +17,7 @@ export const signLoginMessageWithArbitrary = async (
   if (!keplr) {
     throw new Error('Keplr not installed')
   }
-  const chainId = 'stargaze-1'
+  const chainId = config.chainId
   const key = await keplr.getKey(chainId)
 
   const userAddress = key.bech32Address
@@ -51,7 +52,7 @@ export const signLoginMessageWithAmino = async (
   // if (!keplr) {
   //   throw new Error('Keplr not installed')
   // }
-  const chainId = 'stargaze-1'
+  const chainId = config.chainId
   // const key = await keplr.getKey(chainId)
 
   // const userAddress = key.bech32Address
