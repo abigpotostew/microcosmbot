@@ -2,7 +2,7 @@ import { prismaClient } from '@microcosms/db'
 import { CommandMiddleware } from 'grammy'
 import { syncAdmins } from '../../operations/sync-admins'
 import { isBotHasManagePermissions } from '../my_chat_member'
-import { deactivateChatGroup } from '../../operations/deactivate-group'
+import { deactivateChatGroup } from '../../operations/group/deactivate-group'
 import { logContext } from '../../utils/context'
 import { MyContext } from '../../bot/context'
 
