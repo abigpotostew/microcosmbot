@@ -14,7 +14,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 * Setup a https://planetscale.com/ database. Copy the connection string to your env. Run `npx prisma db push` from the `packages/db` directory to deploy the schema. You can use another db, but you will need to modify the file `packages/db/prisma/prisma.schema` file appropriately.
 * Acquire a telegram bot token from @BotFather
-* Enable bot group settings.
+* Enable bot group settings via botfather.
 * Create a webhook to your localhost web port. I can recommend https://tunnelmole.com/ -- `tmole 3000`. Set this tunnel url to your BASEURL env variable.
 * Copy `apps/web/.env.sample` to `apps/web/.env` and fill in the values.
 * Run your bot locally with `turbo dev` in the `apps/web` directory.
@@ -23,8 +23,16 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Deployment
 
+* Get your bot info and store the JSON in `NEXT_PUBLIC_GETME_BOT_INFO` (one time)
+  * Call the telegram api `https://api.telegram.org/bot<your-bot-api-key>/getMe` and copy the `result` field object in the environment variable.
+  * This helps speed up the api calls because grammy will not have to call this each time a function boots.
 * Setup `https://console.upstash.com/qstash` which is used for the cron job to periodically check nft token ownership. Copy the key to your env.
 * Deploy to vercel through the git integration.
+
+### Cron
+A vercel cron job enqueues a job that checks the nft token ownership of all users in the database. If a user no longer owns the token, they are removed from the database and banned from the group. This is to ensure that only users who own the token can be in the group.
+
+Configure how often this runs in `vercel.json`. The default is every 2 hours.
 
 ### Utilities
 
