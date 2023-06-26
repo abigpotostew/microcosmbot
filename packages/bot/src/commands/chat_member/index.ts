@@ -1,7 +1,7 @@
 import { Middleware } from 'grammy'
 import { logContext } from '../../utils/context'
 import { MyContext } from '../../bot/context'
-import { insertAudit } from '../../operations/audit'
+import { insertAudit } from '../../operations/audit/audit'
 import {
   addMemberToGroup,
   removeMemberToGroup,

@@ -24,5 +24,8 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "jsx": "preserve",
+    "paths": {
+      "@microcosms/db": ["../packages/db"]
+    }
   }
 }

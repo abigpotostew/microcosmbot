@@ -25,4 +25,4 @@ https://telegram.me/microcosmbotdotxyz_bot?startgroup=true
 * [x] verify page check if the otp is already used.
 * [x] todo /help cmd, on DM and in group
 * [x] prevent multipl pending invite links
-* make audit log a configuration option 
+* [x] make audit log a configuration option 

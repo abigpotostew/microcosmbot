@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/cron-update-all-entries",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 */2 * * *"
     }
   ]
 }

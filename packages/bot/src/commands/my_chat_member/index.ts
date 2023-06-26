@@ -6,7 +6,7 @@ import { logContext } from '../../utils/context'
 import { isMemberInGroup } from '../chat_member'
 import { deactivateChatGroup } from '../../operations/group/deactivate-group'
 import { MyContext } from '../../bot/context'
-import { insertAudit } from '../../operations/audit'
+import { insertAudit } from '../../operations/audit/audit'
 import { saveActiveGroup } from '../../operations/group/save-active-group'
 
 export const isBotHasManagePermissions = (admin: ChatMemberAdministrator) => {
