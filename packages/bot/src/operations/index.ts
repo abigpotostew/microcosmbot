@@ -1,4 +1,4 @@
-export * from './kick-user'
+export * from './member/kick-member'
 export * from './token-ownership/nft-ownership'
 export { verifyWalletWithOtp } from './verify/verify-wallet-with-otp'
 export { checkAccessRules } from './access/access-rules'

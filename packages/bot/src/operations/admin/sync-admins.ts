@@ -1,6 +1,6 @@
 import { Group, prismaClient } from '@microcosms/db'
 
-import { MyContext } from '../bot/context'
+import { MyContext } from '../../bot/context'
 
 /**
  * Store admins in db. Create accounts for admins if needed

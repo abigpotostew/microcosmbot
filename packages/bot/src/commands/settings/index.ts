@@ -1,5 +1,5 @@
 import { CommandMiddleware } from 'grammy'
-import { responseSettings } from '../../operations/settings'
+import { responseSettings } from '../../operations/settings/settings'
 import { MyContext } from '../../bot/context'
 
 /**

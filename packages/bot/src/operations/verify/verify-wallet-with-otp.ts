@@ -1,5 +1,5 @@
 import { logContext } from '../../utils'
-import { kickUser } from '../kick-user'
+import { kickUser } from '../member/kick-member'
 import bot from '../../bot'
 import { botInfo } from '../../botinfo'
 import { addAccountToGroup } from '../account/add-account-to-group'

@@ -1,7 +1,7 @@
 import { prismaClient } from '@microcosms/db'
 import { Middleware } from 'grammy'
 import { ChatMemberAdministrator } from '@grammyjs/types/manage'
-import { syncAdmins } from '../../operations/sync-admins'
+import { syncAdmins } from '../../operations/admin/sync-admins'
 import { logContext } from '../../utils/context'
 import { isMemberInGroup } from '../chat_member'
 import { deactivateChatGroup } from '../../operations/group/deactivate-group'

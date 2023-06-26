@@ -1,5 +1,5 @@
 import { Account, Group, GroupMember, prismaClient } from '@microcosms/db'
-import bot from '../bot'
+import bot from '../../bot'
 
 export const kickUser = async (
   group: Group,
