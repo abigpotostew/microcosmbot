@@ -1,6 +1,6 @@
 import { Menu, MenuRange } from '@grammyjs/menu'
 import { Composer } from 'grammy'
-import { generateAdminLink } from '../operations/generate-admin-link'
+import { generateAdminLink } from '../operations/admin/generate-admin-link'
 import { logContext } from '../utils'
 import { MyContext } from '../bot/context'
 import { verifyExistingWallet } from '../operations/verify/verify-existing-wallet'
