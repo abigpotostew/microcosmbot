@@ -103,3 +103,9 @@ Learn more about the power of Turborepo:
 
 ## License
 This project is licensed under the GPL licence. See [LICENSE.md](LICENSE.md) for details.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Contributor wish list:
+* Internationalization - help me make this bot available in other languages! See https://grammy.dev/plugins/i18n.html#usage
