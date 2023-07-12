@@ -210,7 +210,13 @@ const VerifyView: React.FC = () => {
                   </PrimaryButton>
                   <DisconnectedButton />
                 </div>
-
+                <div
+                  className={
+                    'gap-3 justify-center items-center flex text-body1 pt-3'
+                  }
+                >
+                  Connected to: {address}
+                </div>
                 <div
                   className={'text-red-500 text-body1 col-span-1 max-w-md pt-4'}
                 >
