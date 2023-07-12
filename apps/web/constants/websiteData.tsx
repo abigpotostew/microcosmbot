@@ -54,8 +54,8 @@ export const websiteData: WebsiteData = {
     subtitle: 'Most recent streams for payouts',
   },
   verifySection: {
-    title: 'Verify Wallet',
-    subtitle: 'Verify your wallet to join a group',
+    title: 'Join a group',
+    subtitle: 'Verify your wallet to join this group',
   },
   manageSection: {
     title: 'Manage Group',

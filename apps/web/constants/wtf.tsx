@@ -1,8 +1,5 @@
 import { WTFList } from 'libs/types'
-import Link from 'next/link'
 import { botInfo } from '@microcosms/bot/botinfo'
-
-const auditUrl = 'https://github.com/daokitchen/nouns-stream/tree/main/audit'
 
 export const wtfList: WTFList[] = [
   {
@@ -15,6 +12,6 @@ export const wtfList: WTFList[] = [
   },
   {
     title: 'Who built MicroCosmBot?',
-    text: `skymagic, a genesis stargaze artist and creator of https://publicworks.art.`,
+    text: `skymagic, a genesis stargaze artist and creator of https://publicworks.art. MicroCosmBot is endorsed by the stargaze.zone creators and was built as part of a stargaze.zone dev bounty.`,
   },
 ]
