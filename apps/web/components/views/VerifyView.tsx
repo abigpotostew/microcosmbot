@@ -9,6 +9,7 @@ import { trpc } from 'utils/trpc'
 import { SpinningCircles } from 'react-loading-icons'
 import { config } from '@microcosms/bot/config'
 import useWallet from '../../client/react/wallet/useWallet'
+import { ac } from 'vitest/dist/types-0373403c'
 
 //todo client side render to grab the OTP, and group.
 const VerifyView: React.FC = () => {
@@ -35,8 +36,9 @@ const VerifyView: React.FC = () => {
   //   getAccount,
   // } = useChain(config.chainName)
 
-  const { connect, disconnect, wallet, signAmino, status } = useWallet()
-  const address = wallet?.address
+  const { connect, disconnect, wallet, signAmino, getAccount, status } =
+    useWallet()
+  // const address = wallet?.address
 
   const [sig, setSig] = useState<string | null>(null)
 
@@ -45,6 +47,11 @@ const VerifyView: React.FC = () => {
     if (!otp) {
       throw new Error('no otp')
     }
+    const account = await getAccount()
+    if (!account) {
+      throw new Error('no account')
+    }
+    const address = account.address
     if (!address) {
       throw new Error('no address connected')
     }
@@ -55,7 +62,7 @@ const VerifyView: React.FC = () => {
     const overwrite = !!sig
     let inputSig = sig
     if (!inputSig) {
-      const account = wallet
+      // const account = wallet
       const res1 = await signLoginMessageWithAmino(otp, address, signAmino)
 
       console.log('res', res1)
@@ -215,7 +222,7 @@ const VerifyView: React.FC = () => {
                     'gap-3 justify-center items-center flex text-body1 pt-3'
                   }
                 >
-                  Connected to: {address}
+                  Connected to: {wallet?.address}
                 </div>
                 <div
                   className={'text-red-500 text-body1 col-span-1 max-w-md pt-4'}

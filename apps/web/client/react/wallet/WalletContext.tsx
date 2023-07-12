@@ -26,6 +26,7 @@ export interface WalletContext {
   wallet?: WalletData
   signAmino?: SignAminoFn
   status: WalletStatus
+  getAccount: () => Promise<WalletData | undefined>
 }
 
 export const Wallet = createContext<WalletContext>({
@@ -37,6 +38,7 @@ export const Wallet = createContext<WalletContext>({
   wallet: undefined,
   signAmino: undefined,
   status: WalletStatus.Disconnected,
+  getAccount: async () => undefined,
 })
 
 export const WalletProvider = ({ children }: { children: ReactNode }) => {
@@ -73,10 +75,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
           walletAddress,
           chainInfo.currencies[0].coinMinimalDenom
         )
-        const account = await getAccount()
         // Set the wallet data
         setWallet({
-          ...account,
           address: walletAddress,
           name: connectedWallet.name,
           balance,
@@ -99,10 +99,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
           walletAddress,
           chainInfo.currencies[0].coinMinimalDenom
         )
-        const account = await getAccount()
         // Set the wallet data
         setWallet({
-          ...account,
           address: walletAddress,
           name: connectedWallet.name,
           balance,
@@ -140,6 +138,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         wallet,
         signAmino,
         status,
+        getAccount,
       }}
     >
       {children}
