@@ -38,14 +38,16 @@ export const signLoginMessageWithArbitrary = async (
   }
 }
 
+export type SignAminoFn = (
+  signer: string,
+  signDoc: StdSignDoc,
+  signOptions?: SignOptions | undefined
+) => Promise<AminoSignResponse>
+
 export const signLoginMessageWithAmino = async (
   otp: string,
   userAddress: string,
-  signAmino: (
-    signer: string,
-    signDoc: StdSignDoc,
-    signOptions?: SignOptions | undefined
-  ) => Promise<AminoSignResponse>
+  signAmino: SignAminoFn
 ) => {
   // const keplrWindow = <Window>window
   // const keplr = keplrWindow.keplr

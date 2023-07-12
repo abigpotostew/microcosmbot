@@ -8,6 +8,7 @@ import { useCallback, useState } from 'react'
 import { trpc } from 'utils/trpc'
 import { SpinningCircles } from 'react-loading-icons'
 import { config } from '@microcosms/bot/config'
+import useWallet from '../../client/react/wallet/useWallet'
 
 //todo client side render to grab the OTP, and group.
 const VerifyView: React.FC = () => {
@@ -25,22 +26,17 @@ const VerifyView: React.FC = () => {
     }
   )
 
-  const {
-    connect,
-    disconnect,
-    openView,
-    status,
-    username,
-    address,
-    message,
-    wallet,
-    chain: chainInfo,
-    logoUrl,
-    signArbitrary,
-    signAmino,
-    getAccount,
-    getSigningCosmWasmClient,
-  } = useChain(config.chainName)
+  // const {
+  //   connect,
+  //   disconnect,
+  //   status,
+  //   address,
+  //   signAmino,
+  //   getAccount,
+  // } = useChain(config.chainName)
+
+  const { connect, disconnect, wallet, signAmino, status } = useWallet()
+  const address = wallet?.address
 
   const [sig, setSig] = useState<string | null>(null)
 
@@ -52,11 +48,14 @@ const VerifyView: React.FC = () => {
     if (!address) {
       throw new Error('no address connected')
     }
+    if (!signAmino) {
+      throw new Error('no signAmino')
+    }
 
     const overwrite = !!sig
     let inputSig = sig
     if (!inputSig) {
-      const account = await getAccount()
+      const account = wallet
       const res1 = await signLoginMessageWithAmino(otp, address, signAmino)
 
       console.log('res', res1)

@@ -21,6 +21,7 @@ import { Chain } from '@chain-registry/types'
 import { getSigningCosmosClientOptions } from 'stargazejs'
 import { GasPrice } from '@cosmjs/stargate'
 import { trpc } from 'utils/trpc'
+import WalletProvider from 'client/react/wallet/WalletProvider'
 
 const queryClient = new QueryClient()
 
@@ -75,33 +76,34 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <ChainProvider
-          chains={chains}
-          assetLists={assets}
-          wallets={[
-            ...keplrWallets,
-            // ...cosmostationWallets,
-            // ...leapWallets,
-            // ...wcWallets,
-          ]}
-          walletConnectOptions={{
-            signClient: {
-              logger: 'debug',
-              projectId: process.env
-                .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,
-              relayUrl: 'wss://relay.walletconnect.com',
-              metadata: {
-                name: 'MicroCosmBot',
-                description:
-                  'MicroCosmbot creates token gated telegram groups.',
-                url: 'https://www.microcosmbot.xyz',
-                icons: ['https://www.microcosmbot.xyz/icons/logo-larger.png'],
-              },
-            },
-          }}
-          wrappedWithChakra={false}
-          signerOptions={signerOptions}
-        >
+        {/*<ChainProvider*/}
+        {/*  chains={chains}*/}
+        {/*  assetLists={assets}*/}
+        {/*  wallets={[*/}
+        {/*    ...keplrWallets,*/}
+        {/*    // ...cosmostationWallets,*/}
+        {/*    // ...leapWallets,*/}
+        {/*    // ...wcWallets,*/}
+        {/*  ]}*/}
+        {/*  walletConnectOptions={{*/}
+        {/*    signClient: {*/}
+        {/*      logger: 'debug',*/}
+        {/*      projectId: process.env*/}
+        {/*        .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,*/}
+        {/*      relayUrl: 'wss://relay.walletconnect.com',*/}
+        {/*      metadata: {*/}
+        {/*        name: 'MicroCosmBot',*/}
+        {/*        description:*/}
+        {/*          'MicroCosmbot creates token gated telegram groups.',*/}
+        {/*        url: 'https://www.microcosmbot.xyz',*/}
+        {/*        icons: ['https://www.microcosmbot.xyz/icons/logo-larger.png'],*/}
+        {/*      },*/}
+        {/*    },*/}
+        {/*  }}*/}
+        {/*  wrappedWithChakra={false}*/}
+        {/*  signerOptions={signerOptions}*/}
+        {/*>*/}
+        <WalletProvider>
           <RecoilRoot>
             <LayoutWrapper
               className={classNames(
@@ -113,7 +115,8 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
               <Component {...pageProps} />
             </LayoutWrapper>
           </RecoilRoot>
-        </ChainProvider>
+        </WalletProvider>
+        {/*</ChainProvider>*/}
       </QueryClientProvider>
     </>
   )
