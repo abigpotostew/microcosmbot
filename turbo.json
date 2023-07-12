@@ -7,7 +7,7 @@
       "dependsOn": ["^prepare"]
     },
     "build": {
-      "dependsOn": ["clean", "test", "^prepare", "^build"],
+      "dependsOn": ["clean", "^prepare", "^build"],
       "outputs": ["dist/**", ".next/**"],
       "env": [
         "NEXT_PUBLIC_ALCHEMY_ID",
