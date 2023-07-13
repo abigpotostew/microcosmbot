@@ -16,3 +16,4 @@ Release candidate.
 Release.
 * Redesigned verify UI to include more info about which group the user is joining.
 * Add support for wallet connect for mobile users.
+* Store telegram account usernames in the database. To be used on the frontend to display the telegram username of the user.
