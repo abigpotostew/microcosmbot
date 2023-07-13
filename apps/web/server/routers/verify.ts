@@ -30,6 +30,13 @@ const getOtp = procedure
               minTokens: 1,
               maxTokens: null,
             },
+            {
+              id: '002',
+              name: 'hyperion max',
+              contractAddress: 'stars1234567890987654321',
+              minTokens: 2,
+              maxTokens: 3,
+            },
           ],
           createdAt: new Date('2023-07-02T08:00:00Z'),
         },

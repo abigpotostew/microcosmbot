@@ -33,7 +33,7 @@ const ProgressBar = ({ step }: { step: Stages }) => {
             {step.status === 'complete' ? (
               <a
                 href={step.href}
-                className="group flex flex-col border-l-4 border-slate-700 py-2 pl-4 hover:border-slate-800 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+                className="group flex flex-col border-l-4 border-violet-700 py-2 pl-4 hover:border-violet-800 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
               >
                 <span className="text-sm font-medium text-grey-600 group-hover:text-grey-800">
                   {step.id}
@@ -43,7 +43,7 @@ const ProgressBar = ({ step }: { step: Stages }) => {
             ) : step.status === 'current' ? (
               <a
                 href={step.href}
-                className="flex flex-col border-l-4 border-slate-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+                className="flex flex-col border-l-4 border-violet-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
                 aria-current="step"
               >
                 <span className="text-sm font-medium text-grey-600">
@@ -54,7 +54,7 @@ const ProgressBar = ({ step }: { step: Stages }) => {
             ) : (
               <a
                 href={step.href}
-                className="group flex flex-col border-l-4 border-slate-200 py-2 pl-4 hover:border-gray-300 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+                className="group flex flex-col border-l-4 border-violet-200 py-2 pl-4 hover:border-violet-300 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
               >
                 <span className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
                   {step.id}
@@ -170,17 +170,24 @@ export const VerifyButtons: React.FC<Props> = () => {
       {otpRes.isSuccess && otpRes.data && (
         <div className={'pt-8'}>
           {status !== 'Connected' && status !== 'Connecting' && (
-            <div className={' justify-center align-center'}>
-              <div className={'flex justify-center'}>
-                <PrimaryButton classes="w-full lg:w-50 " onClick={connect}>
-                  Connect
-                </PrimaryButton>
-              </div>
-              <div className={'flex justify-center'}>
-                <div className={'text-black col-span-1 max-w-md pt-4'}>
-                  <p className={'text-body4'}>
-                    Begin verification by connecting your wallet.
-                  </p>
+            <div className={'grid'}>
+              {/*<div className={''}>*/}
+              <div
+                className={'columns-4 gap-3 justify-center items-center flex'}
+              >
+                <div className={'justify-center align-center'}>
+                  <div className={'flex justify-center'}>
+                    <PrimaryButton classes="w-full lg:w-50 " onClick={connect}>
+                      Connect
+                    </PrimaryButton>
+                  </div>
+                  <div className={'flex justify-center'}>
+                    <div className={'text-black col-span-1 max-w-md pt-4'}>
+                      <p className={'text-body4'}>
+                        Begin verification by connecting your wallet.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -212,7 +219,10 @@ export const VerifyButtons: React.FC<Props> = () => {
           {status === 'Error' && <div className={'text-body4'}>error</div>}
           {status === 'Connected' && (
             <div className={'grid'}>
-              <div className={'gap-3 justify-center items-center flex'}>
+              {/*<div className={''}>*/}
+              <div
+                className={'columns-2 gap-3 justify-center items-center flex'}
+              >
                 <PrimaryButton
                   classes="w-full lg:w-50"
                   onClick={loginMutation.mutate}
@@ -228,58 +238,70 @@ export const VerifyButtons: React.FC<Props> = () => {
               </div>
               <div
                 className={
-                  'gap-3 justify-center items-center flex text-body1 pt-3'
+                  'gap-3 justify-center items-center flex text-body4 pt-3'
                 }
               >
                 Connected to: {wallet?.address}
               </div>
-              <div
-                className={'text-red-500 text-body1 col-span-1 max-w-md pt-4'}
-              >
-                <>
-                  {typeof loginMutation.error === 'string' &&
-                    loginMutation.error}
-                  {!!loginMutation.error &&
-                    typeof loginMutation.error === 'object' &&
-                    'message' in loginMutation.error &&
-                    loginMutation.error.message}
-                  {!!loginMutation.error &&
-                    typeof loginMutation.error === 'string' &&
-                    loginMutation.error}
-                </>
-              </div>
-              <div className={'text-black col-span-1 max-w-md pt-4'}>
-                {loginMutation.isSuccess && loginMutation.data.duplicate && (
-                  <span className={'text-body1 text-xl text-red-500'}>
-                    Duplicate wallet detected. If you continue verifying this
-                    wallet, the existing TG account will lose access to all
-                    groups. Click on the same button again to continue anyways.
-                  </span>
-                )}
-                {loginMutation.isSuccess && !loginMutation.data.duplicate && (
-                  <span className={'text-body1 text-xl'}>
-                    {loginMutation.data.allowed
-                      ? "You're verified! Check your DMs for your invite link: "
-                      : "You don't qualify to join this group. Check your DMs for more info: "}
-                    <a
-                      href={loginMutation.data.link}
-                      target={'_blank'}
-                      rel={'noreferrer'}
-                    >
-                      {loginMutation.data.link}
-                    </a>
-                  </span>
-                )}
-              </div>
-              <div className={'col-span-1 max-w-md pt-4'}>
-                <p className={'text-body4 text-black'}>
-                  To join a token gated telegram group, you must prove you own
-                  your account. Clicking on Prove Wallet Ownership will open
-                  Keplr and request a signature. This is an off-chain signature
-                  only used to verify wallet ownership by the bot. The signature
-                  will be discarded after verification.
-                </p>
-              </div>
+              {/*</div>*/}
+              {!!loginMutation.error && (
+                <div className={'text-red-500 text-body1 max-w-md pt-4'}>
+                  <>
+                    {typeof loginMutation.error === 'string' &&
+                      loginMutation.error}
+                    {!!loginMutation.error &&
+                      typeof loginMutation.error === 'object' &&
+                      'message' in loginMutation.error &&
+                      loginMutation.error.message}
+                    {!!loginMutation.error &&
+                      typeof loginMutation.error === 'string' &&
+                      loginMutation.error}
+                  </>
+                </div>
+              )}
+              {!!loginMutation.isSuccess && (
+                <div
+                  className={
+                    'text-black col-span-1 max-w-md pt-4  container col-span-1 items-center justify-center max-w-sm '
+                  }
+                >
+                  {loginMutation.isSuccess && loginMutation.data.duplicate && (
+                    <span className={'text-body1 text-xl text-red-500'}>
+                      Duplicate wallet detected. If you continue verifying this
+                      wallet, the existing TG account will lose access to all
+                      groups. Click on the same button again to continue
+                      anyways.
+                    </span>
+                  )}
+                  {loginMutation.isSuccess && !loginMutation.data.duplicate && (
+                    <span className={'text-body1 text-l'}>
+                      {loginMutation.data.allowed
+                        ? "You're verified! Check your DMs for your invite link: "
+                        : "You don't qualify to join this group. Check your DMs for more info: "}
+                      <a
+                        href={loginMutation.data.link}
+                        target={'_blank'}
+                        rel={'noreferrer'}
+                      >
+                        {loginMutation.data.link}
+                      </a>
+                    </span>
+                  )}
+                </div>
+              )}
+              {!loginMutation.data?.allowed && (
+                <div
+                  className={
+                    'container col-span-1 items-center justify-center max-w-sm pt-4'
+                  }
+                >
+                  <p className={' text-body4 text-black'}>
+                    Clicking on Prove Wallet Ownership will request an off-chain
+                    signature only used to verify wallet ownership by the bot.
+                    The signature will be discarded after verification.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

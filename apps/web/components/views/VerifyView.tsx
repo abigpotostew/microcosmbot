@@ -25,16 +25,7 @@ const VerifyView: React.FC = () => {
       <header className="relative z-50 bg-olive-200 pt-16 pb-8 lg:pb-9">
         <div className="container flex flex-col px-6 gap-8 lg:gap-0 lg:items-center lg:flex-row">
           <div className="flex flex-col gap-4 flex-grow flex-shrink-0">
-            <h1 className="text-title2">
-              Join Group -{' '}
-              {loading ? (
-                <span className={'inline-block'}>
-                  <SpinningCircles fill={'black'} width={18} height={18} />
-                </span>
-              ) : (
-                otpRes.data?.group.name
-              )}
-            </h1>
+            <h1 className="text-title2">Join Group</h1>
             <p className="text-body4 text-olive-600">
               <span>{websiteData.verifySection.subtitle}</span>
             </p>
@@ -59,7 +50,7 @@ const VerifyView: React.FC = () => {
       <TopSection loading={loading} />
       <div
         className={
-          'container flex align-middle justify-center flex-col px-6 gap-8 lg:items-center lg:flex-col'
+          'pt-4 pb-4 container flex align-middle justify-center flex-col px-6 gap-8 col-span-8 lg:items-center lg:flex-col'
         }
       >
         {/*<div*/}
@@ -68,7 +59,7 @@ const VerifyView: React.FC = () => {
         {/*  }*/}
         {/*>*/}
 
-        <div>
+        <div className={'grid'}>
           <VerifyWtfBox otp={otpRes.data || null} />
         </div>
       </div>

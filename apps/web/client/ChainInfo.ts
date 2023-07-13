@@ -1,7 +1,7 @@
 import { ChainInfo } from '@keplr-wallet/types/build/chain-info'
-import { ChainInfos } from 'config'
+import { ChainInfos, ChainInfoWithExplorer } from 'config'
 
-let chainInfo: ChainInfo
+let chainInfo: ChainInfoWithExplorer
 switch (process?.env.NEXT_PUBLIC_NETWORK) {
   case 'stargaze':
     chainInfo = ChainInfos[0]
