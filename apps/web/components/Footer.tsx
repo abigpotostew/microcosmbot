@@ -22,34 +22,34 @@ const Footer: React.FC = () => (
               />
             </div>
           </Link>
-          {/*<nav className="flex flex-wrap w-full items-start gap-16 md:w-128 md:justify-between md:flex-nowrap lg:w-144 xl:gap-0 xl:pr-9">*/}
-          {/*  {FOOTER_LINKS.map((t, i) => (*/}
-          {/*    <div*/}
-          {/*      key={`${t.type}-${i}`}*/}
-          {/*      className="flex flex-col gap-4 items-start"*/}
-          {/*    >*/}
-          {/*      <h4 className="text-title4 capitalize">{t.type}</h4>*/}
-          {/*      <ul className="flex flex-col gap-3 items-start">*/}
-          {/*        {t.links.map((l, i) => {*/}
-          {/*          return (*/}
-          {/*            <Link*/}
-          {/*              key={`l-${i}`}*/}
-          {/*              href={l.url}*/}
-          {/*              target={l.external ? '_blank' : undefined}*/}
-          {/*              className="text-body3 font-normal capitalize"*/}
-          {/*            >*/}
-          {/*              {l.name}*/}
-          {/*            </Link>*/}
-          {/*          )*/}
-          {/*        })}*/}
-          {/*      </ul>*/}
-          {/*    </div>*/}
-          {/*  ))}*/}
-          {/*</nav>*/}
+          <nav className="flex flex-wrap w-full items-start gap-16 md:w-128 md:justify-between md:flex-nowrap lg:w-144 xl:gap-0 xl:pr-9">
+            {FOOTER_LINKS.map((t, i) => (
+              <div
+                key={`${t.type}-${i}`}
+                className="flex flex-col gap-4 items-start"
+              >
+                <h4 className="text-title4 capitalize">{t.type}</h4>
+                <ul className="flex flex-col gap-3 items-start">
+                  {t.links.map((l, i) => {
+                    return (
+                      <Link
+                        key={`l-${i}`}
+                        href={l.url}
+                        target={l.external ? '_blank' : undefined}
+                        className="text-body3 font-normal capitalize"
+                      >
+                        {l.name}
+                      </Link>
+                    )
+                  })}
+                </ul>
+              </div>
+            ))}
+          </nav>
         </div>
         <div className="flex flex-col gap-4 justify-between border-t border-gray-200 pt-6 mt-8 md:gap-0 md:flex-row xl:pr-9">
           <span className="text-body3 text-xs text-gray-300 md:text-sm">
-            By skymagic.
+            Created with ❤️ by skymagic.
           </span>
           <div className="flex gap-16 xl:gap-28">
             {/*<Link*/}
