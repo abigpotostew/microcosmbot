@@ -16,6 +16,7 @@ import { useWalletName } from '../client/react/hooks/sg-names'
 import { isError } from '@tanstack/react-query'
 
 const StargazeName = ({ address }: { address: string }) => {
+  //https://www.stargaze.zone/marketplace/stars19jq6mj84cnt9p7sagjxqf8hxtczwc8wlpuwe4sh62w45aheseues57n420
   return <span>{address}</span>
   const {
     data: nameOfWallet,
@@ -102,8 +103,15 @@ const TokenRulesExpand = ({ otp }: { otp: GetOtpOutput }) => {
                     </div>
 
                     <div className={'text-body5'}>
-                      Collection:{' '}
-                      <StargazeName address={rule.contractAddress} />
+                      <a
+                        href={`https://www.stargaze.zone/marketplace/${rule.contractAddress}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View collection
+                        <span aria-hidden="true">&rarr;</span>
+                      </a>
+                      {/*<StargazeName address={rule.contractAddress} />*/}
                     </div>
                   </div>
                 </dd>
