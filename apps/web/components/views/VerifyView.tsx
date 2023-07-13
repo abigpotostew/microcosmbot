@@ -43,8 +43,6 @@ const VerifyView: React.FC = () => {
 
   const loading = otpRes.isLoading
 
-  if (loading) return <TopSection loading={loading}></TopSection>
-
   return (
     <>
       <TopSection loading={loading} />
@@ -60,7 +58,20 @@ const VerifyView: React.FC = () => {
         {/*>*/}
 
         <div className={'grid'}>
-          <VerifyWtfBox otp={otpRes.data || null} />
+          {loading && (
+            <FrameBlock
+              classes={'container bg-olive-200 mx-auto animate-pulse'}
+            >
+              <div
+                className={
+                  'h-152 sm:w-64 lg:w-233  flex justify-center items-center text-black '
+                }
+              >
+                <SpinningCircles width={36} height={36} />
+              </div>
+            </FrameBlock>
+          )}
+          {!loading && <VerifyWtfBox otp={otpRes.data || null} />}
         </div>
       </div>
     </>
