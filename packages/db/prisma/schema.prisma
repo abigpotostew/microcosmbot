@@ -16,6 +16,7 @@ model Account {
 
   // tg id
   userId String @unique
+  username String?
 
   wallets            Wallet[]
   pendingGroupMember PendingGroupMember[]

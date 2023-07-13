@@ -25,8 +25,11 @@ export const addMemberToGroup = async ({
       },
       create: {
         userId: chatMember.new_chat_member.user.id.toString(),
+        username: chatMember.new_chat_member.user.username,
       },
-      update: {},
+      update: {
+        username: chatMember.new_chat_member.user.username,
+      },
     }),
   ])
   lc.log(group ? 'found group ' + group.id : 'no group found')
