@@ -143,11 +143,20 @@ export const addMemberToGroup = async ({
       },
     })
     lc.log('chat link consumed', chatMember.invite_link.invite_link)
-    const name =
-      chatMember.new_chat_member.user.username ||
-      chatMember.new_chat_member.user.first_name +
-        ' ' +
-        chatMember.new_chat_member.user.last_name
+    const getChatName = () => {
+      if (chatMember.new_chat_member.user.username) {
+        return `@${chatMember.new_chat_member.user.username}`
+      }
+      let name = ''
+      if (chatMember.new_chat_member.user.first_name) {
+        name = chatMember.new_chat_member.user.first_name
+      }
+      if (chatMember.new_chat_member.user.last_name) {
+        name = (name ? ' ' : '') + chatMember.new_chat_member.user.last_name
+      }
+      return name
+    }
+    const name = getChatName()
     // send welcome message to the group if they joined from the invite link
     await bot.api.sendMessage(
       parseInt(dbInviteLink.groupMember.group.groupId),

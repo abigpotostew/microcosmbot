@@ -17,3 +17,9 @@ Release.
 * Redesigned verify UI to include more info about which group the user is joining.
 * Add support for wallet connect for mobile users.
 * Store telegram account usernames in the database. To be used on the frontend to display the telegram username of the user.
+
+
+## [0.2.1] - 2023-07-13
+Release.
+* Fixed bug where welcome message didn't handle user with no username and no last name
+
