@@ -1,6 +1,7 @@
 import { Group, prismaClient } from '@microcosms/db'
 
 import { MyContext } from '../../bot/context'
+import { logContext, tinyAsyncPoolAll } from '../../utils'
 
 /**
  * Store admins in db. Create accounts for admins if needed
@@ -13,12 +14,13 @@ export const syncAdmins = async (
   chatId: number,
   group?: Group | null
 ) => {
-  //
+  const cl = logContext(ctx, 'syncAdmins')
   const admins = await ctx.api.getChatAdministrators(chatId)
 
   const accounts = await prismaClient().account.createMany({
     data: admins.map((a) => ({
       userId: a.user.id.toString(),
+      username: a.user.username,
     })),
     skipDuplicates: true,
   })
@@ -29,6 +31,43 @@ export const syncAdmins = async (
       },
     },
   })
+
+  const updateUsernames = async () => {
+    const matchedAccounts = adminAccounts.map((aa) => {
+      const matchedAdmin = admins.find(
+        (admin) => admin.user.id.toString() === aa.userId
+      )
+      return { account: aa, admin: matchedAdmin }
+    })
+    // update usernames if needed
+    const accountsNeedingUsernameUpdate = matchedAccounts.filter(
+      (a) =>
+        !a.account.username || a.admin?.user?.username !== a.account.username
+    )
+    if (accountsNeedingUsernameUpdate.length) {
+      await tinyAsyncPoolAll(
+        accountsNeedingUsernameUpdate,
+        async ({ admin, account }) => {
+          if (admin) {
+            await prismaClient().account.update({
+              where: {
+                id: account.id,
+              },
+              data: {
+                username: admin.user.username,
+              },
+            })
+            cl.log(
+              `updated username for ${account.userId} to ${admin.user.username}`
+            )
+          }
+        },
+        { concurrency: 3 }
+      )
+    }
+  }
+  await updateUsernames()
+
   if (!group) {
     group = await prismaClient().group.findFirst({
       where: {
