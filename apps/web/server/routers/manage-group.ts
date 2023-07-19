@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { procedure, router } from 'server/trpc'
 import { Group, ManageGroupCode, prismaClient } from '@microcosms/db'
 import { zodStarsContractAddress } from 'libs/stars'
+import bot from '@microcosms/bot/bot'
 
 const getGroup = procedure
   .input(z.object({ code: z.string() }))
@@ -35,7 +36,17 @@ const getGroup = procedure
     if (!codeDb) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
-    return codeDb
+    const adminsCountPromise = prismaClient().groupAdmin.count({
+      where: {
+        groupId: codeDb.group.id,
+      },
+    })
+    const membersCountPromise = bot.api.getChatMemberCount(codeDb.group.groupId)
+    const [adminsCount, membersCount] = await Promise.all([
+      adminsCountPromise,
+      membersCountPromise,
+    ])
+    return { ...codeDb, adminsCount, membersCount }
   })
 
 const getRule = procedure

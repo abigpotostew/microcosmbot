@@ -9,7 +9,15 @@ import { useRecoilState } from 'recoil'
 import { modalState as modalInitState } from 'state/Modal'
 import { EditOrCreateGroupTokenGateView } from 'components/views/EditOrCreateGroupTokenGateView'
 import { useCallback } from 'react'
-import { PlusIcon } from '@heroicons/react/20/solid'
+import {
+  CalendarDaysIcon,
+  HomeIcon,
+  LockClosedIcon,
+  PlusIcon,
+  UserGroupIcon,
+} from '@heroicons/react/20/solid'
+import { TokenRuleListItem } from './VerifyWtfBox'
+import { PrimaryButton } from '@microcosmbot/ui'
 
 function ManagingActiveGroup({
   group,
@@ -39,11 +47,6 @@ function ManagingActiveGroup({
                 manageGroup={group}
                 onSave={onSave}
               />
-              {/*<DepositBlock*/}
-              {/*  address={address}*/}
-              {/*  token={token as any}*/}
-              {/*  onSubmitCb={updateBalance}*/}
-              {/*/>*/}
             </FrameBlock>
           ),
         }
@@ -54,108 +57,115 @@ function ManagingActiveGroup({
   return (
     <>
       <div className={'min-w-full w-full'}>
-        <div className={'pt-4'}>
-          <span className={'pt-4'}>
-            <h3 className={'text-body1 text-sxl  inline'}>Access Rules</h3>
-            {' - '}
-            <h3 className={'text-body1 text-gray-600 pt-6 inline'}>
-              {group.group.name}
-            </h3>
-          </span>
-          <p className={'text-body1 text-sm pt-2 text-gray-500'}>
-            Add one or more Access Rules to gate your group.
-          </p>
-        </div>
-        {!group.group.groupTokenGate.length && (
-          <div className={'pt-3 text-body1 text-sm text-gray-600'}>
-            No access rules for this group.
-          </div>
-        )}
-        <ul role="list" className="divide-y divide-gray-100">
-          {group.group.groupTokenGate.map((tokenGate, index) => {
-            return (
-              <li
-                key={index}
-                className="relative flex justify-between gap-x-6 py-5"
-              >
-                <button
-                  onClick={
-                    () => {
-                      openEditModal(tokenGate)
-                    }
-                    // router.push(
-                    //   '/manage-group/' +
-                    //     router.query.code +
-                    //     '/edit/' +
-                    //     tokenGate.id
-                    // )
+        <div className={'pt-0'}>
+          <div
+            className={
+              'flex md:items-top justify-between flex-col md:flex-row align-top gap-x-6 py-5'
+            }
+          >
+            <div className={''}>
+              <span className={''}>
+                {/*<h3 className={'text-body1 text-sxl text-gray-600'}>*/}
+                {/*  Access Rules*/}
+                {/*</h3>*/}
+                <h3
+                  className={
+                    'text-body1 text-size-title3 text-gray-800 inline truncate'
                   }
                 >
-                  <div className={'flex gap-x-4'}>
-                    <div className="min-w-0 flex-auto">
-                      <p className="text-left text-body1 text-sm font-semibold leading-6 text-gray-900">
-                        {tokenGate.name}
-                      </p>
-                      <p className="text-body1 mt-1 truncate text-xs leading-5 text-gray-500">
-                        {tokenGate.contractAddress}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-x-4">
-                      {/*<div className="hidden sm:flex sm:flex-col sm:items-end">*/}
-                      {/*  <button*/}
-                      {/*    type="button"*/}
-                      {/*    className="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"*/}
-                      {/*  >*/}
-                      {/*    Button Edit*/}
-                      {/*  </button>*/}
-                      {/*</div>*/}
+                  {group.group.name}
+                </h3>
+              </span>
+            </div>
 
-                      <svg
-                        className="h-5 w-5 flex-none text-gray-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </button>
-              </li>
+            <div>
+              <div className="mt-4 md:mt-0 flex w-full flex-none gap-x-4 md:px-6">
+                <dt className="flex-none">
+                  <span className="sr-only">Member Info</span>
+                  <UserGroupIcon
+                    className="h-6 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </dt>
+                <dd className="text-sm font-medium leading-6 text-gray-900">
+                  {group.membersCount} members
+                </dd>
+              </div>
+              <div className="mt-4 flex w-full flex-none gap-x-4 md:px-6">
+                <dt className="flex-none">
+                  <span className="sr-only">Member Info</span>
+                  <LockClosedIcon
+                    className="h-6 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </dt>
+                <dd className="text-sm font-medium leading-6 text-gray-900">
+                  {group.adminsCount} admins
+                </dd>
+              </div>
+              <div className="mt-4 flex w-full flex-none gap-x-4 md:px-6">
+                <dt className="flex-none">
+                  <span className="sr-only">Due date</span>
+                  <CalendarDaysIcon
+                    className="h-6 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </dt>
+                <dd className="text-sm leading-6 text-gray-900">
+                  <time
+                    dateTime={
+                      group.group.createdAt.getFullYear() +
+                      '-' +
+                      group.group.createdAt.getMonth() +
+                      '-' +
+                      group.group.createdAt.getDate()
+                    }
+                  >
+                    created {group.group.createdAt.toLocaleDateString()}
+                  </time>
+                </dd>
+              </div>
+            </div>
+          </div>
+        </div>
+        {!group.group.groupTokenGate.length && (
+          <div className={'pt-6 text-body1 text-sm text-gray-600'}>
+            No rules yet, create access rules to token gate your chat!
+          </div>
+        )}
+        <h3 className={'text-body1 text-xl text-black font-bold my-0'}>
+          Access Rules
+        </h3>
+        <ul role="list" className="pt-2 pb-5 divide-y divide-gray-100">
+          {group.group.groupTokenGate.map((tokenGate, index) => {
+            return (
+              <TokenRuleListItem rule={tokenGate}>
+                <PrimaryButton
+                  classes="w-full text-body1 text-md text-white p-3 bg-gray-500 tracking-widest"
+                  onClick={() => {
+                    openEditModal(tokenGate)
+                  }}
+                >
+                  Edit
+                </PrimaryButton>
+              </TokenRuleListItem>
             )
           })}
-          <li className="relative flex justify-between gap-x-6 py-5">
+          <li className="relative flex justify-between gap-x-6 pt-5">
             <button
               onClick={() => {
                 openEditModal(undefined)
               }}
             >
               <div className={'flex gap-x-2'}>
-                <PlusIcon className="h-5 w-5 " />
+                <PlusIcon className="h-6 w-6" />
                 <div className="min-w-0 flex-auto">
-                  <p className="text-sm font-semibold leading-6 text-body1 text-gray-900 ">
+                  <p className="text-lg font-semibold leading-6 text-body1 text-gray-900 ">
                     <span>Add access rule</span>
                   </p>
                 </div>
-                <div className="flex items-center gap-x-4">
-                  {/*<svg*/}
-                  {/*  className="h-5 w-5 flex-none text-gray-400"*/}
-                  {/*  viewBox="0 0 20 20"*/}
-                  {/*  fill="currentColor"*/}
-                  {/*  aria-hidden="true"*/}
-                  {/*>*/}
-                  {/*  <path*/}
-                  {/*    fillRule="evenodd"*/}
-                  {/*    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"*/}
-                  {/*    clipRule="evenodd"*/}
-                  {/*  />*/}
-                  {/*</svg>*/}
-                </div>
-              </div>{' '}
+                {/*<div className="flex items-center gap-x-4"></div>*/}
+              </div>
             </button>
           </li>
         </ul>

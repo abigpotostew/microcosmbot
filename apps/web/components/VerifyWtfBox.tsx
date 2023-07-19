@@ -11,9 +11,12 @@ import {
 import { GetOtpOutput } from 'utils/types'
 import FrameBlock from './FrameBlock'
 import { VerifyButtons } from 'components/VerifyButtons'
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { useWalletName } from '../client/react/hooks/sg-names'
 import { isError } from '@tanstack/react-query'
+import classNames from 'classnames'
+import { botInfo } from '@microcosms/bot/botinfo'
+import { PrimaryButton } from '@microcosmbot/ui'
 
 const StargazeName = ({ address }: { address: string }) => {
   //https://www.stargaze.zone/marketplace/stars19jq6mj84cnt9p7sagjxqf8hxtczwc8wlpuwe4sh62w45aheseues57n420
@@ -31,6 +34,61 @@ const StargazeName = ({ address }: { address: string }) => {
   return <span>{nameOfWallet + '.stars'}</span>
 }
 
+const statuses = {
+  Complete: 'text-green-700 bg-green-50 ring-green-600/20',
+  'In progress': 'text-gray-600 bg-gray-50 ring-gray-500/10',
+  Archived: 'text-yellow-800 bg-yellow-50 ring-yellow-600/20',
+}
+export const TokenRuleListItem = ({
+  rule,
+  children,
+}: {
+  rule: Rule
+  children: ReactNode
+}) => {
+  return (
+    <li
+      key={rule.id}
+      className="flex items-center justify-between gap-x-6 py-5"
+    >
+      <div className="min-w-0">
+        <div className="flex items-start gap-x-3">
+          <p className="text-lg font-semibold leading-6 text-gray-900">
+            {rule.name}
+          </p>
+          <p
+            className={classNames(
+              statuses['Complete'],
+              'rounded-md whitespace-nowrap mt-0.5 px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset'
+            )}
+          >
+            Active
+          </p>
+        </div>
+        <div className="mt-1 flex items-center gap-x-2 text-sm leading-5 text-gray-500">
+          <p className="whitespace-nowrap">
+            At least {rule.minTokens} token
+            {(rule.minTokens || 1) > 1 ? 's' : ''}
+          </p>
+          {!!rule.maxTokens && (
+            <>
+              <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
+                <circle cx={1} cy={1} r={1} />
+              </svg>
+              <p className="truncate">
+                at most {rule.maxTokens} token{rule.maxTokens > 1 ? 's' : ''}
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-none items-center gap-x-4">{children}</div>
+    </li>
+  )
+}
+
+type Rule = NonNullable<GetOtpOutput>['group']['groupTokenGate'][0]
 const TokenRulesExpand = ({ otp }: { otp: GetOtpOutput }) => {
   const [expanded, setExpanded] = useState(false)
   if (!otp) {
@@ -78,64 +136,23 @@ const TokenRulesExpand = ({ otp }: { otp: GetOtpOutput }) => {
         className={expanded ? 'border-t border-gray-900/5' : 'hidden'}
         aria-labelledby="accordion-flush-heading-1"
       >
-        <div className="py-5 ">
+        <ul className="py-5 divide-y divide-gray-100">
           {otp.group.groupTokenGate.map((rule, id) => {
             return (
-              <div
-                key={id}
-                className="mt-4 flex w-full flex-none gap-x-4 px-6 items-center"
-              >
-                <dt className="flex-none">
-                  <span className="sr-only">Member Info</span>
-                  <CalculatorIcon
-                    className="h-6 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </dt>
-                <dd className=" font-medium leading-6 text-gray-900">
-                  <div className={''}>
-                    <div>Rule: {rule.name}</div>
-                    <div>
-                      Minimum tokens: {rule.minTokens}
-                      {rule.maxTokens
-                        ? `, Maximum tokens: ${rule.maxTokens}`
-                        : ''}
-                    </div>
-
-                    <div className={'text-body5'}>
-                      <a
-                        href={`https://www.stargaze.zone/marketplace/${rule.contractAddress}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        View collection
-                        <span aria-hidden="true">&rarr;</span>
-                      </a>
-                      {/*<StargazeName address={rule.contractAddress} />*/}
-                    </div>
-                  </div>
-                </dd>
-              </div>
+              <TokenRuleListItem rule={rule}>
+                <a
+                  href={`https://www.stargaze.zone/marketplace/${rule.contractAddress}`}
+                  target={'_blank'}
+                  rel="noreferrer"
+                >
+                  <PrimaryButton classes="w-full text-body1 text-sm text-white p-3 bg-gray-500">
+                    View collection
+                  </PrimaryButton>
+                </a>
+              </TokenRuleListItem>
             )
           })}
-
-          {/*<p className="mb-2 text-gray-500 dark:text-gray-400">*/}
-          {/*  Flowbite is an open-source library of interactive components built*/}
-          {/*  on top of Tailwind CSS including buttons, dropdowns, modals,*/}
-          {/*  navbars, and more.*/}
-          {/*</p>*/}
-          {/*<p className="text-gray-500 dark:text-gray-400">*/}
-          {/*  Check out this guide to learn how to{' '}*/}
-          {/*  <a*/}
-          {/*    href="/docs/getting-started/introduction/"*/}
-          {/*    className="text-blue-600 dark:text-blue-500 hover:underline"*/}
-          {/*  >*/}
-          {/*    get started*/}
-          {/*  </a>{' '}*/}
-          {/*  and start developing websites even faster with components on top of*/}
-          {/*  Tailwind CSS.*/}
-          {/*</p>*/}
-        </div>
+        </ul>
       </div>
     </div>
   )
@@ -151,20 +168,8 @@ export default function VerifyWtfBox({ otp }: { otp: GetOtpOutput }) {
       <div className="rounded-lg bg-gray-50 bg-olive-200 shadow-sm ring-1 ring-gray-900/5">
         <dl className="flex flex-wrap">
           <div className="flex-auto pl-6 pt-6">
-            {/*<dt className="text-sm font-semibold leading-6 text-gray-900 text-body4">*/}
-            {/*  WTF*/}
-            {/*</dt>*/}
-            {/*<dd className="mt-1 text-base font-semibold leading-6 text-gray-900">*/}
-            {/*  $10,560.00*/}
-            {/*</dd>*/}
             <VerifyButtons />
           </div>
-          {/*<div className="flex-none self-end px-6 pt-4">*/}
-          {/*  <dt className="sr-only">Member Count</dt>*/}
-          {/*  <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">*/}
-          {/*    Paid*/}
-          {/*  </dd>*/}
-          {/*</div>*/}
           <div className="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
             <dt className="flex-none">
               <span className="sr-only">Member Info</span>
@@ -220,23 +225,8 @@ export default function VerifyWtfBox({ otp }: { otp: GetOtpOutput }) {
               </time>
             </dd>
           </div>
-          {/*<div className="mt-4 flex w-full flex-none gap-x-4 px-6">*/}
-          {/*  <dt className="flex-none">*/}
-          {/*    <span className="sr-only">Status</span>*/}
-          {/*    <CreditCardIcon*/}
-          {/*      className="h-6 w-5 text-gray-400"*/}
-          {/*      aria-hidden="true"*/}
-          {/*    />*/}
-          {/*  </dt>*/}
-          {/*  <dd className="text-sm leading-6 text-gray-500">*/}
-          {/*    Paid with MasterCard*/}
-          {/*  </dd>*/}
-          {/*</div>*/}
         </dl>
         <div className="mt-6 border-t border-gray-900/5 px-6 py-3">
-          {/*<a href="#" className="text-sm font-semibold leading-6 text-gray-900">*/}
-          {/*  View access rules <span aria-hidden="true">&rarr;</span>*/}
-          {/*</a>*/}
           <TokenRulesExpand otp={otp} />
         </div>
       </div>
