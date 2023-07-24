@@ -7,9 +7,10 @@ import PlusIcon from 'public/icons/plus-icon.svg'
 interface Props {
   title: string
   text: string | JSX.Element
+  video?: JSX.Element
 }
 
-const WTFItem: React.FC<Props> = ({ title, text }) => {
+const WTFItem: React.FC<Props> = ({ title, text, video }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -27,7 +28,14 @@ const WTFItem: React.FC<Props> = ({ title, text }) => {
           )}
         </div>
       </div>
-      {isOpen ? <p className="text-body1 max-w-full mt-6 whitespace-pre-line">{text}</p> : null}
+      {isOpen ? (
+        <div>
+          <p className="text-body1 max-w-full mt-6 whitespace-pre-line">
+            {text}
+          </p>
+          {video}
+        </div>
+      ) : null}
     </div>
   )
 }

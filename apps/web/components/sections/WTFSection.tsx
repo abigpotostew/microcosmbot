@@ -36,7 +36,12 @@ const WTFSection: React.FC = () => {
       </div>
       <div className="container flex flex-col items-start justify-center mt-2 px-6 xl:px-0 xl:mt-0">
         {websiteData.wtfSection.wtfList.map((wtf) => (
-          <WTFItem key={wtf.title} title={wtf.title} text={wtf.text} />
+          <WTFItem
+            key={wtf.title}
+            title={wtf.title}
+            text={wtf.text}
+            video={wtf.video}
+          />
         ))}
       </div>
     </section>

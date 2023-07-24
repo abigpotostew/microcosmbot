@@ -4,6 +4,7 @@ import { FunctionComponent } from 'react'
 export interface WTFList {
   title: string
   text: string | JSX.Element
+  video?: JSX.Element
 }
 
 export interface IBenefitItem {
