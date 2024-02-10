@@ -51,10 +51,19 @@ export const on_my_chat_member: Middleware<MyContext> = async (ctx) => {
   if (myChatMember.chat.type !== 'supergroup') {
     // not a supergroup, exit the group
     //if it's being added, show message and remove self
+    const messageChannel = `Sorry I don't support channels. Try adding me to a private group.`
+    const messageElse = `Sorry I don't support this type of chat. Try adding me to a private group.`
+    const messageGroup = `This group isn't configured for me yet. Set 'Chat history for new members' to 'Visible' and invite me again.`
+    let message: string
+    if (myChatMember.chat.type === 'group') {
+      message = messageGroup
+    } else if (myChatMember.chat.type === 'channel') {
+      message = messageChannel
+    } else {
+      message = messageElse
+    }
     if (newDirection === 'in') {
-      await ctx.reply(
-        `This group isn't configured for me yet. Set 'Chat history for new members' to 'Visible' and invite me again.`
-      )
+      await ctx.reply(message)
       await ctx.api.leaveChat(ctx.myChatMember.chat.id)
     }
     return
@@ -100,5 +109,5 @@ export const on_my_chat_member: Middleware<MyContext> = async (ctx) => {
 
   await syncAdmins(ctx, ctx.myChatMember.chat.id, group)
   cl.log('admins synced')
-  return ctx.reply('Group activated!')
+  return ctx.reply('Group activated! DM me to continue configuring the group.')
 }

@@ -99,7 +99,7 @@ const cmd_start: CommandMiddleware<MyContext> = async (
         },
       },
     })
-    let msg = `Hey and thanks for using MicroCosmBot! Connect a wallet to join '${group.name}'.`
+    let msg = `Hey I'm MicroCosmBot and can help you join private groups with your Stargaze NFTs. Connect a wallet to join '${group.name}'.`
     if (existingWallets.length > 0) {
       msg +=
         ' You have existing wallets. Would you like to use these wallets? Or connect a new wallet?'

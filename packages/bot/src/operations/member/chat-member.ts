@@ -168,6 +168,9 @@ export const addMemberToGroup = async ({
 const getRandomGreeting = (name: string) => {
   const greeting =
     randomGreetings[Math.floor(Math.random() * randomGreetings.length)]
+  if (name.startsWith('@')) {
+    name = name.slice(1)
+  }
   return greeting.replace('%%NAME%%', `@${name}`)
 }
 
@@ -184,7 +187,6 @@ const randomGreetings = [
   '%%NAME%% has entered the conversation',
   '%%NAME%% has joined the room',
   '%%NAME%% has entered the room',
-  '%%NAME%% has joined the channel',
 ]
 
 /**

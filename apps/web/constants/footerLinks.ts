@@ -14,6 +14,13 @@ export const FOOTER_LINKS: FooterLinksRow[] = [
         url: 'https://t.me/microcosmbotdotxyz_bot?startgroup=true',
         external: false,
       },
+
+      {
+        name: 'Documentation',
+        url: 'https://microcosmbotxyz.notion.site/Microcosmbot-xyz-Documentation-3fd13d93ad714e3682216e7a79d535c3',
+        external: true,
+      },
+
       // {
       //   name: 'Tutorials',
       //   url: 'https://docs.nouns.stream/tutorials/overview',

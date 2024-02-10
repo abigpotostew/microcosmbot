@@ -42,6 +42,6 @@ apps/web3/broadcast
 
 # env
 apps/web3/.env
-.env
+.env*
 
 git.sh

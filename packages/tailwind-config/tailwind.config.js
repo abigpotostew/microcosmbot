@@ -7,6 +7,10 @@ module.exports = {
     `./pages/**/*.{js,ts,jsx,tsx,md,mdx}`,
     `./components/**/*.{js,ts,jsx,tsx}`,
     './public/**/*.html',
+    './node_modules/flowbite/**/*.js',
+    './node_modules/flowbite-react/**/*.js',
+    './public/**/*.html',
+    './app/**/*.{ts,tsx}',
   ],
   darkMode: 'class',
   theme: {
