@@ -144,7 +144,6 @@ export const addMemberToGroup = async ({
     })
     lc.log('chat link consumed', chatMember.invite_link.invite_link)
     const getChatName = () => {
-      lc.log('chat member data is', JSON.stringify(chatMember.new_chat_member))
       if (chatMember.new_chat_member.user.username) {
         return `@${chatMember.new_chat_member.user.username}`
       }
@@ -153,7 +152,8 @@ export const addMemberToGroup = async ({
         name = chatMember.new_chat_member.user.first_name
       }
       if (chatMember.new_chat_member.user.last_name) {
-        name = (name ? ' ' : '') + chatMember.new_chat_member.user.last_name
+        name =
+          (name ? name + ' ' : '') + chatMember.new_chat_member.user.last_name
       }
       return name
     }
@@ -169,10 +169,8 @@ export const addMemberToGroup = async ({
 const getRandomGreeting = (name: string) => {
   const greeting =
     randomGreetings[Math.floor(Math.random() * randomGreetings.length)]
-  if (name.startsWith('@')) {
-    name = name.slice(1)
-  }
-  return greeting.replace('%%NAME%%', `@${name}`)
+
+  return greeting.replace('%%NAME%%', name)
 }
 
 const randomGreetings = [
