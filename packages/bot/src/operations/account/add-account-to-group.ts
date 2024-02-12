@@ -67,6 +67,18 @@ export const addAccountToGroup = async ({
     }
   }
 
+  //unban the user if they were kicked
+  try {
+    cl.log('unbanning user: ', account.userId)
+    await bot.api.unbanChatMember(
+      group.groupId.toString(),
+      parseInt(account.userId),
+      { only_if_banned: true }
+    )
+  } catch (e) {
+    cl.log('error unbanning user', e)
+  }
+
   // create a fresh invite link here for the user
   const link = await bot.api.createChatInviteLink(group.groupId.toString(), {
     creates_join_request: false,
@@ -100,6 +112,7 @@ export const addAccountToGroup = async ({
           },
         },
         groupMemberInviteLink: {
+          //this may be a bug?
           connectOrCreate: {
             where: {
               inviteLink,
@@ -114,6 +127,7 @@ export const addAccountToGroup = async ({
       update: {
         //leave it as whatever active state until they actually join they will be added again
         groupMemberInviteLink: {
+          //this may be a bug?
           connectOrCreate: {
             where: {
               inviteLink,
