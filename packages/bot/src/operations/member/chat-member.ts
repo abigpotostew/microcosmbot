@@ -144,6 +144,7 @@ export const addMemberToGroup = async ({
     })
     lc.log('chat link consumed', chatMember.invite_link.invite_link)
     const getChatName = () => {
+      lc.log('chat member data is', JSON.stringify(chatMember.new_chat_member))
       if (chatMember.new_chat_member.user.username) {
         return `@${chatMember.new_chat_member.user.username}`
       }
