@@ -179,11 +179,12 @@ export const ManageGroup = () => {
 
   const group = trpc.manageGroup.getGroup.useQuery(
     { code: router.query.code?.toString() as string },
-    { enabled: !!router.query.code }
+    { enabled: !!router.query.code, refetchOnWindowFocus: false, retry: false }
   )
   const refretch = useCallback(async () => {
     await group.refetch()
   }, [group])
+
   if (group.isLoading) {
     return <div>Loading...</div>
   }
