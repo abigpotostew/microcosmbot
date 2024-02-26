@@ -94,6 +94,7 @@ const saveRule = procedure
         minToken: z.number().int().nonnegative().nullish(),
         maxToken: z.number().int().nonnegative().nullish(),
         contractAddress: zodStarsContractAddress,
+        ruleType: z.enum(['SG721', 'DAO_DAO']).default('SG721'),
       }),
     })
   )
@@ -161,6 +162,7 @@ const saveRule = procedure
               id: codeDb.group.id,
             },
           },
+          ruleType: input.updates.ruleType,
         },
       })
     }
@@ -174,6 +176,7 @@ const saveRule = procedure
         minTokens: input.updates.minToken || 1,
         maxTokens: input.updates.maxToken,
         contractAddress: input.updates.contractAddress,
+        //cannot change the rule type
       },
     })
   })
