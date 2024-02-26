@@ -84,7 +84,7 @@ function ManagingActiveGroup({
 
   const { handleSubmit, handleChange, values, initialValues } = useFormik({
     initialValues: {
-      matchAny: group.group.allowMatchAnyRule,
+      matchAny: group.group.allowMatchAnyRule ?? false,
     },
     validate: toFormikValidate(Schema),
     onSubmit: (values) => submitForm.mutate(values),
@@ -214,6 +214,7 @@ function ManagingActiveGroup({
             >
               <input
                 disabled={submitForm.isLoading}
+                defaultChecked={values.matchAny}
                 id="matchAny"
                 aria-describedby="matchAny"
                 name="matchAny"
