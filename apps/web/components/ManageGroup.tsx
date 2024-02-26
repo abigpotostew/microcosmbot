@@ -8,7 +8,7 @@ import FrameBlock from 'components/FrameBlock'
 import { useRecoilState } from 'recoil'
 import { modalState as modalInitState } from 'state/Modal'
 import { EditOrCreateGroupTokenGateView } from 'components/views/EditOrCreateGroupTokenGateView'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import {
   CalendarDaysIcon,
   HomeIcon,
@@ -18,6 +18,24 @@ import {
 } from '@heroicons/react/20/solid'
 import { TokenRuleListItem } from './VerifyWtfBox'
 import { PrimaryButton } from '@microcosmbot/ui'
+import { toFormikValidate } from 'zod-formik-adapter'
+import { Formik, useFormik } from 'formik'
+import { z } from 'zod'
+import { zodStarsContractAddress } from 'libs/stars'
+import { useMutation } from '@tanstack/react-query'
+
+const Schema = z.object({
+  matchAny: z.boolean(),
+})
+// .refine((data) => {
+//   if (data.minTokens && data.maxTokens) {
+//     return (
+//         parseInt(data.minTokens.toString()) <
+//         parseInt(data.maxTokens.toString())
+//     )
+//   }
+//   return true
+// }, 'refined')
 
 function ManagingActiveGroup({
   group,
@@ -54,6 +72,28 @@ function ManagingActiveGroup({
     },
     [setModalState, group, onSave]
   )
+
+  const setMatchAny = trpc.manageGroup.setMatchAny.useMutation()
+
+  const submitForm = useMutation(async (values: { matchAny: boolean }) => {
+    await setMatchAny.mutateAsync({
+      code: group.code,
+      matchAny: values.matchAny,
+    })
+  })
+
+  const { handleSubmit, handleChange, values, initialValues } = useFormik({
+    initialValues: {
+      matchAny: group.group.allowMatchAnyRule,
+    },
+    validate: toFormikValidate(Schema),
+    onSubmit: (values) => submitForm.mutate(values),
+  })
+  useEffect(() => {
+    if (values !== initialValues) {
+      submitForm.mutate(values)
+    }
+  }, [values, initialValues])
   return (
     <>
       <div className={'min-w-full w-full'}>
@@ -65,9 +105,6 @@ function ManagingActiveGroup({
           >
             <div className={''}>
               <span className={''}>
-                {/*<h3 className={'text-body1 text-sxl text-gray-600'}>*/}
-                {/*  Access Rules*/}
-                {/*</h3>*/}
                 <h3
                   className={
                     'text-body1 text-size-title3 text-gray-800 inline truncate'
@@ -169,6 +206,33 @@ function ManagingActiveGroup({
             </button>
           </li>
         </ul>
+        <div className="relative flex items-start">
+          <div className="flex h-6 items-center">
+            <form
+              onSubmit={handleSubmit}
+              // className="text-body1 bg-olive-100 shadow-sm md:col-span-2"
+            >
+              <input
+                disabled={submitForm.isLoading}
+                id="matchAny"
+                aria-describedby="matchAny"
+                name="matchAny"
+                type="checkbox"
+                onChange={handleChange}
+                value={values.matchAny.toString()}
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              />
+            </form>
+          </div>
+          <div className="ml-3 text-sm leading-6">
+            <label htmlFor="matchAny" className="font-medium text-gray-900">
+              Match any
+            </label>
+            <p id="matchAny" className="text-gray-500">
+              Grant access when any rule matches
+            </p>
+          </div>
+        </div>
       </div>
     </>
   )

@@ -15,7 +15,8 @@
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "backfill": "ts-node --transpile-only scripts/backfill-account-usernames.ts"
+    "backfill": "ts-node --transpile-only scripts/backfill-account-usernames.ts",
+    "prepare": "turbo run prepare"
   },
   "devDependencies": {
     "eslint-config-custom": "*",

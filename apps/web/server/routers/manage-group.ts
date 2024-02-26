@@ -211,10 +211,44 @@ const deleteRule = procedure
     }
   })
 
+const setMatchAny = procedure
+  .input(
+    z.object({
+      matchAny: z.boolean(),
+      code: z.string(),
+    })
+  )
+
+  .mutation(async ({ input, ctx }) => {
+    if (!input.code) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    const updatedRes = await prismaClient().group.updateMany({
+      where: {
+        manageGroupCodes: {
+          some: {
+            code: input.code,
+            expiresAt: {
+              gt: new Date(),
+            },
+          },
+        },
+      },
+      data: {
+        allowMatchAnyRule: input.matchAny,
+      },
+    })
+    if (!updatedRes.count) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    return true
+  })
+
 export const manageGroupRouter = router({
   // Public
   getGroup: getGroup,
   getRule: getRule,
   saveRule: saveRule,
   deleteRule: deleteRule,
+  setMatchAny: setMatchAny,
 })

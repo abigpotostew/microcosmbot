@@ -69,7 +69,6 @@ export const EditOrCreateGroupTokenGateView = ({
     maxTokens:
       typeof rule?.maxTokens !== 'number' ? '' : rule?.maxTokens.toString(),
   }
-  console.log('initalizeValues', initalizeValues)
   return (
     <div className="space-y-10 divide-y divide-gray-900/10">
       <div className="bg-olive-200 grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">

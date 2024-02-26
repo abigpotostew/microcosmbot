@@ -63,8 +63,12 @@ export const on_my_chat_member: Middleware<MyContext> = async (ctx) => {
       message = messageElse
     }
     if (newDirection === 'in') {
-      await ctx.reply(message)
-      await ctx.api.leaveChat(ctx.myChatMember.chat.id)
+      try {
+        await ctx.reply(message)
+        await ctx.api.leaveChat(ctx.myChatMember.chat.id)
+      } catch (e) {
+        cl.error('cannot leave an exit message', e)
+      }
     }
     return
   }

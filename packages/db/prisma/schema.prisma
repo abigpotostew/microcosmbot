@@ -15,7 +15,7 @@ model Account {
   updatedAt DateTime @updatedAt
 
   // tg id
-  userId String @unique
+  userId   String  @unique
   username String?
 
   wallets            Wallet[]
@@ -37,8 +37,8 @@ model Wallet {
   account   Account @relation(fields: [accountId], references: [id])
   accountId String
 
-  @@index([address])
   @@unique([accountId, address])
+  @@index([address])
 }
 
 // A telegram group that has been registered with the bot.
@@ -51,6 +51,8 @@ model Group {
   active  Boolean @default(false)
   // tg id
   groupId String  @unique
+
+  allowMatchAnyRule Boolean @default(false)
 
   groupMembers        GroupMember[]
   manageGroupCodes    ManageGroupCode[]
@@ -67,16 +69,23 @@ model GroupTokenGate {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name            String  @default("") @db.VarChar(128)
-  active          Boolean @default(true)
-  contractAddress String
-  minTokens       Int?
-  maxTokens       Int?
+  name                  String  @default("") @db.VarChar(128)
+  active                Boolean @default(true)
+  contractAddress       String
+  minTokens             Int?
+  maxTokens             Int?
+
+  ruleType              GroupTokenGateRuleTypes @default(SG721)
 
   group   Group  @relation(fields: [groupId], references: [id])
   groupId String
 
   @@index([groupId])
+}
+
+enum GroupTokenGateRuleTypes {
+  SG721
+  DAO_DAO
 }
 
 // Session that allows anyone with this code to access the dashboard without logging in.
@@ -157,7 +166,7 @@ model GroupMemberInviteLink {
   groupMember   GroupMember @relation(fields: [groupMemberId], references: [id])
   groupMemberId String
 
-  inviteLink String @unique
+  inviteLink String    @unique
   expiresAt  DateTime
   consumedAt DateTime?
 
