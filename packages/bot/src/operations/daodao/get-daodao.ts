@@ -1,4 +1,5 @@
 import { fetchCosmWasm } from '../token-ownership/nft-ownership'
+import { ErrorCodes } from './errors.types'
 
 type DumpState = {
   data: {
@@ -36,12 +37,6 @@ type ContractInfo = {
   }
 }
 
-enum ErrorCodes {
-  NOT_NFT_VOTING_MODULE = 'NOT_NFT_VOTING_MODULE',
-  VOTING_MODULE_NOT_FOUND = 'VOTING_MODULE_NOT_FOUND',
-  INVALID_NFT_COLLECTION_INFO = 'INVALID_NFT_COLLECTION_INFO',
-  NOT_DAO_DAO_CORE = 'NOT_DAO_DAO_CORE',
-}
 type Result<T> = { ok: true; value: T } | { ok: false; error: ErrorCodes }
 export const Ok = <T>(value: T): Result<T> => ({ ok: true, value })
 export const Err = (error: ErrorCodes): Result<never> => ({ ok: false, error })
@@ -56,58 +51,63 @@ type DaoDaoResult = {
 export const getDaoDaoContractAndNft = async (
   contractAddress: string
 ): Promise<Result<DaoDaoResult>> => {
-  const dump_state: DumpState = await fetchCosmWasm(contractAddress, {
-    dump_state: {},
-  })
-  if (dump_state.data.version.contract !== 'crates.io:dao-dao-core') {
+  try {
+    const dump_state: DumpState = await fetchCosmWasm(contractAddress, {
+      dump_state: {},
+    })
+    if (dump_state.data.version.contract !== 'crates.io:dao-dao-core') {
+      return Err(ErrorCodes.NOT_DAO_DAO_CORE)
+    }
+
+    const voting_module_address = dump_state.data.voting_module
+    if (typeof voting_module_address !== 'string') {
+      console.log('voting_module_address not found')
+      return Err(ErrorCodes.VOTING_MODULE_NOT_FOUND)
+    }
+    const vote_nft_config: VotingModuleConfig = await fetchCosmWasm(
+      voting_module_address,
+      {
+        config: {},
+      }
+    )
+
+    const nft_address = vote_nft_config.data.nft_address
+    if (typeof nft_address !== 'string') {
+      console.log('nft_address not found')
+      return Err(ErrorCodes.NOT_NFT_VOTING_MODULE)
+    }
+
+    //further query the nft contract??
+    let collection_info: NftConfig
+    try {
+      collection_info = await fetchCosmWasm(nft_address, {
+        collection_info: {},
+      })
+    } catch (e) {
+      console.log('error fetching nft collection_info: ', e)
+      return Err(ErrorCodes.INVALID_NFT_COLLECTION_INFO)
+    }
+
+    let contract_info: ContractInfo
+    try {
+      contract_info = await fetchCosmWasm(nft_address, {
+        contract_info: {},
+      })
+    } catch (e) {
+      console.log('error fetching nft contract_info: ', e)
+      return Err(ErrorCodes.INVALID_NFT_COLLECTION_INFO)
+    }
+
+    const nft = {
+      name: contract_info.data.name,
+      coverImage: collection_info.data.image,
+    }
+
+    return Ok({ nft_address, voting_module_address, nft })
+  } catch (e) {
+    console.log('error fetching dao dao contract and nft: ', e)
     return Err(ErrorCodes.NOT_DAO_DAO_CORE)
   }
-
-  const voting_module_address = dump_state.data.voting_module
-  if (typeof voting_module_address !== 'string') {
-    console.log('voting_module_address not found')
-    return Err(ErrorCodes.VOTING_MODULE_NOT_FOUND)
-  }
-  const vote_nft_config: VotingModuleConfig = await fetchCosmWasm(
-    voting_module_address,
-    {
-      config: {},
-    }
-  )
-
-  const nft_address = vote_nft_config.data.nft_address
-  if (typeof nft_address !== 'string') {
-    console.log('nft_address not found')
-    return Err(ErrorCodes.NOT_NFT_VOTING_MODULE)
-  }
-
-  //further query the nft contract??
-  let collection_info: NftConfig
-  try {
-    collection_info = await fetchCosmWasm(nft_address, {
-      collection_info: {},
-    })
-  } catch (e) {
-    console.log('error fetching nft collection_info: ', e)
-    return Err(ErrorCodes.INVALID_NFT_COLLECTION_INFO)
-  }
-
-  let contract_info: ContractInfo
-  try {
-    contract_info = await fetchCosmWasm(nft_address, {
-      contract_info: {},
-    })
-  } catch (e) {
-    console.log('error fetching nft contract_info: ', e)
-    return Err(ErrorCodes.INVALID_NFT_COLLECTION_INFO)
-  }
-
-  const nft = {
-    name: contract_info.data.name,
-    coverImage: collection_info.data.image,
-  }
-
-  return Ok({ nft_address, voting_module_address, nft })
 }
 
 export const getStakedCount = async (

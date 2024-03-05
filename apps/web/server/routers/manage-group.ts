@@ -4,6 +4,7 @@ import { procedure, router } from 'server/trpc'
 import { Group, ManageGroupCode, prismaClient } from '@microcosms/db'
 import { zodStarsContractAddress } from 'libs/stars'
 import bot from '@microcosms/bot/bot'
+import { getDaoDaoContractAndNft } from '@microcosms/bot/operations/daodao/get-daodao'
 
 const getGroup = procedure
   .input(z.object({ code: z.string() }))
@@ -246,6 +247,26 @@ const setMatchAny = procedure
     }
     return true
   })
+const getDaoDaoInfo = procedure
+  .input(
+    z.object({
+      contractAddress: zodStarsContractAddress,
+    })
+  )
+
+  .query(async ({ input, ctx }) => {
+    if (!input.contractAddress) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    const daodaoinfo = await getDaoDaoContractAndNft(input.contractAddress)
+    if (!daodaoinfo.ok) {
+      return {
+        ok: false,
+        error: daodaoinfo.error.toString(),
+      }
+    }
+    return { ok: true, daoDaoInfo: daodaoinfo.value }
+  })
 
 export const manageGroupRouter = router({
   // Public
@@ -254,4 +275,5 @@ export const manageGroupRouter = router({
   saveRule: saveRule,
   deleteRule: deleteRule,
   setMatchAny: setMatchAny,
+  getDaoDaoInfo: getDaoDaoInfo,
 })
