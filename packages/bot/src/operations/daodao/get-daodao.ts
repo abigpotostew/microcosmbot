@@ -20,7 +20,7 @@ type NftConfig = {
   data: {
     // "creator": "stars18zwgf4kvwxpyejde5dyudjl9jkl7a4fttnrqpy",
     // "description": "Meet Adora! UMEE's first and cutest digital collectible. 1000 of these Adorabilis are crossing the defi waves using UMEE's borrowing and lending platform. Check out more on https://umee.cc/",
-    image: 'ipfs://bafybeidr4hu5wg4fsfro7utqewszoauo22c2bpchrqwt6eqiu6fiyuvjiy/1001.gif'
+    image: string //'ipfs://bafybeidr4hu5wg4fsfro7utqewszoauo22c2bpchrqwt6eqiu6fiyuvjiy/1001.gif'
     // "external_link": "https://umee.cc/",
     // "explicit_content": false,
     // "start_trading_time": "1673158500000000000",
