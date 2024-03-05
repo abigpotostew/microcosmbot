@@ -6,6 +6,7 @@ import { getOwnedCount } from '@microcosms/bot'
 const schema = z.object({
   contractAddress: zodStarsContractAddress,
   owner: zodStarsAddress,
+  isDaoDao: z.boolean().optional().default(false),
 })
 /**
  * API endpoint to get the number of NFTs owned by an address and cache it in vercel so that during
@@ -29,7 +30,7 @@ export default async function handler(
     return
   }
 
-  const count = await getOwnedCount(parse.data)
+  const count = await getOwnedCount({ ...parse.data, useRemoteCache: false })
   //cache for 5 minutes
   res.setHeader('Cache-Control', 's-maxage=300')
   res.status(200).json({ count })

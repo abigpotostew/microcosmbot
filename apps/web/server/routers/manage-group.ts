@@ -4,6 +4,7 @@ import { procedure, router } from 'server/trpc'
 import { Group, ManageGroupCode, prismaClient } from '@microcosms/db'
 import { zodStarsContractAddress } from 'libs/stars'
 import bot from '@microcosms/bot/bot'
+import { getDaoDaoContractAndNft } from '@microcosms/bot/operations/daodao/get-daodao'
 
 const getGroup = procedure
   .input(z.object({ code: z.string() }))
@@ -94,6 +95,7 @@ const saveRule = procedure
         minToken: z.number().int().nonnegative().nullish(),
         maxToken: z.number().int().nonnegative().nullish(),
         contractAddress: zodStarsContractAddress,
+        ruleType: z.enum(['SG721', 'DAO_DAO']).default('SG721'),
       }),
     })
   )
@@ -161,6 +163,7 @@ const saveRule = procedure
               id: codeDb.group.id,
             },
           },
+          ruleType: input.updates.ruleType,
         },
       })
     }
@@ -174,6 +177,7 @@ const saveRule = procedure
         minTokens: input.updates.minToken || 1,
         maxTokens: input.updates.maxToken,
         contractAddress: input.updates.contractAddress,
+        //cannot change the rule type
       },
     })
   })
@@ -243,6 +247,26 @@ const setMatchAny = procedure
     }
     return true
   })
+const getDaoDaoInfo = procedure
+  .input(
+    z.object({
+      contractAddress: zodStarsContractAddress,
+    })
+  )
+
+  .query(async ({ input, ctx }) => {
+    if (!input.contractAddress) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    const daodaoinfo = await getDaoDaoContractAndNft(input.contractAddress)
+    if (!daodaoinfo.ok) {
+      return {
+        ok: false,
+        error: daodaoinfo.error.toString(),
+      }
+    }
+    return { ok: true, daoDaoInfo: daodaoinfo.value }
+  })
 
 export const manageGroupRouter = router({
   // Public
@@ -251,4 +275,5 @@ export const manageGroupRouter = router({
   saveRule: saveRule,
   deleteRule: deleteRule,
   setMatchAny: setMatchAny,
+  getDaoDaoInfo: getDaoDaoInfo,
 })
