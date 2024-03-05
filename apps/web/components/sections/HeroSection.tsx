@@ -32,7 +32,9 @@ const HeroSection: React.FC = () => {
               }
             >
               <div>
-                <h2 className={'font-semibold'}>Create a token gated telegram group in seconds.</h2>
+                <h2 className={'font-semibold'}>
+                  Create a token gated telegram group in seconds.
+                </h2>
               </div>
               <div className={'pt-8'}>
                 <a
@@ -40,8 +42,8 @@ const HeroSection: React.FC = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <PrimaryButton classes="w-full text-xl text-body1 text-white">
-                    @{botInfo.username}
+                  <PrimaryButton classes="w-full text-xl text-body1 font-sans text-white">
+                    /start
                   </PrimaryButton>
                 </a>
               </div>
