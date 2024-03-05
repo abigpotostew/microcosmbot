@@ -94,6 +94,7 @@ const TokenRulesExpand = ({ otp }: { otp: GetOtpOutput }) => {
   if (!otp) {
     return null
   }
+  console.log('opt ', otp)
   return (
     <div
       id="accordion-flush"
@@ -141,12 +142,18 @@ const TokenRulesExpand = ({ otp }: { otp: GetOtpOutput }) => {
             return (
               <TokenRuleListItem rule={rule}>
                 <a
-                  href={`https://www.stargaze.zone/marketplace/${rule.contractAddress}`}
+                  href={
+                    rule.ruleType === 'DAO_DAO'
+                      ? `https://daodao.zone/dao/${rule.contractAddress}/home`
+                      : `https://www.stargaze.zone/marketplace/${rule.contractAddress}`
+                  }
                   target={'_blank'}
                   rel="noreferrer"
                 >
                   <PrimaryButton classes="w-full text-body1 text-sm text-white p-3 bg-gray-500">
-                    View collection
+                    {rule.ruleType === 'DAO_DAO'
+                      ? 'View DAO'
+                      : 'View Collection'}
                   </PrimaryButton>
                 </a>
               </TokenRuleListItem>

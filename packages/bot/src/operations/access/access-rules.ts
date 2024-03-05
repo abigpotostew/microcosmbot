@@ -63,6 +63,9 @@ export const checkAccessRules = async (
     if (foundWallet.value) {
       return
     }
+    //todo allow the rules to span wallets.
+    // ie, wallet 1 passes rule A and wallet 2 passes rule B, for AND then the group is allowed
+    // so move this check to the group level outside of this loop.
     // use OR logic if true, AND logic if false
     const allowMatchAnyRule = group.allowMatchAnyRule
     let matchedAnyRule = false

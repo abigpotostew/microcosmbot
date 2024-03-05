@@ -22,3 +22,17 @@ export const getAdminGroups = async ({ userId }: { userId: number }) => {
     },
   })
 }
+
+export const getAdminGroupsCount = async ({ userId }: { userId: number }) => {
+  return prismaClient().group.count({
+    where: {
+      groupAdmins: {
+        some: {
+          account: {
+            userId: userId.toString(),
+          },
+        },
+      },
+    },
+  })
+}

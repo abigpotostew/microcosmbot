@@ -29,6 +29,7 @@ const getOtp = procedure
               contractAddress: 'stars1234567890987654321',
               minTokens: 1,
               maxTokens: null,
+              ruleType: 'SG721',
             },
             {
               id: '002',
@@ -36,6 +37,7 @@ const getOtp = procedure
               contractAddress: 'stars1234567890987654321',
               minTokens: 2,
               maxTokens: 3,
+              ruleType: 'DAO_DAO',
             },
           ],
           createdAt: new Date('2023-07-02T08:00:00Z'),
@@ -76,6 +78,7 @@ const getOtp = procedure
                 contractAddress: true,
                 minTokens: true,
                 maxTokens: true,
+                ruleType: true,
               },
             },
           },
