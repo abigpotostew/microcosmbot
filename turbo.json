@@ -23,7 +23,8 @@
         "NEXT_PUBLIC_CHAINNAME",
         "NEXT_PUBLIC_CHAINRESTURL",
         "NEXT_PUBLIC_NETWORK",
-        "NEXT_PUBLIC_CHAINID"
+        "NEXT_PUBLIC_CHAINID",
+        "MAINTENANCE_MODE"
       ]
     },
     "lint": {
@@ -46,7 +47,8 @@
         "NEXT_PUBLIC_CHAINNAME",
         "NEXT_PUBLIC_CHAINRESTURL",
         "NEXT_PUBLIC_NETWORK",
-        "NEXT_PUBLIC_CHAINID"
+        "NEXT_PUBLIC_CHAINID",
+        "MAINTENANCE_MODE"
       ],
       "cache": false,
       "persistent": true
