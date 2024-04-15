@@ -122,6 +122,7 @@ module.exports = {
         125: '33.333rem',
         '130px': '8.125rem',
         133: '33.333rem',
+        170: '38rem',
       },
       maxHeight: {
         '139px': '8.7rem',

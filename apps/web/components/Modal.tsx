@@ -57,7 +57,7 @@ export const Modal: React.FC<ModalProps> = ({
       )}
       onClick={closeOnClickOutside ? onOverlayClick : undefined}
     >
-      <div className="relative w-full max-w-133 mx-auto" ref={container}>
+      <div className="relative w-full max-w-[700px] mx-auto" ref={container}>
         <div>{content}</div>
         <button
           className="absolute top-6 right-6 flex items-center justify-center cursor-pointer select-none outline-none z-50"

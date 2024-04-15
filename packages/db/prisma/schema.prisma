@@ -60,6 +60,8 @@ model Group {
   groupTokenGate      GroupTokenGate[]
   groupAdmins         GroupAdmin[]
 
+  chainId String @default("stargaze-1")
+
   @@index([groupId])
 }
 
@@ -69,13 +71,16 @@ model GroupTokenGate {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name                  String  @default("") @db.VarChar(128)
-  active                Boolean @default(true)
-  contractAddress       String
-  minTokens             Int?
-  maxTokens             Int?
+  name            String  @default("") @db.VarChar(128)
+  active          Boolean @default(true)
+  contractAddress String
+  minTokens       Float?
+  maxTokens       Float?
 
-  ruleType              GroupTokenGateRuleTypes @default(SG721)
+  tokenFactoryDenom String?
+  tokenFactoryExponent Int? // decimals for the denom
+
+  ruleType GroupTokenGateRuleTypes @default(SG721)
 
   group   Group  @relation(fields: [groupId], references: [id])
   groupId String
@@ -84,8 +89,9 @@ model GroupTokenGate {
 }
 
 enum GroupTokenGateRuleTypes {
-  SG721
+  SG721 //cw721
   DAO_DAO
+  TOKEN_FACTORY //cosmos token factory denom
 }
 
 // Session that allows anyone with this code to access the dashboard without logging in.

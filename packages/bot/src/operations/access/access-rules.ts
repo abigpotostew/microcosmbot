@@ -43,8 +43,10 @@ export const verifyWalletAgainstAccessRule = async (
   }
   const ownedCount = await getOwnedCount({
     contractAddress: tokenGate.contractAddress,
+    ruleType: tokenGate.ruleType,
+    denom: tokenGate.tokenFactoryDenom,
+    exponent: tokenGate.tokenFactoryExponent,
     owner: address,
-    isDaoDao: tokenGate.ruleType === 'DAO_DAO',
     useRemoteCache,
   })
 

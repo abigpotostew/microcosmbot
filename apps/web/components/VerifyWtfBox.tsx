@@ -66,18 +66,44 @@ export const TokenRuleListItem = ({
           </p>
         </div>
         <div className="mt-1 flex items-center gap-x-2 text-sm leading-5 text-gray-500">
-          <p className="whitespace-nowrap">
-            At least {rule.minTokens} token
-            {(rule.minTokens || 1) > 1 ? 's' : ''}
-          </p>
-          {!!rule.maxTokens && (
+          {rule.ruleType === 'TOKEN_FACTORY' && (
             <>
-              <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
-                <circle cx={1} cy={1} r={1} />
-              </svg>
-              <p className="truncate">
-                at most {rule.maxTokens} token{rule.maxTokens > 1 ? 's' : ''}
+              <p className="whitespace-nowrap">
+                At least {rule.minTokens} {rule.tokenFactoryDenom} token
+                {(rule.minTokens || 1) > 1 ? 's' : ''}
               </p>
+              {!!rule.maxTokens && (
+                <>
+                  <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
+                    <circle cx={1} cy={1} r={1} />
+                  </svg>
+                  <p className="truncate">
+                    at most {rule.maxTokens} {rule.tokenFactoryDenom} token
+                    {rule.maxTokens > 1 ? 's' : ''}
+                  </p>
+                </>
+              )}
+            </>
+          )}
+          {rule.ruleType !== 'TOKEN_FACTORY' && (
+            <>
+              <p className="whitespace-nowrap">
+                At least {rule.minTokens} token
+                {(rule.minTokens || 1) > 1 ? 's' : ''}
+                {rule.ruleType === 'DAO_DAO' ? ' staked in DAO' : ''}
+              </p>
+              {!!rule.maxTokens && (
+                <>
+                  <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
+                    <circle cx={1} cy={1} r={1} />
+                  </svg>
+                  <p className="truncate">
+                    at most {rule.maxTokens} token
+                    {rule.maxTokens > 1 ? 's' : ''}
+                    {rule.ruleType === 'DAO_DAO' ? ' staked in DAO' : ''}
+                  </p>
+                </>
+              )}
             </>
           )}
         </div>

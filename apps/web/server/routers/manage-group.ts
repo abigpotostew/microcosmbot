@@ -5,6 +5,8 @@ import { Group, ManageGroupCode, prismaClient } from '@microcosms/db'
 import { zodStarsContractAddress } from 'libs/stars'
 import bot from '@microcosms/bot/bot'
 import { getDaoDaoContractAndNft } from '@microcosms/bot/operations/daodao/get-daodao'
+import { fetchDenomExponent } from '@microcosms/bot/operations'
+import { updateRuleSchema } from 'server/update-schema'
 
 const getGroup = procedure
   .input(z.object({ code: z.string() }))
@@ -90,13 +92,7 @@ const saveRule = procedure
     z.object({
       id: z.string().cuid().optional(),
       code: z.string(),
-      updates: z.object({
-        name: z.string().max(128),
-        minToken: z.number().int().nonnegative().nullish(),
-        maxToken: z.number().int().nonnegative().nullish(),
-        contractAddress: zodStarsContractAddress,
-        ruleType: z.enum(['SG721', 'DAO_DAO']).default('SG721'),
-      }),
+      updates: updateRuleSchema,
     })
   )
 
@@ -104,7 +100,7 @@ const saveRule = procedure
     if (!input.code) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
-    //check code in db
+
     if (
       input.updates.maxToken &&
       input.updates.minToken &&
@@ -115,6 +111,26 @@ const saveRule = procedure
         message: 'maxToken must be greater than minToken',
       })
     }
+
+    let exponent: number | null = null
+    //todo for token_factory rule, check that the denom exists and fetch the exponent
+    if (input.updates.ruleType === 'TOKEN_FACTORY') {
+      if (!input.updates.tokenFactoryDenom) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'tokenFactoryDenom is required for TOKEN_FACTORY ruleType',
+        })
+      }
+      //fetch the exponent here
+      exponent = await fetchDenomExponent(input.updates.tokenFactoryDenom)
+      if (typeof exponent !== 'number') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'invalid tokenFactoryDenom',
+        })
+      }
+    }
+
     const codeDb = await prismaClient().manageGroupCode.findFirst({
       where: {
         code: input.code,
@@ -157,7 +173,15 @@ const saveRule = procedure
           name: input.updates.name,
           minTokens: input.updates.minToken || 1,
           maxTokens: input.updates.maxToken,
-          contractAddress: input.updates.contractAddress,
+          contractAddress:
+            'contractAddress' in input.updates
+              ? input.updates.contractAddress
+              : '',
+          tokenFactoryDenom:
+            'tokenFactoryDenom' in input.updates
+              ? input.updates.tokenFactoryDenom
+              : null,
+          tokenFactoryExponent: exponent,
           group: {
             connect: {
               id: codeDb.group.id,
@@ -176,7 +200,15 @@ const saveRule = procedure
         name: input.updates.name,
         minTokens: input.updates.minToken || 1,
         maxTokens: input.updates.maxToken,
-        contractAddress: input.updates.contractAddress,
+        contractAddress:
+          'contractAddress' in input.updates
+            ? input.updates.contractAddress
+            : '',
+        tokenFactoryDenom:
+          'tokenFactoryDenom' in input.updates
+            ? input.updates.tokenFactoryDenom
+            : null,
+        tokenFactoryExponent: exponent,
         //cannot change the rule type
       },
     })
@@ -268,6 +300,26 @@ const getDaoDaoInfo = procedure
     return { ok: true, daoDaoInfo: daodaoinfo.value }
   })
 
+const getDenomInfo = procedure
+  .input(
+    z.object({
+      denom: z.string(),
+    })
+  )
+
+  .query(async ({ input, ctx }) => {
+    if (!input.denom) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    const denomInfo = await fetchDenomExponent(input.denom)
+    if (typeof denomInfo !== 'number') {
+      return {
+        ok: false,
+      }
+    }
+    return { ok: true, exponent: denomInfo }
+  })
+
 export const manageGroupRouter = router({
   // Public
   getGroup: getGroup,
@@ -276,4 +328,5 @@ export const manageGroupRouter = router({
   deleteRule: deleteRule,
   setMatchAny: setMatchAny,
   getDaoDaoInfo: getDaoDaoInfo,
+  getDenomInfo: getDenomInfo,
 })

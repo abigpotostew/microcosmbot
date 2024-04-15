@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { Formik, useFormik } from 'formik'
-import { GroupTokenGate } from '@microcosms/db'
+import { GroupTokenGate, GroupTokenGateRuleTypes } from '@microcosms/db'
 import { GetRuleOutput } from 'utils/types'
 import { toFormikValidate } from 'zod-formik-adapter'
 import { z } from 'zod'
@@ -14,6 +14,7 @@ import { PrimaryButton } from '@microcosmbot/ui'
 import { LoadingIcon } from '@microcosmbot/ui'
 import { ErrorCodes } from '@microcosms/bot/operations/daodao/errors.types'
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import { UpdateRule } from 'server/update-schema'
 
 type Props = {
   rule?: GroupTokenGate
@@ -21,23 +22,23 @@ type Props = {
   onSave: () => Promise<void>
 }
 
+const positiveInteger = z.string().refine((n) => {
+  const int = parseFloat(n)
+  return int > 0 && Number.isFinite(int)
+}, 'must be a positive number')
+// .transform((n) => parseInt(n))
 const positiveIntegerOrEmptyString = z.union([
-  z
-    .string()
-    .refine((n) => {
-      const int = parseInt(n)
-      return int > 0 && Number.isInteger(int)
-    }, 'must be an positive integer')
-    .transform((n) => parseInt(n)),
+  positiveInteger,
   z.string().length(0),
 ])
 
 const Schema = z
   .object({
-    name: z.string().max(128),
-    contractAddress: zodStarsContractAddress,
-    minTokens: positiveIntegerOrEmptyString,
+    name: z.string().min(1).max(128),
+    contractAddress: zodStarsContractAddress.optional(),
+    minTokens: positiveInteger,
     maxTokens: positiveIntegerOrEmptyString,
+    tokenFactoryDenom: z.string().optional(),
   })
   .refine((data) => {
     if (data.minTokens && data.maxTokens) {
@@ -47,7 +48,7 @@ const Schema = z
       )
     }
     return true
-  }, 'refined')
+  }, 'tokens')
 
 const daodaoErrorMap = (daodaoError?: string) => {
   const errorMap = {
@@ -71,9 +72,8 @@ export const EditOrCreateGroupTokenGateView = ({
   manageGroup,
   onSave,
 }: Props) => {
-  const [ruleType, setRuleType] = React.useState<'SG721' | 'DAO_DAO' | null>(
-    rule?.ruleType ?? null
-  )
+  const [ruleType, setRuleType] =
+    React.useState<GroupTokenGateRuleTypes | null>(rule?.ruleType ?? null)
 
   const { closeModalReset: closeModal } = useCloseModal()
 
@@ -90,11 +90,15 @@ export const EditOrCreateGroupTokenGateView = ({
   const { invalidate } = useInvalidateCode()
   const initalizeValues = {
     name: rule?.name || '',
-    contractAddress: rule?.contractAddress || '',
-    minTokens:
-      typeof rule?.minTokens !== 'number' ? '' : rule.minTokens.toString(),
+    contractAddress: rule?.contractAddress || undefined,
+    // minTokens: (typeof rule?.minTokens !== 'number'
+    //   ? 1
+    //   : rule.minTokens
+    // ).toString(),
+    minTokens: rule?.minTokens ? rule.minTokens?.toString() : '',
     maxTokens:
       typeof rule?.maxTokens !== 'number' ? '' : rule?.maxTokens.toString(),
+    tokenFactoryDenom: rule?.tokenFactoryDenom || undefined,
   }
 
   const formik = useFormik({
@@ -102,25 +106,65 @@ export const EditOrCreateGroupTokenGateView = ({
     onSubmit: async (values, { setSubmitting }) => {
       console.log('submitted valued', values)
       try {
-        await saveRule.mutateAsync({
-          id: rule?.id,
-          code: manageGroup.code,
-          updates: {
-            ...values,
+        let updates: UpdateRule | null = null
+        if (ruleType === 'SG721' || !ruleType) {
+          if (!values.contractAddress) {
+            throw new Error('Contract address is required')
+          }
+          updates = {
+            ruleType: 'SG721',
             minToken: parseInt(values.minTokens.toString()),
             maxToken: values.maxTokens
               ? parseInt(values.maxTokens.toString())
               : null,
-            ruleType: ruleType ?? undefined,
-          },
+            contractAddress: values.contractAddress,
+            name: values.name,
+          }
+        } else if (ruleType === 'DAO_DAO') {
+          if (!values.contractAddress) {
+            throw new Error('Contract address is required')
+          }
+          updates = {
+            ruleType: 'DAO_DAO',
+            minToken: parseInt(values.minTokens.toString()),
+            maxToken: values.maxTokens
+              ? parseInt(values.maxTokens.toString())
+              : null,
+            contractAddress: values.contractAddress,
+            name: values.name,
+          }
+        } else if (ruleType === 'TOKEN_FACTORY') {
+          const { tokenFactoryDenom } = values
+          if (!tokenFactoryDenom) {
+            throw new Error('Token Factory Denom is required')
+          }
+          updates = {
+            ruleType: 'TOKEN_FACTORY',
+            minToken: parseInt(values.minTokens.toString()),
+            maxToken: values.maxTokens
+              ? parseInt(values.maxTokens.toString())
+              : null,
+            name: values.name,
+            tokenFactoryDenom,
+          }
+        }
+        if (!updates) {
+          throw new Error('Invalid rule type')
+        }
+        await saveRule.mutateAsync({
+          id: rule?.id,
+          code: manageGroup.code,
+          updates,
         })
+        await invalidate()
+        await onSave()
+        setSubmitting(false)
+        closeModal()
       } catch (e) {
         //error uhhh what
+        console.error('Error saving rule', e)
+        setSubmitting(false)
       }
-      await invalidate()
-      await onSave()
-      setSubmitting(false)
-      closeModal()
     },
     validate: toFormikValidate(Schema),
   })
@@ -138,7 +182,23 @@ export const EditOrCreateGroupTokenGateView = ({
       refetchOnWindowFocus: false,
     }
   )
-  const loading = daoDaoInfo.isLoading
+
+  const denomInfo = trpc.manageGroup.getDenomInfo.useQuery(
+    {
+      denom: formik.values.tokenFactoryDenom as string,
+    },
+    {
+      enabled:
+        ruleType === 'TOKEN_FACTORY' && !!formik.values.tokenFactoryDenom,
+      refetchOnWindowFocus: false,
+    }
+  )
+
+  const invalidMinMax =
+    (formik.touched.minTokens || formik.touched.maxTokens) &&
+    formik.values.minTokens &&
+    formik.values.maxTokens &&
+    parseInt(formik.values.minTokens) >= parseInt(formik.values.maxTokens)
 
   return (
     <>
@@ -187,6 +247,21 @@ export const EditOrCreateGroupTokenGateView = ({
                     configured Dao Dao.
                   </p>
                 </div>
+
+                <div>
+                  <PrimaryButton
+                    classes="w-full text-body1 text-md text-white p-3 bg-gray-500 tracking-widest"
+                    onClick={() => {
+                      setRuleType('TOKEN_FACTORY')
+                    }}
+                  >
+                    Native Token
+                  </PrimaryButton>
+                  <p className={'py-2 text-sm'}>
+                    Native Token rules use a token factory denomination to get
+                    access. Balance and staked amount are checked.
+                  </p>
+                </div>
               </div>
             </div>
           )}
@@ -219,70 +294,140 @@ export const EditOrCreateGroupTokenGateView = ({
                           className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           placeholder="Rule name"
                         />
-                        <span className={'text-red-400'}>
-                          {formik.errors.name &&
-                            formik.touched.name &&
-                            formik.errors.name}
-                        </span>
                       </div>
+                      <span className={'text-red-400'}>
+                        {formik.errors.name &&
+                          ((formik.submitCount > 0 && !formik.isValid) ||
+                            formik.touched.name) &&
+                          formik.errors.name}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="sm:col-span-5">
-                    <label
-                      htmlFor="contractAddress"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      {ruleType === 'DAO_DAO'
-                        ? 'Dao Dao Contract Address'
-                        : 'NFT Contract Address'}
-                    </label>
-                    <div className="mt-2">
-                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                        {/*<span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">*/}
-                        {/*  http://*/}
-                        {/*</span>*/}
-                        <input
-                          type="text"
-                          name="contractAddress"
-                          id="contractAddress"
-                          className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          placeholder="stars..."
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.contractAddress}
-                        />
-                      </div>{' '}
-                      <span className={'text-red-400'}>
-                        {formik.errors.contractAddress &&
-                          formik.touched.contractAddress &&
-                          formik.errors.contractAddress}
-                      </span>
-                      <div className="mt-2 text-sm leading-6 text-gray-600">
-                        {ruleType === 'DAO_DAO' && loading ? (
-                          <LoadingIcon containerClassNames={' '} />
-                        ) : !daoDaoInfo.data ? (
-                          <>Something went wrong</>
-                        ) : (
-                          <div>
-                            {(!daoDaoInfo.data.ok ||
-                              !!daoDaoInfo.data.error) && (
-                              <>{daodaoErrorMap(daoDaoInfo.data?.error)}</>
-                            )}
-                            {daoDaoInfo.data.ok &&
-                              !!daoDaoInfo.data.daoDaoInfo && (
+                  {ruleType === 'TOKEN_FACTORY' && (
+                    <div className="sm:col-span-5">
+                      <label
+                        htmlFor="tokenFactoryDenom"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Token Factory Denomination Name
+                      </label>
+                      <div className="mt-2">
+                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          {/*<span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">*/}
+                          {/*  http://*/}
+                          {/*</span>*/}
+                          <input
+                            type="text"
+                            name="tokenFactoryDenom"
+                            id="tokenFactoryDenom"
+                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="ustars"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.tokenFactoryDenom}
+                          />
+                        </div>{' '}
+                        <span className={'text-red-400'}>
+                          {formik.errors.tokenFactoryDenom &&
+                            ((formik.submitCount > 0 && !formik.isValid) ||
+                              formik.touched.tokenFactoryDenom) &&
+                            formik.errors.tokenFactoryDenom}
+                        </span>
+                        <div className="mt-2 text-sm leading-6 text-gray-600">
+                          {!formik.values
+                            .tokenFactoryDenom ? null : denomInfo.isLoading ? (
+                            <LoadingIcon containerClassNames={''} />
+                          ) : !denomInfo.data ? (
+                            <>Something went wrong</>
+                          ) : (
+                            <div>
+                              {!denomInfo.data.ok && (
+                                <>{'Denomination not found'}</>
+                              )}
+                              {denomInfo.data.ok && (
                                 <div className={'flex'}>
                                   <CheckCircleIcon color={'green'} width={16} />
                                   <span>
-                                    {daoDaoInfo.data.daoDaoInfo.nft.name}
+                                    {' '}
+                                    Found{' '}
+                                    {`'${formik.values.tokenFactoryDenom}'`}{' '}
+                                    denom with exponent of{' '}
+                                    {denomInfo.data.exponent}
                                   </span>
                                 </div>
                               )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/*Show contract address for dao dao and nft rules*/}
+                  {ruleType !== 'TOKEN_FACTORY' && (
+                    <div className="sm:col-span-5">
+                      <label
+                        htmlFor="contractAddress"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        {ruleType === 'DAO_DAO'
+                          ? 'Dao Dao Contract Address'
+                          : 'NFT Contract Address'}
+                      </label>
+                      <div className="mt-2">
+                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          {/*<span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">*/}
+                          {/*  http://*/}
+                          {/*</span>*/}
+                          <input
+                            type="text"
+                            name="contractAddress"
+                            id="contractAddress"
+                            className="block w-full rounded-md border-0 py-1.5 p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="stars..."
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.contractAddress}
+                          />
+                        </div>{' '}
+                        <span className={'text-red-400'}>
+                          {formik.errors.contractAddress &&
+                            ((formik.submitCount > 0 && !formik.isValid) ||
+                              formik.touched.contractAddress) &&
+                            formik.errors.contractAddress}
+                        </span>
+                        {ruleType === 'DAO_DAO' && (
+                          <div className="mt-2 text-sm leading-6 text-gray-600">
+                            {ruleType === 'DAO_DAO' && daoDaoInfo.isLoading ? (
+                              <LoadingIcon containerClassNames={' '} />
+                            ) : !daoDaoInfo.data ? (
+                              <>Something went wrong</>
+                            ) : (
+                              <div>
+                                {(!daoDaoInfo.data.ok ||
+                                  !!daoDaoInfo.data.error) && (
+                                  <>{daodaoErrorMap(daoDaoInfo.data?.error)}</>
+                                )}
+                                {daoDaoInfo.data.ok &&
+                                  !!daoDaoInfo.data.daoDaoInfo && (
+                                    <div className={'flex'}>
+                                      <CheckCircleIcon
+                                        color={'green'}
+                                        width={16}
+                                      />
+                                      <span>
+                                        {daoDaoInfo.data.daoDaoInfo.nft.name}
+                                      </span>
+                                    </div>
+                                  )}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="sm:col-span-4">
                     <label
@@ -307,7 +452,8 @@ export const EditOrCreateGroupTokenGateView = ({
                     </div>
                     <span className={'text-red-400'}>
                       {formik.errors.minTokens &&
-                        formik.touched.minTokens &&
+                        ((formik.submitCount > 0 && !formik.isValid) ||
+                          formik.touched.minTokens) &&
                         formik.errors.minTokens}
                     </span>
                   </div>
@@ -332,12 +478,17 @@ export const EditOrCreateGroupTokenGateView = ({
                     </div>
                     <span className={'text-red-400'}>
                       {formik.errors.maxTokens &&
-                        formik.touched.maxTokens &&
+                        ((formik.submitCount > 0 && !formik.isValid) ||
+                          formik.touched.maxTokens) &&
                         formik.errors.maxTokens}
                     </span>
                   </div>
                 </div>
               </div>
+              <span className={'text-red-400'}>
+                {invalidMinMax &&
+                  'Minimum tokens must be less than maximum tokens'}
+              </span>
               <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
                 {rule && (
                   <button
@@ -363,10 +514,14 @@ export const EditOrCreateGroupTokenGateView = ({
                   type="submit"
                   className="rounded-md bg-indigo-600 px-3 py-2 text-md tracking-widest font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   disabled={
+                    invalidMinMax ||
                     formik.isSubmitting ||
                     onDeleteRule.isLoading ||
                     (ruleType === 'DAO_DAO' &&
-                      (!daoDaoInfo.data?.daoDaoInfo || daoDaoInfo.isLoading))
+                      (!daoDaoInfo.data?.daoDaoInfo || daoDaoInfo.isLoading)) ||
+                    (ruleType === 'TOKEN_FACTORY' &&
+                      (typeof denomInfo.data?.exponent !== 'number' ||
+                        denomInfo.isLoading))
                   }
                 >
                   Save
