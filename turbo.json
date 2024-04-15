@@ -23,7 +23,11 @@
         "NEXT_PUBLIC_CHAINNAME",
         "NEXT_PUBLIC_CHAINRESTURL",
         "NEXT_PUBLIC_NETWORK",
-        "NEXT_PUBLIC_CHAINID"
+        "NEXT_PUBLIC_CHAINID",
+        "CRON_SECRET",
+        "QSTASH_TOKEN",
+        "QSTASH_CURRENT_SIGNING_KEY",
+        "QSTASH_NEXT_SIGNING_KEY"
       ]
     },
     "lint": {
@@ -46,7 +50,11 @@
         "NEXT_PUBLIC_CHAINNAME",
         "NEXT_PUBLIC_CHAINRESTURL",
         "NEXT_PUBLIC_NETWORK",
-        "NEXT_PUBLIC_CHAINID"
+        "NEXT_PUBLIC_CHAINID",
+        "CRON_SECRET",
+        "QSTASH_TOKEN",
+        "QSTASH_CURRENT_SIGNING_KEY",
+        "QSTASH_NEXT_SIGNING_KEY"
       ],
       "cache": false,
       "persistent": true

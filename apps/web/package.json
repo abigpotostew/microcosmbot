@@ -36,6 +36,7 @@
     "@trpc/next": "^10.30.0",
     "@trpc/react-query": "^10.30.0",
     "@trpc/server": "^10.30.0",
+    "@upstash/qstash": "^2.4.3",
     "chain-registry": "^1.14.0",
     "cosmwasm": "^1.1.1",
     "date-fns": "^2.29.3",
