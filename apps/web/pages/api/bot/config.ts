@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { bot } from '@microcosms/bot/bot'
+import { cronSecretRequired } from 'server/cron-secret-required'
 
 /**
  * API endpoint to configure the bot. This should be called once by the bot owner whenever the BASEURL or
@@ -8,6 +9,11 @@ import { bot } from '@microcosms/bot/bot'
  * @param res
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const authorized = cronSecretRequired(req)
+  if (!authorized.ok) {
+    return authorized.setResponse(res)
+  }
+
   const webhookUrl =
     process.env.BASEURL + '/api/bot/' + process.env.TELEGRAM_BOT_KEY
 

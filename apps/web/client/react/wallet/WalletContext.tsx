@@ -3,10 +3,9 @@ import { useChain } from '@cosmos-kit/react'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { SigningStargateClient } from '@cosmjs/stargate'
 import { WalletData } from 'client/core/wallet'
-import chainInfo from 'client/ChainInfo'
-import useWallet from './useWallet'
 import { SignAminoFn } from 'libs/verify/keplr'
 import { WalletStatus } from '@cosmos-kit/core'
+import { ChainInfos } from '@microcosms/bot/chains/config'
 
 // Wallet context
 
@@ -41,7 +40,13 @@ export const Wallet = createContext<WalletContext>({
   getAccount: async () => undefined,
 })
 
-export const WalletProvider = ({ children }: { children: ReactNode }) => {
+export const WalletProvider = ({
+  children,
+  chainName,
+}: {
+  children: ReactNode
+  chainName: string
+}) => {
   // Current wallet data
   const [wallet, setWallet] = useState<WalletData>()
   const [signingCosmWasmClient, setSigningCosmWasmClient] =
@@ -51,6 +56,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   const [refreshCounter, setRefreshCounter] = useState<number>(0)
 
+  console.log('WalletProvider', chainName)
   const {
     connect: connectWallet,
     disconnect: disconnectWallet,
@@ -61,7 +67,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     signAmino,
     getAccount,
     status,
-  } = useChain(process.env.NEXT_PUBLIC_NETWORK!)
+    chain,
+  } = useChain(chainName)
 
   const refreshBalance = () => {
     setRefreshCounter(refreshCounter + 1)
@@ -71,20 +78,14 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     async function effect() {
       if (connectedWallet && walletAddress && signingCosmWasmClient) {
-        const balance = await signingCosmWasmClient?.getBalance(
-          walletAddress,
-          chainInfo.currencies[0].coinMinimalDenom
-        )
-        // Set the wallet data
         setWallet({
           address: walletAddress,
           name: connectedWallet.name,
-          balance,
         })
       }
     }
     effect()
-  }, [refreshCounter])
+  }, [refreshCounter, chain.chain_id])
 
   // When connectedWallet changes, we extract the info we need and save it to `wallet`.
   // If it's become `null`, we also set `wallet` to `null`.
@@ -94,16 +95,10 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         const signingCosmWasmClient = await getSigningCosmWasmClient()
         const signingStargateClient = await getSigningStargateClient()
 
-        // Fetch the user's balance from the signing cosmwasm client
-        const balance = await signingCosmWasmClient?.getBalance(
-          walletAddress,
-          chainInfo.currencies[0].coinMinimalDenom
-        )
         // Set the wallet data
         setWallet({
           address: walletAddress,
           name: connectedWallet.name,
-          balance,
         })
 
         // Get all other signers

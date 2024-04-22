@@ -9,4 +9,7 @@ export interface DropdownProps {
   options: JSX.Element[]
   isOpen: boolean
   setIsOpen: (v: boolean) => void
+  onOptionSelected: (index: number) => void
+  className?: string
+  labelClassName?: string
 }

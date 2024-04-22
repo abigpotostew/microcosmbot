@@ -94,11 +94,19 @@ export const VerifyButtons: React.FC<Props> = () => {
     if (!signAmino) {
       throw new Error('no signAmino')
     }
+    if (!otpRes.data?.chain.chainId) {
+      throw new Error('no chainId')
+    }
 
     const overwrite = !!sig
     let inputSig = sig
     if (!inputSig) {
-      const res1 = await signLoginMessageWithAmino(otp, address, signAmino)
+      const res1 = await signLoginMessageWithAmino(
+        otpRes.data?.chain.chainId,
+        otp,
+        address,
+        signAmino
+      )
 
       console.log('res', res1)
       inputSig =

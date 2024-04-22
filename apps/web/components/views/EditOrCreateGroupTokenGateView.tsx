@@ -171,6 +171,7 @@ export const EditOrCreateGroupTokenGateView = ({
 
   const daoDaoInfo = trpc.manageGroup.getDaoDaoInfo.useQuery(
     {
+      code: manageGroup.code,
       contractAddress: formik.values.contractAddress as string,
     },
     {
@@ -185,6 +186,7 @@ export const EditOrCreateGroupTokenGateView = ({
 
   const denomInfo = trpc.manageGroup.getDenomInfo.useQuery(
     {
+      code: manageGroup.code,
       denom: formik.values.tokenFactoryDenom as string,
     },
     {
@@ -208,9 +210,14 @@ export const EditOrCreateGroupTokenGateView = ({
             <h2 className="text-body1 text-xl font-semibold leading-7 text-gray-900">
               Access Rule
             </h2>
-            <p className="mt-1 text-sm leading-6 text-body1 text-gray-600">
+            <p className="mt-1 text-sm leading-6 text-body1 text-gray-600 font-extrabold">
               {rule && 'Configure an access rule'}
               {!rule && 'Create an access rule'}
+            </p>
+            <p className="mt-1 text-sm leading-6 text-body1 text-gray-600">
+              {rule?.ruleType === 'SG721' && 'SG721 NFT Access Rule'}
+              {rule?.ruleType === 'TOKEN_FACTORY' &&
+                'Token Factory access rules require a token denomination to be configured'}
             </p>
           </div>
           {!ruleType && (
@@ -342,17 +349,15 @@ export const EditOrCreateGroupTokenGateView = ({
                             <>Something went wrong</>
                           ) : (
                             <div>
-                              {!denomInfo.data.ok && (
-                                <>{'Denomination not found'}</>
-                              )}
+                              {!!formik.touched.tokenFactoryDenom &&
+                                !denomInfo.data.ok && (
+                                  <>{'Denomination not found'}</>
+                                )}
                               {denomInfo.data.ok && (
                                 <div className={'flex'}>
-                                  <CheckCircleIcon color={'green'} width={16} />
+                                  <CheckCircleIcon color={'green'} width={16} />{' '}
                                   <span>
-                                    {' '}
-                                    Found{' '}
-                                    {`'${formik.values.tokenFactoryDenom}'`}{' '}
-                                    denom with exponent of{' '}
+                                    Found denom with exponent of{' '}
                                     {denomInfo.data.exponent}
                                   </span>
                                 </div>
@@ -512,7 +517,7 @@ export const EditOrCreateGroupTokenGateView = ({
                 </button>
                 <button
                   type="submit"
-                  className="rounded-md bg-indigo-600 px-3 py-2 text-md tracking-widest font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="rounded-md bg-indigo-600 px-3 py-2 text-md tracking-widest font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-[100px]"
                   disabled={
                     invalidMinMax ||
                     formik.isSubmitting ||
@@ -524,7 +529,7 @@ export const EditOrCreateGroupTokenGateView = ({
                         denomInfo.isLoading))
                   }
                 >
-                  Save
+                  Sav{formik.isSubmitting ? 'ing...' : 'e'}
                 </button>
               </div>
             </form>

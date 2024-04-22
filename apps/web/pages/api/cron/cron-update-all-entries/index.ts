@@ -2,17 +2,15 @@ import { prismaClient } from '@microcosms/db'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { publishMessage } from '../../../../services/qstash'
 import { tinyAsyncPoolAll } from '@microcosms/bot'
+import { cronSecretRequired } from 'server/cron-secret-required'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const authHeader = req.headers?.['authorization']
-  if (
-    !process.env.CRON_SECRET ||
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return res.status(401).json({ success: false })
+  const authorized = cronSecretRequired(req)
+  if (!authorized.ok) {
+    return authorized.setResponse(res)
   }
 
   try {

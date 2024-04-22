@@ -1,7 +1,7 @@
 import { GroupTokenGateRuleTypes } from '@microcosms/db'
 import { z } from 'zod'
-import { config } from '../../config'
 import { getDaoDaoContractAndNft, getStakedCount } from '../daodao/get-daodao'
+import { getChainInfo } from '../../chains/ChainInfo' //todo stew move this to bot
 
 interface TokensMsg {
   owner: String
@@ -22,8 +22,10 @@ export const getOwnedCount = async ({
   ruleType,
   denom,
   exponent,
+  chainId,
   useRemoteCache = false,
 }: {
+  chainId: string
   contractAddress?: string | null
   owner: string
   denom?: string | null
@@ -33,12 +35,14 @@ export const getOwnedCount = async ({
 }) => {
   if (useRemoteCache) {
     return getOwnedCountRemote({
+      chainId,
       contractAddress: contractAddress ?? undefined,
       owner,
       ruleType,
     })
   } else {
     return getOwnedCountDirect({
+      chainId,
       contractAddress: contractAddress ?? undefined,
       owner,
       ruleType,
@@ -49,12 +53,15 @@ export const getOwnedCount = async ({
 }
 
 const getOwnedCountRemote = async ({
+  chainId,
   contractAddress,
   owner,
   ruleType,
   denom,
   exponent,
 }: {
+  chainId: string
+
   contractAddress?: string
   owner: string
   ruleType: GroupTokenGateRuleTypes
@@ -65,6 +72,7 @@ const getOwnedCountRemote = async ({
   if (contractAddress) {
     url.searchParams.set('contractAddress', contractAddress)
   }
+  url.searchParams.set('chainId', chainId)
   url.searchParams.set('owner', owner)
   url.searchParams.set('ruleType', ruleType.toString())
   if (denom) {
@@ -90,18 +98,20 @@ const getOwnedCountDirect = async ({
   owner,
   ruleType,
   exponent,
+  chainId,
 }: {
   contractAddress?: string
   owner: string
   ruleType: GroupTokenGateRuleTypes
   denom?: string
   exponent?: number
+  chainId: string
 }) => {
   if (ruleType === 'DAO_DAO') {
     if (!contractAddress) {
       throw new Error('contractAddress is required for DAO_DAO ruleType')
     }
-    return getDaoDaoOwnedCount({ contractAddress, owner })
+    return getDaoDaoOwnedCount({ chainId, contractAddress, owner })
   } else if (ruleType === 'TOKEN_FACTORY') {
     if (!denom) {
       throw new Error('denom is required for TOKEN_FACTORY ruleType')
@@ -109,19 +119,22 @@ const getOwnedCountDirect = async ({
     if (typeof exponent !== 'number') {
       throw new Error('exponent is required for TOKEN_FACTORY ruleType')
     }
-    return getTokenFactoryTotalOwnedCount({ denom, owner, exponent })
+    return getTokenFactoryTotalOwnedCount({ chainId, denom, owner, exponent })
   } else {
     if (!contractAddress) {
       throw new Error('contractAddress is required for SG721 ruleType')
     }
-    return getSg721OwnedCount({ contractAddress, owner })
+    return getSg721OwnedCount({ chainId, contractAddress, owner })
   }
 }
 
 const getSg721OwnedCount = async ({
+  chainId,
   contractAddress,
   owner,
 }: {
+  chainId: string
+
   contractAddress: string
   owner: string
 }) => {
@@ -129,7 +142,7 @@ const getSg721OwnedCount = async ({
   let start_after = undefined
   const limit = 100
   do {
-    const json: any = await fetchCosmWasm(contractAddress, {
+    const json: any = await fetchCosmWasm(chainId, contractAddress, {
       tokens: {
         owner,
         limit,
@@ -147,13 +160,15 @@ const getSg721OwnedCount = async ({
 }
 
 const getDaoDaoOwnedCount = async ({
+  chainId,
   contractAddress,
   owner,
 }: {
+  chainId: string
   contractAddress: string
   owner: string
 }) => {
-  const contract = await getDaoDaoContractAndNft(contractAddress)
+  const contract = await getDaoDaoContractAndNft(chainId, contractAddress)
   if (!contract.ok) {
     console.log(
       `error fetching dao dao contract and nft for '${contractAddress}'. Error code: ${contract.error}`
@@ -161,6 +176,7 @@ const getDaoDaoOwnedCount = async ({
     return 0
   }
   const staked = await getStakedCount(
+    chainId,
     contract.value.voting_module_address,
     owner
   )
@@ -168,31 +184,36 @@ const getDaoDaoOwnedCount = async ({
 }
 
 const getTokenFactoryTotalOwnedCount = async ({
+  chainId,
   denom,
   owner,
   exponent,
 }: {
+  chainId: string
+
   denom: string
   owner: string
   exponent: number
 }) => {
   const [delegations, balance] = await Promise.all([
-    getDelegatedTokenCount({ owner, denom, exponent }),
-    getTokenFactoryOwnedCount({ denom, owner, exponent }),
+    getDelegatedTokenCount({ chainId, owner, denom, exponent }),
+    getTokenFactoryOwnedCount({ chainId, denom, owner, exponent }),
   ])
   return delegations + balance
 }
 const getTokenFactoryOwnedCount = async ({
+  chainId,
   denom,
   owner,
   exponent,
 }: {
+  chainId: string
   denom: string
   owner: string
   exponent: number
 }) => {
   const path = `/cosmos/bank/v1beta1/balances/${owner}/by_denom?denom=${denom}`
-  const res = await fetchRest(path)
+  const res = await fetchRest(chainId, path)
   // {"balance":{"denom":"ustars","amount":"2581404290"}}
   if (!res.ok) {
     console.log(
@@ -242,10 +263,12 @@ const delegationsSchema = z.object({
 })
 
 const getDelegatedTokenCount = async ({
+  chainId,
   owner,
   denom,
   exponent,
 }: {
+  chainId: string
   owner: string
   denom: string
   exponent: number
@@ -260,7 +283,7 @@ const getDelegatedTokenCount = async ({
     const path =
       `/cosmos/staking/v1beta1/delegations/${owner}` +
       (key ? `?key=${key}` : '')
-    const res = await fetchRest(path)
+    const res = await fetchRest(chainId, path)
     if (!res.ok) {
       console.log(
         'failed to fetch delegations',
@@ -289,11 +312,13 @@ const getDelegatedTokenCount = async ({
 }
 
 export const fetchCosmWasm = async (
+  chainId: string,
   contractAddress: string,
   msgObj: object
 ): Promise<any> => {
   const msg = msgBase64(msgObj)
   const res = await fetchRest(
+    chainId,
     `/cosmwasm/wasm/v1/contract/${contractAddress}/smart/${msg}`
   )
   if (!res.ok) {
@@ -303,14 +328,32 @@ export const fetchCosmWasm = async (
   return res.json()
 }
 
-export const fetchRest = async (path: string): Promise<any> => {
-  const url = `${config.chainRestUrl}${path}`
+const fetchRest = async (chainId: string, path: string): Promise<any> => {
+  const chain = getChainInfo(chainId)
+  if (!chain) {
+    throw new Error('chain not found')
+  }
+  const url = `${chain.rest}${path}`
   // return false
+  console.log('fetching', url)
   return fetch(url)
 }
 
-export const fetchDenomExponent = async (denom: string): Promise<any> => {
-  const res = await fetchRest(`/cosmos/bank/v1beta1/denoms_metadata/${denom}`)
+export const fetchDenomExponent = async (
+  chainId: string,
+  denom: string
+): Promise<number | null> => {
+  const isAllowed = isDenomAllowed(chainId, denom)
+  if (!isAllowed) {
+    return null
+  }
+  if (typeof isAllowed.decimals == 'number') {
+    return isAllowed.decimals
+  }
+  const res = await fetchRest(
+    chainId,
+    `/cosmos/bank/v1beta1/denoms_metadata/${denom}`
+  )
   if (!res.ok) {
     console.log(
       'failed to fetch denom metadata',
@@ -332,4 +375,39 @@ export const fetchDenomExponent = async (denom: string): Promise<any> => {
     return exponent
   }
   return null
+}
+
+const allowedDenomsSchema = z.record(
+  z.string(),
+  z.array(
+    z.object({
+      denom: z.string(),
+      decimals: z.number().nullish(),
+    })
+  )
+)
+type AllowedDenoms = z.infer<typeof allowedDenomsSchema>
+
+const isDenomAllowed = (chainId: string, denom: string) => {
+  const configString = process.env.ALLOWED_DENOMS
+  if (!configString) {
+    return null
+  }
+  let data: AllowedDenoms | null = null
+  try {
+    const allowedDenoms = JSON.parse(configString)
+    data = allowedDenomsSchema.parse(allowedDenoms)
+  } catch (e) {
+    console.log('error parsing ALLOWED_DENOMS', e)
+    return null
+  }
+  if (!data || !data[chainId]) {
+    return null
+  }
+  const denomFound = data[chainId].find((d) => d.denom === denom)
+  if (!denomFound) {
+    return null
+  }
+
+  return denomFound
 }

@@ -4,14 +4,20 @@ import { procedure, router } from 'server/trpc'
 import { Group, ManageGroupCode, prismaClient } from '@microcosms/db'
 import { zodStarsContractAddress } from 'libs/stars'
 import bot from '@microcosms/bot/bot'
+import { getChainInfo } from '@microcosms/bot/chains/ChainInfo'
 
 const getOtp = procedure
   .input(z.object({ otp: z.string() }))
 
   .query(async ({ input, ctx }) => {
     if (input.otp === '00000000') {
+      const chain = getChainInfo('stargaze-1')
+      if (!chain) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
       // this is a test code to verify the UI. It will always return the same group
       return {
+        chain,
         adminsCount: 2,
         membersCount: 47,
         otp: input.otp,
@@ -90,6 +96,7 @@ const getOtp = procedure
           select: {
             id: true,
             groupId: true,
+            chainId: true,
             name: true,
             createdAt: true,
             groupTokenGate: {
@@ -112,6 +119,10 @@ const getOtp = procedure
       },
     })
     if (info) {
+      const chain = getChainInfo(info.group.chainId)
+      if (!chain) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
       const adminsCountPromise = prismaClient().groupAdmin.count({
         where: {
           groupId: info.group.id,
@@ -124,6 +135,7 @@ const getOtp = procedure
       ])
       return {
         ...info,
+        chain,
         adminsCount,
         membersCount,
       }

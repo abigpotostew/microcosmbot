@@ -12,26 +12,12 @@ import { GetOtpOutput } from 'utils/types'
 import FrameBlock from './FrameBlock'
 import { VerifyButtons } from 'components/VerifyButtons'
 import { ReactNode, useState } from 'react'
-import { useWalletName } from '../client/react/hooks/sg-names'
-import { isError } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { botInfo } from '@microcosms/bot/botinfo'
 import { PrimaryButton } from '@microcosmbot/ui'
 
 const StargazeName = ({ address }: { address: string }) => {
   //https://www.stargaze.zone/marketplace/stars19jq6mj84cnt9p7sagjxqf8hxtczwc8wlpuwe4sh62w45aheseues57n420
   return <span>{address}</span>
-  const {
-    data: nameOfWallet,
-    isLoading,
-    isError,
-  } = useWalletName(address ?? '')
-  console.log('nameOfWallet', nameOfWallet)
-  if (isLoading) return <span>Loading...</span>
-  if (isError || !nameOfWallet) {
-    return <span>{address}</span>
-  }
-  return <span>{nameOfWallet + '.stars'}</span>
 }
 
 const statuses = {
@@ -69,7 +55,17 @@ export const TokenRuleListItem = ({
           {rule.ruleType === 'TOKEN_FACTORY' && (
             <>
               <p className="whitespace-nowrap">
-                At least {rule.minTokens} {rule.tokenFactoryDenom} token
+                At least {rule.minTokens}
+                {" '"}
+                {rule.tokenFactoryDenom && rule.tokenFactoryDenom.length > 8
+                  ? rule.tokenFactoryDenom.slice(0, 12) +
+                    '...' +
+                    rule.tokenFactoryDenom.slice(
+                      rule.tokenFactoryDenom.length - 9
+                    )
+                  : rule.tokenFactoryDenom}
+                {"' "}
+                token
                 {(rule.minTokens || 1) > 1 ? 's' : ''}
               </p>
               {!!rule.maxTokens && (
@@ -186,7 +182,6 @@ const TokenRulesExpand = ({ otp }: { otp: GetOtpOutput }) => {
 
 export default function VerifyWtfBox({ otp }: { otp: GetOtpOutput }) {
   if (!otp) return null
-  // console.log('otp', otp)
 
   return (
     <FrameBlock classes="col-span-8 lg:col-start-3 lg:row-end-1 text-body4">

@@ -5,6 +5,8 @@ import { SpinningCircles } from 'react-loading-icons'
 import VerifyWtfBox from 'components/VerifyWtfBox'
 import FrameBlock from 'components/FrameBlock'
 import { useOtp } from '../../client/react/hooks/useOtp'
+import { WalletProvider } from 'client/react/wallet/WalletContext'
+import WalletProviderRoot from '../../client/react/wallet/WalletProviderRoot'
 
 //todo client side render to grab the OTP, and group.
 const VerifyView: React.FC = () => {
@@ -65,7 +67,25 @@ const VerifyView: React.FC = () => {
               </div>
             </FrameBlock>
           )}
-          {!loading && <VerifyWtfBox otp={otpRes.data || null} />}
+          {!loading && !!otpRes.data && (
+            <>
+              <WalletProvider chainName={otpRes.data.chain.useChainName}>
+                <VerifyWtfBox otp={otpRes.data || null} />
+              </WalletProvider>
+            </>
+          )}
+          {!loading && !otpRes.data && (
+            <FrameBlock
+              classes={
+                'container bg-olive-200 mx-auto pt-4 pb-4 container flex align-middle justify-center flex-col md:px-6 gap-8 col-span-8 lg:items-center lg:flex-col'
+              }
+            >
+              <div className={'text-body4'}>
+                This verify url was either not found or already used. If
+                you&apos;re having trouble, try verifying with the bot again.
+              </div>
+            </FrameBlock>
+          )}
         </div>
       </div>
     </>

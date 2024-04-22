@@ -49,12 +49,17 @@ type DaoDaoResult = {
   }
 }
 export const getDaoDaoContractAndNft = async (
+  chainId: string,
   contractAddress: string
 ): Promise<Result<DaoDaoResult>> => {
   try {
-    const dump_state: DumpState = await fetchCosmWasm(contractAddress, {
-      dump_state: {},
-    })
+    const dump_state: DumpState = await fetchCosmWasm(
+      chainId,
+      contractAddress,
+      {
+        dump_state: {},
+      }
+    )
     if (dump_state.data.version.contract !== 'crates.io:dao-dao-core') {
       return Err(ErrorCodes.NOT_DAO_DAO_CORE)
     }
@@ -65,6 +70,7 @@ export const getDaoDaoContractAndNft = async (
       return Err(ErrorCodes.VOTING_MODULE_NOT_FOUND)
     }
     const vote_nft_config: VotingModuleConfig = await fetchCosmWasm(
+      chainId,
       voting_module_address,
       {
         config: {},
@@ -80,7 +86,7 @@ export const getDaoDaoContractAndNft = async (
     //further query the nft contract??
     let collection_info: NftConfig
     try {
-      collection_info = await fetchCosmWasm(nft_address, {
+      collection_info = await fetchCosmWasm(chainId, nft_address, {
         collection_info: {},
       })
     } catch (e) {
@@ -90,7 +96,7 @@ export const getDaoDaoContractAndNft = async (
 
     let contract_info: ContractInfo
     try {
-      contract_info = await fetchCosmWasm(nft_address, {
+      contract_info = await fetchCosmWasm(chainId, nft_address, {
         contract_info: {},
       })
     } catch (e) {
@@ -111,6 +117,7 @@ export const getDaoDaoContractAndNft = async (
 }
 
 export const getStakedCount = async (
+  chainId: string,
   voting_module_address: string,
   owner: string
 ) => {
@@ -121,6 +128,7 @@ export const getStakedCount = async (
   let ownedCount = 0
   do {
     const stakedTokensRes: { data: string[] } = await fetchCosmWasm(
+      chainId,
       voting_module_address,
       {
         staked_nfts: { address: owner, start_after, limit },

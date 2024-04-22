@@ -5,23 +5,19 @@ import 'styles/globals.css'
 
 import { RecoilRoot } from 'recoil'
 import type { AppProps, AppType } from 'next/app'
-import { Lexend_Deca, Patrick_Hand, Amatic_SC } from '@next/font/google'
+import { Amatic_SC, Lexend_Deca, Patrick_Hand } from '@next/font/google'
 import LayoutWrapper from 'components/LayoutWrapper'
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import * as Fathom from 'fathom-client'
-import { QueryClient } from '@tanstack/react-query'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { ChainProvider } from '@cosmos-kit/react'
-import { chains, assets } from 'chain-registry'
-import { wallets as keplrWallets } from '@cosmos-kit/keplr'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SignerOptions } from '@cosmos-kit/core'
 import { Chain } from '@chain-registry/types'
 import { getSigningCosmosClientOptions } from 'stargazejs'
 import { GasPrice } from '@cosmjs/stargate'
 import { trpc } from 'utils/trpc'
-import WalletProvider from 'client/react/wallet/WalletProvider'
+import WalletProviderRoot from '../client/react/wallet/WalletProviderRoot'
 
 const queryClient = new QueryClient()
 
@@ -48,6 +44,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
     function onRouteChangeComplete() {
       Fathom.trackPageview()
     }
+
     // Record a pageview when route changes
     router.events.on('routeChangeComplete', onRouteChangeComplete)
 
@@ -103,7 +100,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
         {/*  wrappedWithChakra={false}*/}
         {/*  signerOptions={signerOptions}*/}
         {/*>*/}
-        <WalletProvider>
+        <WalletProviderRoot>
           <RecoilRoot>
             <LayoutWrapper
               className={classNames(
@@ -115,7 +112,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
               <Component {...pageProps} />
             </LayoutWrapper>
           </RecoilRoot>
-        </WalletProvider>
+        </WalletProviderRoot>
         {/*</ChainProvider>*/}
       </QueryClientProvider>
     </>

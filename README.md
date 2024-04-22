@@ -14,7 +14,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Development Setup
 
-* Setup a https://planetscale.com/ database. Copy the connection string to your env. Run `npx prisma db push` from the `packages/db` directory to deploy the schema. You can use another db, but you will need to modify the file `packages/db/prisma/prisma.schema` file appropriately.
+* Setup a mysql8 database. Copy the connection string to your env in `DATABASE_URL`. Run `npx prisma db push` from the `packages/db` directory to deploy the schema.
 * Acquire a telegram bot token from @BotFather
 * Enable bot group settings via botfather.
 * Create a webhook to your localhost web port. I can recommend https://tunnelmole.com/ -- `tmole 3000`. Set this tunnel url to your BASEURL env variable.
@@ -22,6 +22,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 * Run your bot locally with `turbo dev` in the `apps/web` directory.
 * Call the config api to tell the bot where to send updates. `curl -X GET  http://localhost:3000/api/bot/<your bot key>/config`
 * You will now receive bot updates from telegram to your local machine.
+* For testing the background checks, create an upstash QStash. Save QSTASH_URL, QSTASH_TOKEN, QSTASH_CURRENT_SIGNING_KEY, and QSTASH_NEXT_SIGNING_KEY from qstash
 
 ### Deployment
 
@@ -120,3 +121,8 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Contributor wish list:
 * Internationalization - help me make this bot available in other languages! See https://grammy.dev/plugins/i18n.html#usage
 * Multi chain support - help me make this bot available on other chains!
+
+
+6dp:
+factory/neutron1ffus553eet978k024lmssw0czsxwr97mggyv85lpcsdkft8v9ufsz3sa07/astro
+factory/neutron1zlf3hutsa4qnmue53lz2tfxrutp8y2e3rj4nkghg3rupgl4mqy8s5jgxsn/xASTRO

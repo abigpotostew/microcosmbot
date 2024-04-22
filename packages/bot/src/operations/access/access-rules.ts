@@ -48,6 +48,7 @@ export const verifyWalletAgainstAccessRule = async (
     exponent: tokenGate.tokenFactoryExponent,
     owner: address,
     useRemoteCache,
+    chainId: group.chainId,
   })
 
   return hasValidOwnedCount(ownedCount)

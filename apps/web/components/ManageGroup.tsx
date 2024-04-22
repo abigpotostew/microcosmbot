@@ -1,28 +1,30 @@
 // @flow
 import * as React from 'react'
+import { useCallback, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { trpc } from 'utils/trpc'
-import { Group, GroupTokenGate, ManageGroupCode } from '@microcosms/db'
+import { GroupTokenGate } from '@microcosms/db'
 import { GetGroup } from 'utils/types'
 import FrameBlock from 'components/FrameBlock'
 import { useRecoilState } from 'recoil'
 import { modalState as modalInitState } from 'state/Modal'
 import { EditOrCreateGroupTokenGateView } from 'components/views/EditOrCreateGroupTokenGateView'
-import { useCallback, useEffect } from 'react'
 import {
   CalendarDaysIcon,
-  HomeIcon,
+  CheckCircleIcon,
   LockClosedIcon,
   PlusIcon,
   UserGroupIcon,
 } from '@heroicons/react/20/solid'
 import { TokenRuleListItem } from './VerifyWtfBox'
-import { PrimaryButton } from '@microcosmbot/ui'
+import { LoadingIcon, PrimaryButton } from '@microcosmbot/ui'
 import { toFormikValidate } from 'zod-formik-adapter'
-import { Formik, useFormik } from 'formik'
+import { useFormik } from 'formik'
 import { z } from 'zod'
-import { zodStarsContractAddress } from 'libs/stars'
 import { useMutation } from '@tanstack/react-query'
+import Dropdown from 'components/Dropdown'
+import { ChainInfos } from '@microcosms/bot/chains/config'
+import { useInvalidateCode } from 'utils/trpc/invalidate'
 
 const Schema = z.object({
   matchAny: z.boolean(),
@@ -74,6 +76,7 @@ function ManagingActiveGroup({
   )
 
   const setMatchAny = trpc.manageGroup.setMatchAny.useMutation()
+  const setChain = trpc.manageGroup.setChain.useMutation()
 
   const submitForm = useMutation(async (values: { matchAny: boolean }) => {
     await setMatchAny.mutateAsync({
@@ -93,7 +96,41 @@ function ManagingActiveGroup({
     if (values !== initialValues) {
       submitForm.mutate(values)
     }
-  }, [values, initialValues])
+  }, [submitForm, values, initialValues])
+
+  const chains = ChainInfos
+  const groupChain = chains.findIndex(
+    (chain) => chain.chainId === group.group.chainId
+  )
+
+  const [selectedOption, setSelectedOption] = React.useState<number>(groupChain)
+  const { invalidate } = useInvalidateCode()
+  const saveChainMutation = useMutation(async (optionIndex: number) => {
+    try {
+      const chainId = chains[optionIndex].chainId
+      if (!chainId) {
+        return
+      }
+      await setChain.mutateAsync({
+        code: group.code,
+        chainId,
+      })
+      await invalidate()
+      setSelectedOption(optionIndex)
+    } catch (e) {
+      console.error(e)
+    }
+  })
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false)
+  const chainOptions = chains.map((chain, i) => (
+    <div className={'flex flex-row gap-1 min-w-130px py-1'}>
+      {chain.chainName}
+      {i === selectedOption ? (
+        <CheckCircleIcon color={'green'} width={16} />
+      ) : null}
+    </div>
+  ))
+
   return (
     <>
       <div className={'min-w-full w-full'}>
@@ -103,7 +140,7 @@ function ManagingActiveGroup({
               'flex md:items-top justify-between flex-col md:flex-row align-top gap-x-6 py-5'
             }
           >
-            <div className={''}>
+            <div className={'flex flex-col'}>
               <span className={''}>
                 <h3
                   className={
@@ -113,6 +150,24 @@ function ManagingActiveGroup({
                   {group.group.name}
                 </h3>
               </span>
+              <div className={'flex flex-row items-center gap-1 pt-3'}>
+                <Dropdown
+                  label={'Chain - ' + chains[selectedOption].chainName}
+                  options={chainOptions}
+                  isOpen={isDropdownOpen}
+                  setIsOpen={setIsDropdownOpen}
+                  onOptionSelected={saveChainMutation.mutate}
+                  labelClassName={'min-w-[100px]'}
+                />
+                <div>{saveChainMutation.isLoading && <LoadingIcon />}</div>
+                <div>
+                  {saveChainMutation.isSuccess && (
+                    <CheckCircleIcon color={'green'} width={24} />
+                  )}
+
+                  {saveChainMutation.isError && 'Error saving chain'}
+                </div>
+              </div>
             </div>
 
             <div>

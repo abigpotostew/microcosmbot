@@ -22,23 +22,6 @@ const ManageGroupView: React.FC = () => {
               (Do not share this code with anyone)
             </p>
           </div>
-          {/*  <div className="flex items-center justify-between mb-4 sm:justify-start lg:mb-0">*/}
-          {/*      {Object.entries(stats).map(([key, value], i) => (*/}
-          {/*          <div*/}
-          {/*              key={`key-${i}`}*/}
-          {/*              className={classNames(*/}
-          {/*                  'flex flex-col flex-shrink-0 border-r border-olive-500 pl-1 pr-3 gap-3 pt-4 pb-3 sm:gap-5 sm:pr-16 sm:pl-7',*/}
-          {/*                  i === 0 ? 'pl-0 sm:pl-0' : '',*/}
-          {/*                  i == Object.keys(stats).length - 1 ? 'border-none lg:pr-11' : ''*/}
-          {/*              )}*/}
-          {/*          >*/}
-          {/*              <span className="text-title5">{value}</span>*/}
-          {/*              <span className="text-body4 text-olive-600">*/}
-          {/*  {STATS_LABELS[key]}*/}
-          {/*</span>*/}
-          {/*          </div>*/}
-          {/*      ))}*/}
-          {/*  </div>*/}
         </div>
       </header>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">

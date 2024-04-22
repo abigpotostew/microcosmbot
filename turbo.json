@@ -27,7 +27,8 @@
         "CRON_SECRET",
         "QSTASH_TOKEN",
         "QSTASH_CURRENT_SIGNING_KEY",
-        "QSTASH_NEXT_SIGNING_KEY"
+        "QSTASH_NEXT_SIGNING_KEY",
+        "ALLOWED_DENOMS"
       ]
     },
     "lint": {
@@ -54,7 +55,8 @@
         "CRON_SECRET",
         "QSTASH_TOKEN",
         "QSTASH_CURRENT_SIGNING_KEY",
-        "QSTASH_NEXT_SIGNING_KEY"
+        "QSTASH_NEXT_SIGNING_KEY",
+        "ALLOWED_DENOMS"
       ],
       "cache": false,
       "persistent": true

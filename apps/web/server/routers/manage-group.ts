@@ -1,12 +1,13 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { procedure, router } from 'server/trpc'
-import { Group, ManageGroupCode, prismaClient } from '@microcosms/db'
+import { prismaClient } from '@microcosms/db'
 import { zodStarsContractAddress } from 'libs/stars'
 import bot from '@microcosms/bot/bot'
 import { getDaoDaoContractAndNft } from '@microcosms/bot/operations/daodao/get-daodao'
 import { fetchDenomExponent } from '@microcosms/bot/operations'
 import { updateRuleSchema } from 'server/update-schema'
+import { getChainInfo } from '@microcosms/bot/chains/ChainInfo'
 
 const getGroup = procedure
   .input(z.object({ code: z.string() }))
@@ -112,25 +113,6 @@ const saveRule = procedure
       })
     }
 
-    let exponent: number | null = null
-    //todo for token_factory rule, check that the denom exists and fetch the exponent
-    if (input.updates.ruleType === 'TOKEN_FACTORY') {
-      if (!input.updates.tokenFactoryDenom) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'tokenFactoryDenom is required for TOKEN_FACTORY ruleType',
-        })
-      }
-      //fetch the exponent here
-      exponent = await fetchDenomExponent(input.updates.tokenFactoryDenom)
-      if (typeof exponent !== 'number') {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'invalid tokenFactoryDenom',
-        })
-      }
-    }
-
     const codeDb = await prismaClient().manageGroupCode.findFirst({
       where: {
         code: input.code,
@@ -154,6 +136,29 @@ const saveRule = procedure
     if (!codeDb) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
+
+    let exponent: number | null = null
+
+    if (input.updates.ruleType === 'TOKEN_FACTORY') {
+      if (!input.updates.tokenFactoryDenom) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'tokenFactoryDenom is required for TOKEN_FACTORY ruleType',
+        })
+      }
+      // fetch the exponent here if it's unknown.
+      exponent = await fetchDenomExponent(
+        codeDb.group.chainId,
+        input.updates.tokenFactoryDenom
+      )
+      if (typeof exponent !== 'number') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'invalid tokenFactoryDenom',
+        })
+      }
+    }
+
     const count = await prismaClient().groupTokenGate.count({
       where: {
         group: {
@@ -279,9 +284,47 @@ const setMatchAny = procedure
     }
     return true
   })
+
+const setChain = procedure
+  .input(
+    z.object({
+      chainId: z.string(),
+      code: z.string(),
+    })
+  )
+
+  .mutation(async ({ input, ctx }) => {
+    if (!input.code) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    const chainInfo = getChainInfo(input.chainId)
+    if (!chainInfo) {
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'invalid chain' })
+    }
+    const updatedRes = await prismaClient().group.updateMany({
+      where: {
+        manageGroupCodes: {
+          some: {
+            code: input.code,
+            expiresAt: {
+              gt: new Date(),
+            },
+          },
+        },
+      },
+      data: {
+        chainId: input.chainId,
+      },
+    })
+    if (!updatedRes.count) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    return true
+  })
 const getDaoDaoInfo = procedure
   .input(
     z.object({
+      code: z.string(),
       contractAddress: zodStarsContractAddress,
     })
   )
@@ -290,7 +333,15 @@ const getDaoDaoInfo = procedure
     if (!input.contractAddress) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
-    const daodaoinfo = await getDaoDaoContractAndNft(input.contractAddress)
+    const group = await getGroupForCode(input.code)
+    if (!group) {
+      console.log('group not found', input.code)
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    const daodaoinfo = await getDaoDaoContractAndNft(
+      group.group.chainId,
+      input.contractAddress
+    )
     if (!daodaoinfo.ok) {
       return {
         ok: false,
@@ -300,9 +351,23 @@ const getDaoDaoInfo = procedure
     return { ok: true, daoDaoInfo: daodaoinfo.value }
   })
 
+const getGroupForCode = (code: string) => {
+  return prismaClient().manageGroupCode.findFirst({
+    where: {
+      code,
+      expiresAt: {
+        gt: new Date(),
+      },
+    },
+    include: {
+      group: true,
+    },
+  })
+}
 const getDenomInfo = procedure
   .input(
     z.object({
+      code: z.string(),
       denom: z.string(),
     })
   )
@@ -311,7 +376,12 @@ const getDenomInfo = procedure
     if (!input.denom) {
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
-    const denomInfo = await fetchDenomExponent(input.denom)
+    const group = await getGroupForCode(input.code)
+    if (!group) {
+      console.log('group not found', input.code)
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+    const denomInfo = await fetchDenomExponent(group.group.chainId, input.denom)
     if (typeof denomInfo !== 'number') {
       return {
         ok: false,
@@ -327,6 +397,7 @@ export const manageGroupRouter = router({
   saveRule: saveRule,
   deleteRule: deleteRule,
   setMatchAny: setMatchAny,
+  setChain: setChain,
   getDaoDaoInfo: getDaoDaoInfo,
   getDenomInfo: getDenomInfo,
 })

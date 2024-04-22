@@ -3,7 +3,8 @@
     {
       "path": "/api/cron/cron-update-all-entries",
       "schedule": "0 */2 * * *"
-    },{
+    },
+    {
       "path": "/api/bot/config",
       "schedule": "*/30 * * * *"
     }

@@ -32,7 +32,7 @@ const signerOptions: SignerOptions = {
   },
 }
 
-export default function WalletProvider({
+export default function WalletProviderRoot({
   children,
 }: {
   children: JSX.Element
@@ -62,10 +62,7 @@ export default function WalletProvider({
         },
       }}
     >
-      <WalletContextProvider>
-        <>{children}</>
-        {/*<StargazeProvider>{children}</StargazeProvider>*/}
-      </WalletContextProvider>
+      <>{children}</>
     </ChainProvider>
   )
 }

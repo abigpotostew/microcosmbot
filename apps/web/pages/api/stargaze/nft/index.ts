@@ -23,6 +23,7 @@ const schema = z.object({
       return parseInt(v)
     })
     .nullish(),
+  chainId: z.string().nullish(),
 })
 
 /**
@@ -39,19 +40,13 @@ export default async function handler(req: NextRequest) {
 
     const url = new URL(req.url, 'https://example.com')
     const query = url.searchParams
-    const { contractAddress, owner, ruleType, denom, exponent } = {
+    const parse = schema.safeParse({
       contractAddress: query.get('contractAddress'),
       owner: query.get('owner'),
       ruleType: query.get('ruleType'),
       denom: query.get('denom'),
       exponent: query.get('exponent'),
-    }
-    const parse = schema.safeParse({
-      contractAddress,
-      owner,
-      ruleType,
-      denom,
-      exponent,
+      chainId: query.get('chainId'),
     })
     if (!parse.success) {
       console.log('invalid parameters', parse.error.format())
@@ -61,8 +56,13 @@ export default async function handler(req: NextRequest) {
         { status: 400 }
       )
     }
+    const chainIdOut = parse.data.chainId || 'stargaze-1'
 
-    const count = await getOwnedCount({ ...parse.data, useRemoteCache: false })
+    const count = await getOwnedCount({
+      ...parse.data,
+      chainId: chainIdOut,
+      useRemoteCache: false,
+    })
 
     //cache for 1 hour
     return NextResponse.json(

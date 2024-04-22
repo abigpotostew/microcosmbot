@@ -6,6 +6,7 @@ import { SignOptions } from '@cosmos-kit/core'
 import { config } from '@microcosms/bot/config'
 
 export const signLoginMessageWithArbitrary = async (
+  chainId: string,
   otp: string,
   signArbitrary: (
     signer: string,
@@ -17,7 +18,6 @@ export const signLoginMessageWithArbitrary = async (
   if (!keplr) {
     throw new Error('Keplr not installed')
   }
-  const chainId = config.chainId
   const key = await keplr.getKey(chainId)
 
   const userAddress = key.bech32Address
@@ -45,6 +45,7 @@ export type SignAminoFn = (
 ) => Promise<AminoSignResponse>
 
 export const signLoginMessageWithAmino = async (
+  chainId: string,
   otp: string,
   userAddress: string,
   signAmino: SignAminoFn
@@ -54,7 +55,7 @@ export const signLoginMessageWithAmino = async (
   // if (!keplr) {
   //   throw new Error('Keplr not installed')
   // }
-  const chainId = config.chainId
+  // const chainId = config.chainId
   // const key = await keplr.getKey(chainId)
 
   // const userAddress = key.bech32Address
