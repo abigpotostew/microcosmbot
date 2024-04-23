@@ -108,10 +108,15 @@ export default async function handler(
       const wallets = groupWithMember.groupMembers
         .map((gm) => gm.account.wallets)
         .flat()
-      const allowed = await checkAccessRules(cl, groupWithMember, wallets, {
-        useRemoteCache: true,
-      })
-      if (!allowed) {
+      const allowedWallet = await checkAccessRules(
+        cl,
+        groupWithMember,
+        wallets,
+        {
+          useRemoteCache: true,
+        }
+      )
+      if (!allowedWallet) {
         //kick them from the group. deactivate in db.
         cl.log(
           'kicking member',
@@ -125,7 +130,7 @@ export default async function handler(
         'done processing group member',
         parse.data.groupMemberId,
         'allowed?',
-        allowed
+        !!allowedWallet
       )
       return res.status(200).json({ message: 'done' })
     } catch (e) {
