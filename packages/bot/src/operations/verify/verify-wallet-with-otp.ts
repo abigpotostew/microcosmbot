@@ -198,7 +198,3 @@ interface TokensMsg {
   start_after?: string
   limit: number
 }
-
-const msgBase64 = (msg: TokensMsg) => {
-  return Buffer.from(JSON.stringify({ tokens: msg })).toString('base64')
-}

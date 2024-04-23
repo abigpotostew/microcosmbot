@@ -1,7 +1,11 @@
-import { bot, registerMenus } from '@microcosms/bot'
+import { bot } from '@microcosms/bot'
 import { webhookCallback } from 'grammy'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { commands } from '@microcosms/bot'
+
+export const config = {
+  runtime: 'edge',
+}
 
 function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: any) {
   return new Promise((resolve, reject) => {
