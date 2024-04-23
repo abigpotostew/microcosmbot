@@ -2,12 +2,13 @@ import { bot } from '@microcosms/bot'
 import { webhookCallback } from 'grammy'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { commands } from '@microcosms/bot'
+import { NextRequest, NextResponse } from 'next/server'
 
 export const config = {
   runtime: 'edge',
 }
 
-function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: any) {
+function runMiddleware(req: NextRequest, res: NextResponse, fn: any) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
       if (result instanceof Error) {
@@ -20,16 +21,17 @@ function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: any) {
 }
 
 bot.use(commands)
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
-    res.status(404).json({ ok: false })
+const callback = webhookCallback(bot, 'std/http')
+const handler = async (req: NextRequest, res: NextResponse) => {
+  const botId = req.nextUrl.searchParams.get('bot_id')
+  if (botId !== process.env.TELEGRAM_BOT_KEY) {
+    return NextResponse.json({ message: 'not found' }, { status: 404 })
   }
 
   if (process.env.NODE_ENV === 'development') {
-    console.log('ding ding', JSON.stringify(req.body))
+    console.log('ding ding')
   }
-  await runMiddleware(req, res, webhookCallback(bot, 'next-js'))
+  await runMiddleware(req, res, callback)
   // return botWebhook(req, res)
 }
 export default handler

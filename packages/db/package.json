@@ -10,7 +10,7 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "clean": "rm -rf .dist",
-    "prepare": "prisma generate"
+    "prepare": "prisma generate --no-engine"
   },
   "devDependencies": {
     "eslint-config-custom": "*",
@@ -20,6 +20,7 @@
     "typescript": "4.7.4"
   },
   "dependencies": {
-    "@prisma/client": "5.12.1"
+    "@prisma/client": "5.12.1",
+    "@prisma/extension-accelerate": "^1.0.0"
   }
 }
