@@ -40,7 +40,7 @@ export const websiteData: WebsiteData = {
   wtfSection: {
     title: 'WTF?',
     subtitle:
-      'MicroCosmBot is a telegram bot that enables token gated telegram groups with stargaze NFTs.',
+      'MicroCosmBot is a telegram bot that enables token gated telegram groups with cosmos assets.',
     text: `Quickly and easily configure a bot to manage access based on NFT holdings.
     
     MicroCosmBot will periodically make sure group members still hold the required NFTs. If they don't, they will be removed from the group. 

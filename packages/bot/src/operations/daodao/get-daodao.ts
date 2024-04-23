@@ -121,8 +121,6 @@ export const getStakedCount = async (
   voting_module_address: string,
   owner: string
 ) => {
-  // StakedNfts
-
   let start_after: string | undefined = undefined
   const limit = 100
   let ownedCount = 0

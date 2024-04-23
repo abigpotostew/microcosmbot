@@ -2,6 +2,7 @@ import { Group, GroupTokenGate, Wallet } from '@microcosms/db'
 import { LogContext, tinyAsyncPoolAll } from '../../utils'
 import { Pointer } from '../../utils/pointer'
 import { getOwnedCount } from '../token-ownership/nft-ownership'
+
 function shuffle<T>(array: Array<T>) {
   let currentIndex = array.length,
     randomIndex

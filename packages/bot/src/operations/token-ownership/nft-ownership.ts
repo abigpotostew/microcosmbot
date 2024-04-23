@@ -1,7 +1,7 @@
 import { GroupTokenGateRuleTypes } from '@microcosms/db'
 import { z } from 'zod'
 import { getDaoDaoContractAndNft, getStakedCount } from '../daodao/get-daodao'
-import { getChainInfo } from '../../chains/ChainInfo' //todo stew move this to bot
+import { getChainInfo } from '../../chains/ChainInfo'
 
 interface TokensMsg {
   owner: String
@@ -39,6 +39,8 @@ export const getOwnedCount = async ({
       contractAddress: contractAddress ?? undefined,
       owner,
       ruleType,
+      denom: denom ?? undefined,
+      exponent: exponent ?? undefined,
     })
   } else {
     return getOwnedCountDirect({
@@ -175,12 +177,7 @@ const getDaoDaoOwnedCount = async ({
     )
     return 0
   }
-  const staked = await getStakedCount(
-    chainId,
-    contract.value.voting_module_address,
-    owner
-  )
-  return staked
+  return getStakedCount(chainId, contract.value.voting_module_address, owner)
 }
 
 const getTokenFactoryTotalOwnedCount = async ({

@@ -173,6 +173,7 @@ const getRandomGreeting = (name: string) => {
   return greeting.replace('%%NAME%%', name)
 }
 
+//todo allow admins to configure this
 const randomGreetings = [
   'Welcome %%NAME%% to the chat',
   '%%NAME%% has arrived',
@@ -221,11 +222,11 @@ export const removeMemberToGroup = async ({
     },
   })
   lc.log(
-    'deleted group member from chat id',
+    'deactivate group member from chat id',
     groupChatId,
     'member id',
     userId,
-    'result: ',
-    res.count ? 'deleted' : 'no members to delete'
+    'result:',
+    res.count ? 'deactivated' : 'no members to deactivate (skipping)'
   )
 }

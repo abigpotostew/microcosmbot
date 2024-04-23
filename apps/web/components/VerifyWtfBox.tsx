@@ -7,13 +7,15 @@ import {
   LockClosedIcon,
   UserCircleIcon,
   UserGroupIcon,
+  SparklesIcon,
 } from '@heroicons/react/20/solid'
 import { GetOtpOutput } from 'utils/types'
 import FrameBlock from './FrameBlock'
 import { VerifyButtons } from 'components/VerifyButtons'
 import { ReactNode, useState } from 'react'
 import classNames from 'classnames'
-import { PrimaryButton } from '@microcosmbot/ui'
+import { PrimaryButton, KeyValue } from '@microcosmbot/ui'
+import * as React from 'react'
 
 const StargazeName = ({ address }: { address: string }) => {
   //https://www.stargaze.zone/marketplace/stars19jq6mj84cnt9p7sagjxqf8hxtczwc8wlpuwe4sh62w45aheseues57n420
@@ -158,19 +160,57 @@ const TokenRulesExpand = ({ otp }: { otp: GetOtpOutput }) => {
         className={expanded ? 'border-t border-gray-900/5' : 'hidden'}
         aria-labelledby="accordion-flush-heading-1"
       >
-        <ul className="py-5 divide-y divide-gray-100">
+        <div className={'flex flex-row items-center pt-4'}>
+          {otp.group.allowMatchAnyRule && (
+            <div className="flex flex-row items-center justify-center gap-1 text-sm leading-6">
+              <LockClosedIcon
+                className="h-6 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+
+              <label htmlFor="matchAny" className="font-medium text-gray-900">
+                Match any rule
+              </label>
+              <span id="matchAny" className="text-gray-500">
+                {' '}
+                Gain access when any rule matches
+              </span>
+            </div>
+          )}
+          {!otp.group.allowMatchAnyRule && (
+            <div className="flex flex-row items-center justify-center gap-1 text-sm leading-6">
+              <LockClosedIcon
+                className="h-6 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+
+              <label htmlFor="matchAny" className="font-medium text-gray-900">
+                Match all rules
+              </label>
+              <span id="matchAny" className="text-gray-500">
+                {' '}
+                Gain access when all rules match
+              </span>
+            </div>
+          )}
+        </div>
+        <ul className="pb-5 divide-y divide-gray-100">
           {otp.group.groupTokenGate.map((rule, id) => {
             return (
               <TokenRuleListItem rule={rule}>
-                <a
-                  href={`https://www.stargaze.zone/marketplace/${rule.contractAddress}`}
-                  target={'_blank'}
-                  rel="noreferrer"
-                >
-                  <PrimaryButton classes="w-full text-body1 text-sm text-white p-3 bg-gray-500">
-                    View collection
-                  </PrimaryButton>
-                </a>
+                <>
+                  {rule.ruleType === 'SG721' && (
+                    <a
+                      href={`https://www.stargaze.zone/marketplace/${rule.contractAddress}`}
+                      target={'_blank'}
+                      rel="noreferrer"
+                    >
+                      <PrimaryButton classes="w-full text-body1 text-sm text-white p-3 bg-gray-500">
+                        View collection
+                      </PrimaryButton>
+                    </a>
+                  )}
+                </>
               </TokenRuleListItem>
             )
           })}
@@ -200,6 +240,18 @@ export default function VerifyWtfBox({ otp }: { otp: GetOtpOutput }) {
               {otp.group.name}
             </dd>
           </div>
+          <div className="mt-6 flex w-full flex-none gap-x-4  px-6">
+            <dt className="flex-none">
+              <span className="sr-only">Chain Name</span>
+              <SparklesIcon
+                className="h-6 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </dt>
+            <dd className="text-sm font-medium leading-6 text-gray-900">
+              {otp.chain.chainName}
+            </dd>
+          </div>
           <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
             <dt className="flex-none">
               <span className="sr-only">Member Info</span>
@@ -212,18 +264,30 @@ export default function VerifyWtfBox({ otp }: { otp: GetOtpOutput }) {
               {otp.membersCount} members
             </dd>
           </div>
-          <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-            <dt className="flex-none">
-              <span className="sr-only">Member Info</span>
+          <KeyValue
+            className={'mt-4'}
+            labelTextScreenReader={'Member Info'}
+            label={
               <LockClosedIcon
                 className="h-6 w-5 text-gray-400"
                 aria-hidden="true"
               />
-            </dt>
-            <dd className="text-sm font-medium leading-6 text-gray-900">
-              {otp.adminsCount} admins
-            </dd>
-          </div>
+            }
+          >
+            {otp.adminsCount} admins
+          </KeyValue>
+          {/*<div className="mt-4 flex w-full flex-none gap-x-4 px-6">*/}
+          {/*  <dt className="flex-none">*/}
+          {/*    <span className="sr-only">Member Info</span>*/}
+          {/*    <LockClosedIcon*/}
+          {/*      className="h-6 w-5 text-gray-400"*/}
+          {/*      aria-hidden="true"*/}
+          {/*    />*/}
+          {/*  </dt>*/}
+          {/*  <dd className="text-sm font-medium leading-6 text-gray-900">*/}
+          {/*    {otp.adminsCount} admins*/}
+          {/*  </dd>*/}
+          {/*</div>*/}
           <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
             <dt className="flex-none">
               <span className="sr-only">Due date</span>

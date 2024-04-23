@@ -149,7 +149,7 @@ export const VerifyButtons: React.FC<Props> = () => {
   const DisconnectedButton = () => {
     return (
       <PrimaryButton
-        disabled={loginMutation.isLoading}
+        disabled={loginMutation.isLoading || loginMutation.data?.allowed}
         classes="w-full lg:w-50 bg-gray-400"
         onClick={disconnectWallet}
       >
@@ -234,7 +234,9 @@ export const VerifyButtons: React.FC<Props> = () => {
                 <PrimaryButton
                   classes="w-full lg:w-50"
                   onClick={loginMutation.mutate}
-                  disabled={loginMutation.isLoading}
+                  disabled={
+                    loginMutation.isLoading || loginMutation.data?.allowed
+                  }
                 >
                   Prove Wallet Ownership{' '}
                   {loginMutation.data?.duplicate && '(continue anyway)'}
@@ -253,7 +255,11 @@ export const VerifyButtons: React.FC<Props> = () => {
               </div>
               {/*</div>*/}
               {!!loginMutation.error && (
-                <div className={'text-red-500 text-body1 max-w-md pt-4'}>
+                <div
+                  className={
+                    'flex items-center justify-center w-full text-red-500 text-body1 pt-4'
+                  }
+                >
                   <>
                     {typeof loginMutation.error === 'string' &&
                       loginMutation.error}
@@ -305,7 +311,7 @@ export const VerifyButtons: React.FC<Props> = () => {
                 >
                   <p className={' text-body4 text-black'}>
                     Clicking on Prove Wallet Ownership will request an off-chain
-                    signature only used to verify wallet ownership by the bot.
+                    signature used only to verify wallet ownership by the bot.
                     The signature will be discarded after verification.
                   </p>
                 </div>

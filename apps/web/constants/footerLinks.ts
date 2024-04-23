@@ -68,12 +68,27 @@ export const FOOTER_LINKS: FooterLinksRow[] = [
       // },
       {
         name: 'Twitter',
-        url: 'https://twitter.com/stewbracken',
+        url: 'https://twitter.com/microcosmbot',
+        external: true,
+      },
+    ],
+  },
+  {
+    type: 'Support',
+    links: [
+      {
+        name: 'Twitter',
+        url: 'https://twitter.com/microcosmbot',
         external: true,
       },
       {
         name: 'Bugs & issues',
         url: 'https://github.com/abigpotostew/microcosmbot/issues/new',
+        external: true,
+      },
+      {
+        name: 'New chain support (send DM)',
+        url: 'https://twitter.com/microcosmbot',
         external: true,
       },
       {

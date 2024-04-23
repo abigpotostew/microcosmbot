@@ -24,10 +24,11 @@ const getOtp = procedure
         id: '0',
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         consumed: false,
+
         group: {
           id: '0',
           name: 'Test',
-
+          allowMatchAnyRule: false,
           groupTokenGate: [
             {
               id: '001',
@@ -99,6 +100,7 @@ const getOtp = procedure
             chainId: true,
             name: true,
             createdAt: true,
+            allowMatchAnyRule: true,
             groupTokenGate: {
               where: {
                 active: true,

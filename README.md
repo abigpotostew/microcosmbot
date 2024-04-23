@@ -1,6 +1,6 @@
 # MicroCosmBot
 
-MicroCosmBot is a telegram bot for creating token gated telegram group chats for stargaze NFTs.
+MicroCosmBot is a telegram bot for creating token gated telegram group chats for cosmos assets.
 
 ### Apps and Packages
 
@@ -126,3 +126,8 @@ Contributor wish list:
 6dp:
 factory/neutron1ffus553eet978k024lmssw0czsxwr97mggyv85lpcsdkft8v9ufsz3sa07/astro
 factory/neutron1zlf3hutsa4qnmue53lz2tfxrutp8y2e3rj4nkghg3rupgl4mqy8s5jgxsn/xASTRO
+
+ideas:
+- change the auth type to sign arbitrary if it's non mobile
+- allow admin to configure how the greetings work
+- 

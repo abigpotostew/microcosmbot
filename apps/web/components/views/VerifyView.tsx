@@ -77,12 +77,13 @@ const VerifyView: React.FC = () => {
           {!loading && !otpRes.data && (
             <FrameBlock
               classes={
-                'container bg-olive-200 mx-auto pt-4 pb-4 container flex align-middle justify-center flex-col md:px-6 gap-8 col-span-8 lg:items-center lg:flex-col'
+                'container min-h-[100px] col-span-8 lg:col-start-3 lg:row-end-1 text-body4 bg-olive-200 mx-auto pt-4 pb-4 container flex align-middle justify-center flex-col md:px-6 gap-8 col-span-8 lg:items-center lg:flex-col'
               }
             >
               <div className={'text-body4'}>
                 This verify url was either not found or already used. If
                 you&apos;re having trouble, try verifying with the bot again.
+                Reach out on twitter @microcosmbot if you need further help.
               </div>
             </FrameBlock>
           )}

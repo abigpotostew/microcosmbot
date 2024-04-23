@@ -22,7 +22,7 @@ export const verifyConnectNewWalletMenu = async ({
 
     return 'This link has expired. Use the invite link to restart your wallet verification.'
   }
-  return `Your verification code is ${otp?.code}.\n\nOpen this URL and verify the password is the same in your browser before signing the verification message:\n\n${process.env.BASEURL}/verify/${otp?.code}\n\nDo not share this link with anyone.`
+  return `Your verification code is ${otp?.code}.\n\nOpen this URL and verify the one time code is the same before signing the verification message:\n\n${process.env.BASEURL}/verify/${otp?.code}\n\nDo not share this link with anyone.`
 }
 
 export const verifyWalletWithOtp = async ({

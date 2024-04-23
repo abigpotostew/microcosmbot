@@ -99,12 +99,11 @@ const cmd_start: CommandMiddleware<MyContext> = async (
         },
       },
     })
-    let msg = `Hey I'm MicroCosmBot and can help you join private groups with your Stargaze NFTs. Connect a wallet to join '${group.name}'.`
+    let msg = `Hey I'm MicroCosmBot and can help you join private groups gated by Cosmos assets. To join '${group.name}', connect a new wallet with this telegram account`
     if (existingWallets.length > 0) {
-      msg +=
-        ' You have existing wallets. Would you like to use these wallets? Or connect a new wallet?'
+      msg += ', or connect with one of your existing wallets.'
     } else {
-      msg += ' Please connect a new wallet.'
+      msg += '.'
     }
     await ctx.reply(msg, {
       reply_markup: menuUserResponse,

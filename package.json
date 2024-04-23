@@ -19,10 +19,10 @@
     "prepare": "turbo run prepare"
   },
   "devDependencies": {
+    "dotenv-cli": "latest",
     "eslint-config-custom": "*",
     "prettier": "latest",
-    "turbo": "latest",
-    "dotenv-cli": "latest"
+    "turbo": "latest"
   },
   "engines": {
     "node": ">=14.0.0"

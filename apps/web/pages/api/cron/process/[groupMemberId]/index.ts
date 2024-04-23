@@ -98,6 +98,7 @@ export default async function handler(
         },
       })
       if (!groupWithMember?.groupMembers?.length) {
+        cl.log("couldn't find the group member", parse.data.groupMemberId)
         return res
           .status(200)
           .json({ message: 'could not find the group member. stopping' })
@@ -120,6 +121,12 @@ export default async function handler(
         )
         await kickUser(groupWithMember, groupWithMember.groupMembers[0])
       }
+      cl.log(
+        'done processing group member',
+        parse.data.groupMemberId,
+        'allowed?',
+        allowed
+      )
       return res.status(200).json({ message: 'done' })
     } catch (e) {
       cl.error('something went wrong. retrying')

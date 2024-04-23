@@ -75,36 +75,54 @@ function ManagingActiveGroup({
     [setModalState, group, onSave]
   )
 
-  const setMatchAny = trpc.manageGroup.setMatchAny.useMutation()
+  const setMatchAnyMutation = trpc.manageGroup.setMatchAny.useMutation()
   const setChain = trpc.manageGroup.setChain.useMutation()
 
+  const { invalidate } = useInvalidateCode()
+
   const submitForm = useMutation(async (values: { matchAny: boolean }) => {
-    await setMatchAny.mutateAsync({
+    await setMatchAnyMutation.mutateAsync({
       code: group.code,
       matchAny: values.matchAny,
     })
+    await invalidate()
   })
 
-  const { handleSubmit, handleChange, values, initialValues } = useFormik({
-    initialValues: {
-      matchAny: group.group.allowMatchAnyRule ?? false,
-    },
-    validate: toFormikValidate(Schema),
-    onSubmit: (values) => submitForm.mutate(values),
-  })
-  useEffect(() => {
-    if (values !== initialValues) {
-      submitForm.mutate(values)
+  // const { handleSubmit, handleChange, values, initialValues, touched } =
+  //   useFormik({
+  //     initialValues: {
+  //       matchAny: group.group.allowMatchAnyRule ?? false,
+  //     },
+  //     validate: toFormikValidate(Schema),
+  //     onSubmit: (values) => submitForm.mutate(values),
+  //   })
+  // useEffect(() => {
+  //   if (
+  //     typeof values.matchAny !== 'undefined' &&
+  //     values.matchAny !== initialValues.matchAny &&
+  //     submitForm.isIdle
+  //   ) {
+  //     submitForm.mutate({ matchAny: values.matchAny })
+  //   }
+  // }, [touched.matchAny, submitForm, values.matchAny, initialValues.matchAny])
+
+  const [matchAny, setMatchAny] = React.useState(group.group.allowMatchAnyRule)
+  const onMatchAnyChange = useMutation(
+    async ({ matchAny }: { matchAny: boolean }) => {
+      setMatchAny(matchAny)
+      await setMatchAnyMutation.mutateAsync({
+        code: group.code,
+        matchAny: matchAny,
+      })
+      await invalidate()
     }
-  }, [submitForm, values, initialValues])
-
+  )
   const chains = ChainInfos
   const groupChain = chains.findIndex(
     (chain) => chain.chainId === group.group.chainId
   )
 
   const [selectedOption, setSelectedOption] = React.useState<number>(groupChain)
-  const { invalidate } = useInvalidateCode()
   const saveChainMutation = useMutation(async (optionIndex: number) => {
     try {
       const chainId = chains[optionIndex].chainId
@@ -263,29 +281,34 @@ function ManagingActiveGroup({
         </ul>
         <div className="relative flex items-start">
           <div className="flex h-6 items-center">
-            <form
-              onSubmit={handleSubmit}
-              // className="text-body1 bg-olive-100 shadow-sm md:col-span-2"
-            >
-              <input
-                disabled={submitForm.isLoading}
-                defaultChecked={values.matchAny}
-                id="matchAny"
-                aria-describedby="matchAny"
-                name="matchAny"
-                type="checkbox"
-                onChange={handleChange}
-                value={values.matchAny.toString()}
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-              />
-            </form>
+            <input
+              disabled={onMatchAnyChange.isLoading}
+              defaultChecked={matchAny}
+              id="matchAny"
+              aria-describedby="matchAny"
+              name="matchAny"
+              type="checkbox"
+              onChange={() => onMatchAnyChange.mutate({ matchAny: !matchAny })}
+              value={matchAny.toString()}
+              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+            />
           </div>
           <div className="ml-3 text-sm leading-6">
             <label htmlFor="matchAny" className="font-medium text-gray-900">
-              Match any
+              <div className={'flex flex-row gap-2'}>
+                <span>Match any </span>
+                {onMatchAnyChange.isLoading && (
+                  <LoadingIcon containerClassNames={'w-4 h-4'} />
+                )}
+              </div>
             </label>
             <p id="matchAny" className="text-gray-500">
-              Grant access when any rule matches
+              {matchAny && (
+                <span>(Checked) Grant access when any rule matches</span>
+              )}
+              {!matchAny && (
+                <span>(Unchecked) Grant access when all rules match</span>
+              )}
             </p>
           </div>
         </div>
