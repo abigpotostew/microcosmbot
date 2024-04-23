@@ -11,6 +11,7 @@ export const cmd_me: CommandMiddleware<MyContext> = async (ctx) => {
   if (ctx.chat.type !== 'private') {
     return ctx.reply('DM me to run this command :)')
   }
+
   const from = ctx.from
   if (!from) {
     return
@@ -38,7 +39,7 @@ export const cmd_me: CommandMiddleware<MyContext> = async (ctx) => {
     )
   }
   return ctx.reply(
-    `You have verified wallets 🎉\n ${account?.wallets
+    `You have verified wallets 🎉\n${account?.wallets
       .map((w) => w.address)
       .join('\n')}`
   )

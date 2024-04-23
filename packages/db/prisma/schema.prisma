@@ -77,7 +77,7 @@ model GroupTokenGate {
   minTokens       Float?
   maxTokens       Float?
 
-  tokenFactoryDenom String?
+  tokenFactoryDenom    String?
   tokenFactoryExponent Int? // decimals for the denom
 
   ruleType GroupTokenGateRuleTypes @default(SG721)

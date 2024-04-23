@@ -12,15 +12,14 @@
   },
   "dependencies": {
     "@microcosms/db": "*",
-    "grammy": "^1.16.2",
-    "tiny-async-pool": "^2.1.0",
-    "zod": "^3.21.4"
+    "grammy": "1.22.4",
+    "tiny-async-pool": "2.1.0",
+    "zod": "3.23.3"
   },
   "devDependencies": {
-    "@types/express": "^4.17.17",
-    "@types/tiny-async-pool": "^2.0.0",
+    "@types/tiny-async-pool": "2.0.3",
     "eslint-config-custom": "*",
-    "nodemon": "^2.0.22",
-    "ts-node": "^10.9.1"
+    "nodemon": "2.0.22",
+    "ts-node": "10.9.2"
   }
 }
