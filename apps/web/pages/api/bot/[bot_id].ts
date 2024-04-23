@@ -23,6 +23,7 @@ bot.use(commands)
 const callback = webhookCallback(bot, 'std/http')
 const handler = async (req: NextRequest, res: NextResponse) => {
   try {
+    console.log('before bot_id')
     const botId = req.nextUrl.searchParams.get('bot_id')
     if (botId !== process.env.TELEGRAM_BOT_KEY) {
       return NextResponse.json({ message: 'not found' }, { status: 404 })
