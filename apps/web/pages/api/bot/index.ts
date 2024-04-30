@@ -9,5 +9,8 @@ bot.use(commands)
 
 export default webhookCallback(bot, 'std/http', {
   secretToken: process.env.TG_WEBHOOK_SECRET,
-  onTimeout: 'return',
+  onTimeout: (e) => {
+    console.log('onTimeout', e)
+    throw e
+  },
 })
