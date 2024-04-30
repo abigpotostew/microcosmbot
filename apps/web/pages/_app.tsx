@@ -12,12 +12,15 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import * as Fathom from 'fathom-client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { SignerOptions } from '@cosmos-kit/core'
-import { Chain } from '@chain-registry/types'
-import { getSigningCosmosClientOptions } from 'stargazejs'
-import { GasPrice } from '@cosmjs/stargate'
 import { trpc } from 'utils/trpc'
-import WalletProviderRoot from '../client/react/wallet/WalletProviderRoot'
+import dynamic from 'next/dynamic'
+
+const WalletProviderRoot = dynamic(
+  () => import('../client/react/wallet/WalletProviderRoot')
+  // {
+  //   loading: () => <p>Loading...</p>,
+  // }
+)
 
 const queryClient = new QueryClient()
 
@@ -54,52 +57,9 @@ const MyApp: AppType = ({ Component, pageProps }: AppProps) => {
     }
   }, [router.events])
 
-  const signerOptions: SignerOptions = {
-    // @ts-ignore
-    signingStargate: (_chain: Chain) => {
-      return getSigningCosmosClientOptions()
-    },
-    // @ts-ignore
-    signingCosmwasm: (chain: Chain) => {
-      switch (chain.chain_name) {
-        case 'stargaze':
-          return {
-            gasPrice: GasPrice.fromString('0.0ustars'),
-          }
-      }
-    },
-  }
-
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {/*<ChainProvider*/}
-        {/*  chains={chains}*/}
-        {/*  assetLists={assets}*/}
-        {/*  wallets={[*/}
-        {/*    ...keplrWallets,*/}
-        {/*    // ...cosmostationWallets,*/}
-        {/*    // ...leapWallets,*/}
-        {/*    // ...wcWallets,*/}
-        {/*  ]}*/}
-        {/*  walletConnectOptions={{*/}
-        {/*    signClient: {*/}
-        {/*      logger: 'debug',*/}
-        {/*      projectId: process.env*/}
-        {/*        .NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string,*/}
-        {/*      relayUrl: 'wss://relay.walletconnect.com',*/}
-        {/*      metadata: {*/}
-        {/*        name: 'MicroCosmBot',*/}
-        {/*        description:*/}
-        {/*          'MicroCosmbot creates token gated telegram groups.',*/}
-        {/*        url: 'https://www.microcosmbot.xyz',*/}
-        {/*        icons: ['https://www.microcosmbot.xyz/icons/logo-larger.png'],*/}
-        {/*      },*/}
-        {/*    },*/}
-        {/*  }}*/}
-        {/*  wrappedWithChakra={false}*/}
-        {/*  signerOptions={signerOptions}*/}
-        {/*>*/}
         <WalletProviderRoot>
           <RecoilRoot>
             <LayoutWrapper

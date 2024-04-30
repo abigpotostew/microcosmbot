@@ -1,18 +1,23 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@microcosms/bot",
-  "version": "0.0.0",
+  "version": "0.0.1",
+
   "types": "./src/index.ts",
+  "main": "./src/index.ts",
   "exports": {
     ".": "./src"
   },
-  "main": "./src/index.ts",
+
   "scripts": {
-    "dev": "echo nodemon"
+    "dev": "echo tsup --watch",
+    "build": "echo tsup",
+    "clean": "rm -rf ./dist"
   },
   "dependencies": {
     "@microcosms/db": "*",
-    "grammy": "1.22.4",
+    "@grammyjs/menu": "1.2.1",
+    "grammy": "npm:@ponomarevlad/grammy@1.19.2-next-edge",
     "tiny-async-pool": "2.1.0",
     "zod": "3.23.3"
   },
@@ -20,6 +25,7 @@
     "@types/tiny-async-pool": "2.0.3",
     "eslint-config-custom": "*",
     "nodemon": "2.0.22",
-    "ts-node": "10.9.2"
+    "ts-node": "10.9.2",
+    "tsup": "6.7.0"
   }
 }

@@ -1,19 +1,23 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { bot } from '@microcosms/bot/bot'
+import { bot } from '@microcosms/bot'
+import { NextRequest, NextResponse } from 'next/server'
 
+export const config = {
+  runtime: 'edge',
+}
 /**
  * API endpoint to configure the bot. This should be called once by the bot owner whenever the BASEURL or
  * any webhook config or commands change.
  * @param req
  * @param res
  */
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
-    res.status(404).json({ ok: false })
+const handler = async (req: NextRequest, res: NextResponse) => {
+  const botId = req.nextUrl.searchParams.get('bot_id')
+
+  if (botId !== process.env.TELEGRAM_BOT_KEY) {
+    return NextResponse.json({ message: 'not found' }, { status: 404 })
   }
 
-  const webhookUrl =
-    process.env.BASEURL + '/api/bot/' + process.env.TELEGRAM_BOT_KEY
+  const webhookUrl = process.env.BASEURL + '/api/bot'
 
   await bot.api.deleteWebhook()
   await bot.api.setWebhook(webhookUrl, {
@@ -28,6 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       'edited_message',
       'callback_query',
     ],
+    secret_token: process.env.TG_WEBHOOK_SECRET,
   })
 
   await bot.api.setMyCommands([
@@ -40,7 +45,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   ])
   console.log('bot configured', webhookUrl)
 
-  res.status(200).json({ ok: true, baseUrl: process.env.BASEURL })
+  return NextResponse.json(
+    { ok: true, baseUrl: process.env.BASEURL },
+    { status: 200 }
+  )
 }
 
 export default handler

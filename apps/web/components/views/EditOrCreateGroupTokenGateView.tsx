@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { Formik, useFormik } from 'formik'
+import { useFormik } from 'formik'
 import { GroupTokenGate, GroupTokenGateRuleTypes } from '@microcosms/db'
 import { GetRuleOutput } from 'utils/types'
 import { toFormikValidate } from 'zod-formik-adapter'

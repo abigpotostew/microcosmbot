@@ -1,10 +1,9 @@
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { procedure, router } from 'server/trpc'
-import { Group, ManageGroupCode, prismaClient } from '@microcosms/db'
-import { zodStarsContractAddress } from 'libs/stars'
-import bot from '@microcosms/bot/bot'
-import { getChainInfo } from '@microcosms/bot/chains/ChainInfo'
+import { prismaClient } from '@microcosms/db'
+import { bot } from '@microcosms/bot'
+import { getChainInfo } from '@microcosms/bot'
 
 const getOtp = procedure
   .input(z.object({ otp: z.string() }))

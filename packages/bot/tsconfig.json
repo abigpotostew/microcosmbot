@@ -1,15 +1,16 @@
 {
   "extends": "tsconfig/base.json",
   "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "svg-module.d.ts"
+    "./src/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist",
+    ".turbo"
   ],
   "compilerOptions": {
+    "noEmit": true,
+    "incremental": true,
     "baseUrl": "./src",
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -17,13 +18,10 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
     "resolveJsonModule": true,
     "isolatedModules": false,
-    "jsx": "preserve",
     "paths": {
       "@microcosms/db": ["../packages/db"]
     }

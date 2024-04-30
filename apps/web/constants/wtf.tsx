@@ -57,20 +57,20 @@ export const wtfList: WTFList[] = [
       </>
     ),
     video: (
-        <div style={{ position: 'relative', paddingBottom: '62.5%', height: 0 }}>
-          <iframe
-              src="https://www.loom.com/embed/2d6266e5fb734be19c32d1a92b2f366e?sid=e42ba131-199a-443c-a708-fe477c99282a"
-              frameBorder="0"
-              allowFullScreen
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-              }}
-          ></iframe>
-        </div>
+      <div style={{ position: 'relative', paddingBottom: '62.5%', height: 0 }}>
+        <iframe
+          src="https://www.loom.com/embed/2d6266e5fb734be19c32d1a92b2f366e?sid=e42ba131-199a-443c-a708-fe477c99282a"
+          frameBorder="0"
+          allowFullScreen
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        ></iframe>
+      </div>
     ),
   },
   {

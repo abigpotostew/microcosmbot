@@ -1,9 +1,8 @@
 import { Window } from '@keplr-wallet/types'
-import { SigningCosmWasmClient, StdSignDoc } from 'cosmwasm'
+import { StdSignDoc } from 'cosmwasm'
 import { buildMessage } from './build-mesage'
 import { AminoSignResponse, StdSignature } from '@cosmjs/amino'
 import { SignOptions } from '@cosmos-kit/core'
-import { config } from '@microcosms/bot/config'
 
 export const signLoginMessageWithArbitrary = async (
   chainId: string,
