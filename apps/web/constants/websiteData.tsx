@@ -9,7 +9,7 @@ import HeroImageSrc from 'assets/images/hero.png'
 import ProcessImageSrc from 'public/images/form-process-image.png'
 import Logo from 'assets/icons/logo-larger.svg'
 import { wtfList } from './wtf'
-import { botInfo } from '@microcosms/bot/botinfo'
+import { botInfo } from '@microcosms/bot'
 
 export const websiteData: WebsiteData = {
   logo: <Logo className="w-20" />,

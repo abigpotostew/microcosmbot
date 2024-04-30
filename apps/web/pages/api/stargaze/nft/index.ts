@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getOwnedCount } from '@microcosms/bot/operations/token-ownership/nft-ownership'
+import { getOwnedCount } from '@microcosms/bot'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const config = {

@@ -1,6 +1,5 @@
-import { bot } from '@microcosms/bot'
+import { bot, commands } from '@microcosms/bot'
 import { webhookCallback } from 'grammy'
-import { commands } from '@microcosms/bot'
 import { NextRequest, NextResponse } from 'next/server'
 import { FrameworkAdapter } from 'grammy/out/convenience/frameworks'
 

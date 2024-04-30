@@ -3,11 +3,11 @@ import { TRPCError } from '@trpc/server'
 import { procedure, router } from 'server/trpc'
 import { prismaClient } from '@microcosms/db'
 import { zodStarsContractAddress } from 'libs/stars'
-import bot from '@microcosms/bot/bot'
-import { getDaoDaoContractAndNft } from '@microcosms/bot/operations/daodao/get-daodao'
-import { fetchDenomExponent } from '@microcosms/bot/operations'
+import { bot } from '@microcosms/bot'
+import { getDaoDaoContractAndNft } from '@microcosms/bot'
+import { fetchDenomExponent } from '@microcosms/bot'
 import { updateRuleSchema } from 'server/update-schema'
-import { getChainInfo } from '@microcosms/bot/chains/ChainInfo'
+import { getChainInfo } from '@microcosms/bot'
 
 const getGroup = procedure
   .input(z.object({ code: z.string() }))

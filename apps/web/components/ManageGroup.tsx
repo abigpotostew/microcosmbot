@@ -18,12 +18,10 @@ import {
 } from '@heroicons/react/20/solid'
 import { TokenRuleListItem } from './VerifyWtfBox'
 import { LoadingIcon, PrimaryButton } from '@microcosmbot/ui'
-import { toFormikValidate } from 'zod-formik-adapter'
-import { useFormik } from 'formik'
 import { z } from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import Dropdown from 'components/Dropdown'
-import { ChainInfos } from '@microcosms/bot/chains/config'
+import { ChainInfos } from '@microcosms/bot'
 import { useInvalidateCode } from 'utils/trpc/invalidate'
 
 const Schema = z.object({

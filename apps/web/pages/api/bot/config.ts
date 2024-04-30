@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { bot } from '@microcosms/bot/bot'
+import { bot } from '@microcosms/bot'
 import { cronSecretRequired } from 'server/cron-secret-required'
 
 /**

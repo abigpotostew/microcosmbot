@@ -5,7 +5,6 @@ import { SigningStargateClient } from '@cosmjs/stargate'
 import { WalletData } from 'client/core/wallet'
 import { SignAminoFn } from 'libs/verify/keplr'
 import { WalletStatus } from '@cosmos-kit/core'
-import { ChainInfos } from '@microcosms/bot/chains/config'
 
 // Wallet context
 

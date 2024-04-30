@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { bot } from '@microcosms/bot/bot'
+import { bot } from '@microcosms/bot'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const config = {
