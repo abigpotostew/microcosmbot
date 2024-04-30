@@ -8,8 +8,10 @@ export default defineConfig((options: Options) => ({
   dts: true,
   minify: true,
   clean: true,
-  sourcemap: true,
+  sourcemap: false,
   target: 'es2020',
-  skipNodeModulesBundle: true,
+  // skipNodeModulesBundle: false,
+  noExternal: ['grammy'],
+  bundle: true,
   ...options,
 }))
