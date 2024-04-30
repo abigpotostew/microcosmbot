@@ -15,7 +15,7 @@
   "dependencies": {
     "@microcosms/db": "*",
     "@grammyjs/menu": "1.2.1",
-    "grammy": "1.22.4",
+    "grammy": "npm:@ponomarevlad/grammy@1.19.2-next-edge",
     "tiny-async-pool": "2.1.0",
     "zod": "3.23.3"
   },
