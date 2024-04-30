@@ -51,6 +51,8 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
     "react-loading-icons": "^1.1.0",
+    "@grammyjs/menu": "1.2.1",
+    "grammy": "1.22.4",
     "react-text-mask": "^5.5.0",
     "recoil": "^0.7.6",
     "stargazejs": "0.14.0",
