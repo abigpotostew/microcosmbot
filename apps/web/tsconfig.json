@@ -19,7 +19,13 @@
       "assets/*": ["public/*"],
       "utils/*": ["utils/*"],
       "state/*": ["state/*"],
-      "server/*": ["server/*"]
+      "server/*": ["server/*"],
+      "@microcosms/bot/*": ["../../packages/bot/src/*"]
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../packages/bot"
+    }
+  ]
 }

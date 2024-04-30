@@ -7,7 +7,7 @@ import PeriodicIcon from 'public/icons/periodic-icon.svg'
 import { websiteData } from 'constants/index'
 import Image from 'next/image'
 import { PrimaryButton } from '@microcosmbot/ui'
-import { botInfo } from '@microcosms/bot/dist/botinfo'
+import { botInfo } from '@microcosms/bot/botinfo'
 
 const HeroSection: React.FC = () => {
   const tabs = [

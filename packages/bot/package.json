@@ -3,13 +3,15 @@
   "name": "@microcosms/bot",
   "version": "0.0.1",
 
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "./src/index.ts",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src"
+  },
 
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "echo tsup --watch",
+    "build": "echo tsup",
     "clean": "rm -rf ./dist"
   },
   "dependencies": {

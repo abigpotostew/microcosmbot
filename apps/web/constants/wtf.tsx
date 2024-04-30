@@ -1,5 +1,5 @@
 import { WTFList } from 'libs/types'
-import { botInfo } from '@microcosms/bot/dist/botinfo'
+import { botInfo } from '@microcosms/bot/botinfo'
 
 export const wtfList: WTFList[] = [
   {

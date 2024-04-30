@@ -9,6 +9,8 @@
     ".turbo"
   ],
   "compilerOptions": {
+    "noEmit": true,
+    "incremental": true,
     "baseUrl": "./src",
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -20,5 +22,8 @@
     "module": "esnext",
     "resolveJsonModule": true,
     "isolatedModules": false,
+    "paths": {
+      "@microcosms/db": ["../packages/db"]
+    }
   }
 }
