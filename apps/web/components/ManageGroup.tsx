@@ -21,7 +21,7 @@ import { LoadingIcon, PrimaryButton } from '@microcosmbot/ui'
 import { z } from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import Dropdown from 'components/Dropdown'
-import { ChainInfos } from '@microcosms/bot'
+import { ChainInfos } from '@microcosms/bot/chains/config'
 import { useInvalidateCode } from 'utils/trpc/invalidate'
 
 const Schema = z.object({

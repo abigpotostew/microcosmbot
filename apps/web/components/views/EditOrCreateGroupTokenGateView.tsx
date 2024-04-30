@@ -12,7 +12,7 @@ import { useInvalidateCode } from 'utils/trpc/invalidate'
 import { useMutation } from '@tanstack/react-query'
 import { PrimaryButton } from '@microcosmbot/ui'
 import { LoadingIcon } from '@microcosmbot/ui'
-import { ErrorCodes } from '@microcosms/bot'
+import { ErrorCodes } from '@microcosms/bot/operations/daodao/errors.types'
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import { UpdateRule } from 'server/update-schema'
 
