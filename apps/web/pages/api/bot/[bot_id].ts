@@ -1,13 +1,9 @@
-import { bot } from '@microcosms/bot'
+import { bot, registerMenus } from '@microcosms/bot'
 import { webhookCallback } from 'grammy'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { commands } from '@microcosms/bot'
-import { NextRequest, NextResponse } from 'next/server'
 
-export const config = {
-  runtime: 'edge',
-}
-
-function runMiddleware(req: NextRequest, res: NextResponse, fn: any) {
+function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: any) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
       if (result instanceof Error) {
@@ -20,23 +16,16 @@ function runMiddleware(req: NextRequest, res: NextResponse, fn: any) {
 }
 
 bot.use(commands)
-const callback = webhookCallback(bot, 'std/http')
-const handler = async (req: NextRequest, res: NextResponse) => {
-  try {
-    console.log('before bot_id')
-    const botId = req.nextUrl.searchParams.get('bot_id')
-    if (botId !== process.env.TELEGRAM_BOT_KEY) {
-      return NextResponse.json({ message: 'not found' }, { status: 404 })
-    }
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('ding ding')
-    }
-    await runMiddleware(req, res, callback)
-    // return botWebhook(req, res)
-  } catch (e) {
-    console.error('failed to run', e)
-    return NextResponse.json({ message: 'error' }, { status: 500 })
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
+    res.status(404).json({ ok: false })
   }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ding ding', JSON.stringify(req.body))
+  }
+  await runMiddleware(req, res, webhookCallback(bot, 'next-js'))
+  // return botWebhook(req, res)
 }
 export default handler

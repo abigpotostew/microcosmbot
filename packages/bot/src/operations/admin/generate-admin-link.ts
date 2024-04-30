@@ -1,8 +1,8 @@
 import { Group, prismaClient } from '@microcosms/db'
-import { toHex } from '../../utils/hex'
+import crypto from 'crypto'
 
 export const generateAdminLink = async (group: Group) => {
-  const code = toHex(crypto.getRandomValues(new Uint8Array(16)))
+  const code = crypto.randomBytes(16).toString('hex')
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 12)
   await prismaClient().manageGroupCode.create({
     data: {

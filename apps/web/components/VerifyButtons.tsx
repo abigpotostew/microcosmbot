@@ -265,7 +265,8 @@ export const VerifyButtons: React.FC<Props> = () => {
                       loginMutation.error}
                     {!!loginMutation.error &&
                       typeof loginMutation.error === 'object' &&
-                      loginMutation.error.toString()}
+                      'message' in loginMutation.error &&
+                      loginMutation.error.message}
                     {!!loginMutation.error &&
                       typeof loginMutation.error === 'string' &&
                       loginMutation.error}

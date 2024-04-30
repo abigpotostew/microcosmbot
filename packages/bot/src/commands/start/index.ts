@@ -1,12 +1,12 @@
 import { Group, prismaClient } from '@microcosms/db'
-import { CommandMiddleware } from 'grammy'
+import { CommandMiddleware, Context, InlineKeyboard } from 'grammy'
 import { menuUserResponse } from '../../menus'
+import * as crypto from 'crypto'
 import { registerAccountToPendingGroupMember } from '../../operations/verify/register-account-to-pending-group-member'
 import { responseSettings } from '../../operations/settings/settings'
 import { logContext } from '../../utils/context'
 import { MyContext } from '../../bot/context'
 import { z } from 'zod'
-import { toHex } from '../../utils/hex'
 
 const cuidSchema = z.object({
   groupId: z.string(),
@@ -119,7 +119,7 @@ const cmd_start: CommandMiddleware<MyContext> = async (
 }
 
 export const startUserVerifyFlow = (fromUserId: number, group: Group) => {
-  const code = toHex(crypto.getRandomValues(new Uint8Array(4)))
+  const code = crypto.randomBytes(4).toString('hex')
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 3)
   return prismaClient().pendingGroupMember.create({
     data: {
