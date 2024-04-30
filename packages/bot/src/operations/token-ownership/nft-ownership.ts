@@ -10,10 +10,7 @@ interface TokensMsg {
 }
 
 const msgBase64 = (msg: object) => {
-  return Buffer.from(JSON.stringify(msg)).toString('base64')
-}
-const tokenMsgBase64 = (msg: TokensMsg) => {
-  return msgBase64({ tokens: msg })
+  return btoa(JSON.stringify(msg))
 }
 
 export const getOwnedCount = async ({
