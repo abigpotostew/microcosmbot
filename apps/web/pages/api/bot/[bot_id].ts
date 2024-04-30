@@ -32,15 +32,19 @@ const callbackMine: FrameworkAdapter = (req: Request) => {
     update: req.json(),
     header: req.headers.get('X-Telegram-Bot-Api-Secret-Token') || undefined,
     end: () => {
+      console.log('ok')
       if (resolveResponse) resolveResponse(ok())
     },
     respond: (json) => {
+      console.log('respond:', json)
       if (resolveResponse) resolveResponse(okJson(json))
     },
     unauthorized: () => {
+      console.log('unauthorized')
       if (resolveResponse) resolveResponse(unauthorized())
     },
     handlerReturn: new Promise((resolve) => {
+      console.log('handlerReturn')
       resolveResponse = resolve
     }),
   }
