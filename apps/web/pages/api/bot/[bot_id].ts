@@ -49,7 +49,7 @@ const callbackMine: FrameworkAdapter = (req: Request) => {
     }),
   }
 }
-const callback = webhookCallback(bot, callbackMine)
+const callback = webhookCallback(bot, 'std/http')
 
 const handler = async (req: NextRequest, res: NextResponse) => {
   try {
