@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import { bot } from '@microcosms/bot'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -18,8 +17,7 @@ const handler = async (req: NextRequest, res: NextResponse) => {
     return NextResponse.json({ message: 'not found' }, { status: 404 })
   }
 
-  const webhookUrl =
-    process.env.BASEURL + '/api/bot/' + process.env.TELEGRAM_BOT_KEY
+  const webhookUrl = process.env.BASEURL + '/api/bot'
 
   await bot.api.deleteWebhook()
   await bot.api.setWebhook(webhookUrl, {
@@ -34,6 +32,7 @@ const handler = async (req: NextRequest, res: NextResponse) => {
       'edited_message',
       'callback_query',
     ],
+    secret_token: process.env.TG_WEBHOOK_SECRET,
   })
 
   await bot.api.setMyCommands([

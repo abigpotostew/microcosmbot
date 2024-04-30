@@ -14,8 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return authorized.setResponse(res)
   }
 
-  const webhookUrl =
-    process.env.BASEURL + '/api/bot/' + process.env.TELEGRAM_BOT_KEY
+  const webhookUrl = process.env.BASEURL + '/api/bot'
 
   await bot.api.setWebhook(webhookUrl, {
     allowed_updates: [
@@ -29,6 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       'edited_message',
       'callback_query',
     ],
+    secret_token: process.env.TG_WEBHOOK_SECRET,
   })
 
   await bot.api.setMyCommands([

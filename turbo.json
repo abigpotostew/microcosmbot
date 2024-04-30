@@ -29,7 +29,8 @@
         "QSTASH_TOKEN",
         "QSTASH_CURRENT_SIGNING_KEY",
         "QSTASH_NEXT_SIGNING_KEY",
-        "ALLOWED_DENOMS"
+        "ALLOWED_DENOMS",
+        "TG_WEBHOOK_SECRET"
       ]
     },
     "lint": {
@@ -58,7 +59,8 @@
         "QSTASH_TOKEN",
         "QSTASH_CURRENT_SIGNING_KEY",
         "QSTASH_NEXT_SIGNING_KEY",
-        "ALLOWED_DENOMS"
+        "ALLOWED_DENOMS",
+        "TG_WEBHOOK_SECRET"
       ],
       "cache": false,
       "persistent": true
