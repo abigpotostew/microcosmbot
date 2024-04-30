@@ -1,9 +1,14 @@
-import { bot, registerMenus } from '@microcosms/bot'
+import { bot } from '@microcosms/bot'
 import { webhookCallback } from 'grammy'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { commands } from '@microcosms/bot'
+import { NextRequest, NextResponse } from 'next/server'
+import { FrameworkAdapter } from 'grammy/out/convenience/frameworks'
 
-function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: any) {
+export const config = {
+  runtime: 'edge',
+}
+
+function runMiddleware(req: NextRequest, res: NextResponse, fn: any) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result: any) => {
       if (result instanceof Error) {
@@ -16,16 +21,48 @@ function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: any) {
 }
 
 bot.use(commands)
+const ok = () => new NextResponse(null, { status: 200 })
+const okJson = (json: string) => NextResponse.json(json, { status: 200 })
+const unauthorized = () =>
+  NextResponse.json({ message: 'unauthorized' }, { status: 401 })
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.query.bot_id !== process.env.TELEGRAM_BOT_KEY) {
-    res.status(404).json({ ok: false })
+const callbackMine: FrameworkAdapter = (req: Request) => {
+  let resolveResponse: (res: Response) => void
+  return {
+    update: req.json(),
+    header: req.headers.get('X-Telegram-Bot-Api-Secret-Token') || undefined,
+    end: () => {
+      if (resolveResponse) resolveResponse(ok())
+    },
+    respond: (json) => {
+      if (resolveResponse) resolveResponse(okJson(json))
+    },
+    unauthorized: () => {
+      if (resolveResponse) resolveResponse(unauthorized())
+    },
+    handlerReturn: new Promise((resolve) => {
+      resolveResponse = resolve
+    }),
   }
+}
+const callback = webhookCallback(bot, callbackMine)
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log('ding ding', JSON.stringify(req.body))
+const handler = async (req: NextRequest, res: NextResponse) => {
+  try {
+    console.log('before bot_id')
+    const botId = req.nextUrl.searchParams.get('bot_id')
+    if (botId !== process.env.TELEGRAM_BOT_KEY) {
+      return NextResponse.json({ message: 'not found' }, { status: 404 })
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('ding ding')
+    }
+    await runMiddleware(req, res, callback)
+    // return botWebhook(req, res)
+  } catch (e) {
+    console.error('failed to run', e)
+    return NextResponse.json({ message: 'error' }, { status: 500 })
   }
-  await runMiddleware(req, res, webhookCallback(bot, 'next-js'))
-  // return botWebhook(req, res)
 }
 export default handler
