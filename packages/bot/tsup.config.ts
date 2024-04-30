@@ -4,9 +4,12 @@ export default defineConfig((options: Options) => ({
   treeshake: false,
   splitting: false,
   entry: ['src/**/*.ts'],
-  format: ['esm'],
+  format: ['esm', 'cjs'],
   dts: true,
   minify: true,
   clean: true,
+  sourcemap: true,
+  target: 'es2020',
+  skipNodeModulesBundle: true,
   ...options,
 }))

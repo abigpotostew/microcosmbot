@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { getDaoDaoContractAndNft } from '@microcosms/bot/src'
+import { getDaoDaoContractAndNft } from '@microcosms/bot'
 
 async function main() {
   console.log(
