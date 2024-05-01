@@ -1,11 +1,26 @@
 # MicroCosmBot
 
-MicroCosmBot is a telegram bot for creating token gated telegram group chats for cosmos assets.
+MicroCosmBot is a telegram bot for creating token gated telegram group chats for cosmos assets across any chain.
+
+Some features:
+* Token gate by stargaze NFTs
+* Token gate by DAO DAO staked NFTs
+* Token gate by native denominations and osmosis token factory tokens-- such as stars, or xASTRO. Staked tokens are also supported.
+* Automatic background checks to ensure users still own the token.
+* Users can link multiple wallets to the same telegram account.
+
+
+### Architecture
+* Next JS powers both the website and the bot itself. This allows for a single codebase to power both the website and the bot.
+* The bot utilized edge functions to handle the telegram bot updates. This allows for the bot to be highly available, scalable, and responsive.
+* Prisma Accelerate is used for connection pooling for mysql db access from edge functions.
+* Upstash is used for the queueing system for the background checks which run every 2 hours.
+
 
 ### Apps and Packages
 
 - `web`: the NextJS web application that also runs the telegram bot
-- `bot`: all the bot logic
+- `bot`: all the bot logic (internal package)
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 - `tailwind-config`: `tailwind.config.js`s used through `web` and `docs` application as well as `package/ui` components
@@ -120,7 +135,6 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Contributor wish list:
 * Internationalization - help me make this bot available in other languages! See https://grammy.dev/plugins/i18n.html#usage
-* Multi chain support - help me make this bot available on other chains!
 
 
 6dp:
@@ -130,4 +144,7 @@ factory/neutron1zlf3hutsa4qnmue53lz2tfxrutp8y2e3rj4nkghg3rupgl4mqy8s5jgxsn/xASTR
 ideas:
 - change the auth type to sign arbitrary if it's non mobile
 - allow admin to configure how the greetings work
-- 
+
+
+Edge notes:
+https://github.com/grammyjs/grammY/pull/501/files
