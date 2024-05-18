@@ -17,6 +17,10 @@ export const trackEvent = async (event: MonitorEvent) => {
     body: JSON.stringify(slackMsg),
   })
   if (!response.ok) {
-    console.error('Failed to send event to slack', response.statusText)
+    console.error(
+      'Failed to send event to slack',
+      response.statusText,
+      await response.text()
+    )
   }
 }

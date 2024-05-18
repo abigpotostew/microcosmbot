@@ -42,7 +42,7 @@ const userMsg = (
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `**${group.name}** - @${user.name} (${user.address})`,
+          text: `**${group.name}** - \`@${user.name}\` (${user.address})`,
         },
       },
     ],

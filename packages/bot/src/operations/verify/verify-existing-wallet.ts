@@ -1,8 +1,13 @@
 import { addAccountToGroup } from '../account/add-account-to-group'
 import { LogContext } from '../../utils'
-import { getCodeGroupUser, getMemberAccountsAndWallets } from '../member/get-with-code'
+import {
+  getCodeGroupUser,
+  getMemberAccountsAndWallets,
+} from '../member/get-with-code'
 
-import {checkAccessRules} from "../access/access-rules";
+import { checkAccessRules } from '../access/access-rules'
+import { trackEvent } from '../../monitor/track-event'
+import { MonitorEvents } from '../../monitor/monitor-events'
 
 //get existing wallets
 //check nfts against group access rules
@@ -44,6 +49,15 @@ export const verifyExistingWallet = async ({
   const wallets = account.wallets
   const fw = await checkAccessRules(cl, group, wallets)
   if (!fw) {
+    await trackEvent({
+      event: MonitorEvents.USER_REJECTED,
+      group: { id: group.id, name: group.name },
+      user: {
+        id: account.userId.toString(),
+        name: account.username,
+        address: wallets.map((w) => w.address).join(', '),
+      },
+    })
     return 'None of your existing wallets are allowed to join this group. Did you connect a wallet that is allowed to join the group?'
   }
   cl.log('wallet is authorized to group')
@@ -52,6 +66,15 @@ export const verifyExistingWallet = async ({
     account: account,
     group,
     cl,
+  })
+  await trackEvent({
+    event: MonitorEvents.USER_VERIFIED,
+    group: { id: group.id, name: group.name },
+    user: {
+      id: account.userId.toString(),
+      name: account.username,
+      address: fw.address,
+    },
   })
   if (inviteLink) {
     return `You have successfully verified your wallet address ${fw.address}. Join the chat with your unique invite link ${inviteLink}`
