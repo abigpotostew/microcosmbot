@@ -49,7 +49,7 @@ const userMsg = (
   }
 }
 
-export const monitorEventToSlackFmt = async (event: MonitorEvent) => {
+export const monitorEventToSlackFmt = (event: MonitorEvent) => {
   if (event.event === MonitorEvents.GROUP_CREATED) {
     return groupMsg('A new group was created!', event.group)
   } else if (event.event === MonitorEvents.GROUP_UPDATED) {
