@@ -5,6 +5,8 @@ import { botInfo } from '../../botinfo'
 import { addAccountToGroup } from '../account/add-account-to-group'
 import { prismaClient } from '@microcosms/db'
 import { checkAccessRules } from '../access/access-rules'
+import { trackEvent } from '../../monitor/track-event'
+import { MonitorEvents } from '../../monitor/monitor-events'
 
 export const verifyConnectNewWalletMenu = async ({
   code,
@@ -171,6 +173,17 @@ export const verifyWalletWithOtp = async ({
       message: 'not passing rules',
       link: `https://t.me/${botInfo.username}`,
     })
+
+    await trackEvent({
+      event: MonitorEvents.USER_REJECTED,
+      group: { id: existing.group.id, name: existing.group.name },
+      user: {
+        id: existing.account.userId.toString(),
+        name: existing.account.username,
+        address: resolveAddress,
+      },
+    })
+
     return
   }
 
@@ -190,6 +203,15 @@ export const verifyWalletWithOtp = async ({
       `You're already a member of this group.`
     )
   }
+  await trackEvent({
+    event: MonitorEvents.USER_VERIFIED,
+    group: { id: existing.group.id, name: existing.group.name },
+    user: {
+      id: existing.account.userId.toString(),
+      name: existing.account.username,
+      address: resolveAddress,
+    },
+  })
   setStatus(200, { message: 'ok', link: `https://t.me/${botInfo.username}` })
 }
 

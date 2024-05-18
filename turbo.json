@@ -30,7 +30,8 @@
         "QSTASH_CURRENT_SIGNING_KEY",
         "QSTASH_NEXT_SIGNING_KEY",
         "ALLOWED_DENOMS",
-        "TG_WEBHOOK_SECRET"
+        "TG_WEBHOOK_SECRET",
+        "SLACK_MONITOR_WEBHOOK"
       ]
     },
     "lint": {
@@ -60,7 +61,8 @@
         "QSTASH_CURRENT_SIGNING_KEY",
         "QSTASH_NEXT_SIGNING_KEY",
         "ALLOWED_DENOMS",
-        "TG_WEBHOOK_SECRET"
+        "TG_WEBHOOK_SECRET",
+        "SLACK_MONITOR_WEBHOOK"
       ],
       "cache": false,
       "persistent": true

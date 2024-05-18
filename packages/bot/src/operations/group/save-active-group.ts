@@ -1,5 +1,7 @@
 import { prismaClient } from '@microcosms/db'
 import { LogContext } from '../../utils'
+import { trackEvent } from '../../monitor/track-event'
+import { MonitorEvents } from '../../monitor/monitor-events'
 
 export const saveActiveGroup = async (
   groupToSave: {
@@ -27,7 +29,7 @@ export const saveActiveGroup = async (
   }
 
   //update the group to active
-  return prismaClient().group.upsert({
+  const res = await prismaClient().group.upsert({
     where: {
       groupId: groupToSave.groupId.toString(),
     },
@@ -41,4 +43,9 @@ export const saveActiveGroup = async (
       active: true,
     },
   })
+  await trackEvent({
+    event: MonitorEvents.GROUP_CREATED,
+    group: { id: res.id, name: res.name },
+  })
+  return res
 }
