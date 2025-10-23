@@ -40,10 +40,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    networks:
-      - app_network
-
-networks:
-  app_network:
-    external: ${DOCKER_NETWORK_EXTERNAL:-false}
-    name: ${DOCKER_NETWORK:-microcosms_default}
