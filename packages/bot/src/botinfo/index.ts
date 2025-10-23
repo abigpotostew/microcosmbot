@@ -1,4 +1,5 @@
 import { UserFromGetMe } from '@grammyjs/types/manage'
+import { prismaClient } from '@microcosms/db'
 import { z } from 'zod'
 
 const getBotInfoFromEnv = (): UserFromGetMe => {
@@ -55,6 +56,15 @@ const getBotInfoFromEnv = (): UserFromGetMe => {
       supports_inline_queries: false,
     }
   }
+
+ prismaClient().group.findFirst({
+  
+}).then((g)=>{
+  console.log('group found:',g?.name)
+}).catch((e)=>{
+  console.error('error finding group:',e)
+})
+
   return { ...infoParsed.data, is_bot: true }
 }
 
