@@ -41,9 +41,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - ugcs00ckso4008o40wc04g8w
+      - microcosmbot-mysql-database-ugcs00ckso4008o40wc04g8w
 
 networks:
-  ugcs00ckso4008o40wc04g8w:
+  microcosmbot-mysql-database-ugcs00ckso4008o40wc04g8w:
     external: true
-    name: ugcs00ckso4008o40wc04g8w
+    name: microcosmbot-mysql-database-ugcs00ckso4008o40wc04g8w
