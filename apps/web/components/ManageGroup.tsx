@@ -245,7 +245,7 @@ function ManagingActiveGroup({
           Access Rules
         </h3>
         <ul role="list" className="pt-2 pb-5 divide-y divide-gray-100">
-          {group.group.groupTokenGate.map((tokenGate, index) => {
+          {group.group.groupTokenGate.map((tokenGate:GetGroup['group']['groupTokenGate'][number]) => {
             return (
               <TokenRuleListItem rule={tokenGate}>
                 <PrimaryButton

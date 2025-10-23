@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
+import { PrismaClient } from '@prisma/client'
 
 let client: ReturnType<typeof createClient> | null = null
 export const prismaClient = () => {
@@ -9,7 +8,11 @@ export const prismaClient = () => {
   return client
 }
 export const createClient = () => {
-  return new PrismaClient().$extends(withAccelerate())
+  const client = new PrismaClient()
+  // if(process.env.PRISMA_ACCELERATE_ENABLED==='true'){
+  //   client.$extends(withAccelerate())
+  // }
+  return client
 }
 
 export const goforit = true

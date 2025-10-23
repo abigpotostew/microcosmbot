@@ -48,7 +48,7 @@ case $COMMAND in
         echo ""
         echo "Next steps:"
         echo "  Run: ./docker.sh run"
-        echo "  Or with compose: docker-compose up -d"
+        echo "  Or with compose: docker compose up -d"
         ;;
     
     run)
@@ -106,14 +106,14 @@ case $COMMAND in
     
     compose-up)
         echo -e "${GREEN}Starting with Docker Compose...${NC}"
-        docker-compose up -d
+        docker compose up -d
         echo -e "${GREEN}Services started!${NC}"
-        echo "View logs: docker-compose logs -f"
+        echo "View logs: docker compose logs -f"
         ;;
     
     compose-down)
         echo -e "${YELLOW}Stopping Docker Compose services...${NC}"
-        docker-compose down
+        docker compose down
         echo -e "${GREEN}Services stopped${NC}"
         ;;
     
@@ -127,8 +127,8 @@ case $COMMAND in
         echo "  stop          - Stop the container"
         echo "  restart       - Restart the container"
         echo "  clean         - Remove container and image"
-        echo "  compose-up    - Start with docker-compose"
-        echo "  compose-down  - Stop docker-compose services"
+        echo "  compose-up    - Start with docker compose"
+        echo "  compose-down  - Stop docker compose services"
         echo ""
         echo "Example: ./docker.sh build"
         exit 1

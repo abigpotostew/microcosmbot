@@ -1,9 +1,6 @@
 import { bot } from '@microcosms/bot'
 import { NextRequest, NextResponse } from 'next/server'
 
-export const config = {
-  runtime: 'edge',
-}
 /**
  * API endpoint to configure the bot. This should be called once by the bot owner whenever the BASEURL or
  * any webhook config or commands change.

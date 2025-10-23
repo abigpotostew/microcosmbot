@@ -9,8 +9,8 @@
     ".turbo"
   ],
   "compilerOptions": {
-    "noEmit": true,
     "incremental": true,
+    "composite": true,
     "baseUrl": "./src",
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],

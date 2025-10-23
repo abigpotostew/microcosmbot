@@ -2,10 +2,6 @@ import { z } from 'zod'
 import { getOwnedCount } from '@microcosms/bot'
 import { NextRequest, NextResponse } from 'next/server'
 
-export const config = {
-  runtime: 'edge',
-}
-
 const schema = z.object({
   //since it's an internal api, don't bother checking for the contract address
   contractAddress: z.string().nullish(),

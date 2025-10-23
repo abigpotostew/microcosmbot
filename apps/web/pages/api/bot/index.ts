@@ -1,9 +1,6 @@
 import { bot, commands } from '@microcosms/bot'
 import { webhookCallback } from 'grammy'
 
-export const config = {
-  runtime: 'edge',
-}
 
 bot.use(commands)
 

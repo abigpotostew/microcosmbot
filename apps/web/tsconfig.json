@@ -4,7 +4,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "svg-module.d.ts"
+    "svg-module.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
@@ -12,16 +13,40 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "components/*": ["components/*"],
-      "libs/*": ["libs/*"],
-      "constants/*": ["constants/*"],
-      "styles/*": ["styles/*"],
-      "assets/*": ["public/*"],
-      "utils/*": ["utils/*"],
-      "state/*": ["state/*"],
-      "server/*": ["server/*"],
-      "@microcosms/bot/*": ["../../packages/bot/src/*"]
-    }
+      "components/*": [
+        "components/*"
+      ],
+      "libs/*": [
+        "libs/*"
+      ],
+      "constants/*": [
+        "constants/*"
+      ],
+      "styles/*": [
+        "styles/*"
+      ],
+      "assets/*": [
+        "public/*"
+      ],
+      "utils/*": [
+        "utils/*"
+      ],
+      "state/*": [
+        "state/*"
+      ],
+      "server/*": [
+        "server/*"
+      ],
+      "@microcosms/bot/*": [
+        "../../packages/bot/src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
   },
   "references": [
     {
