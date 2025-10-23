@@ -41,9 +41,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - microcosmbot-mysql-database-ugcs00ckso4008o40wc04g8w
+      - ${DOCKER_NETWORK:-default}
 
 networks:
-  microcosmbot-mysql-database-ugcs00ckso4008o40wc04g8w:
-    external: true
-    name: microcosmbot-mysql-database-ugcs00ckso4008o40wc04g8w
+  default:
+    external: ${DOCKER_NETWORK_EXTERNAL:-false}
+    name: ${DOCKER_NETWORK:-microcosms_default}
