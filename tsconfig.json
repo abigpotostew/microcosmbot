@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Next.js",
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+
+
+    "baseUrl": ".",
+    "paths": {
+      "components/*": [
+        "components/*"
+      ],
+      "libs/*": [
+        "libs/*"
+      ],
+      "constants/*": [
+        "constants/*"
+      ],
+      "styles/*": [
+        "styles/*"
+      ],
+      "assets/*": [
+        "public/*"
+      ],
+      "utils/*": [
+        "utils/*"
+      ],
+      "state/*": [
+        "state/*"
+      ],
+      "server/*": [
+        "server/*"
+      ],
+      "@microcosms/bot": [
+        "./bot/index.ts"
+      ],
+      "@microcosms/db": [
+        "prisma/index.ts"
+      ],
+      "@microcosms/db/*": [
+        "prisma/*"
+      ],
+      "@microcosms/bot/*": [
+        "./bot/*"
+      ],
+      "@microcosmbot/ui/*": [
+        "./components/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": ["src",  "next-env.d.ts",
+  "**/*.ts",
+  "**/*.tsx",
+  "svg-module.d.ts",
+  ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

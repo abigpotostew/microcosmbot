@@ -1,6 +1,6 @@
 import 'dotenv/config'
-import { prismaClient } from '../packages/db'
-import { bot } from '../packages/bot/src/bot'
+import { bot } from '@microcosms/bot'
+import { prismaClient } from '@microcosms/db'
 
 async function main() {
   const missingUsernames = await prismaClient().account.findMany({
