@@ -10,12 +10,10 @@ WORKDIR /app
 # Copy turbo.json and package.json files (turbo.json needed for prepare scripts)
 COPY package.json yarn.lock turbo.json ./
 COPY apps/web/package.json ./apps/web/
-COPY packages/bot/package.json ./packages/bot/
 COPY packages/db/package.json ./packages/db/
 COPY packages/eslint-config-custom/package.json ./packages/eslint-config-custom/
 COPY packages/tailwind-config/package.json ./packages/tailwind-config/
 COPY packages/tsconfig/package.json ./packages/tsconfig/
-COPY packages/ui/package.json ./packages/ui/
 
 # Copy Prisma schema before install (needed for prepare script)
 COPY packages/db/prisma ./packages/db/prisma
@@ -33,11 +31,9 @@ WORKDIR /app
 # Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
-COPY --from=deps /app/packages/bot/node_modules ./packages/bot/node_modules
 COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules
 COPY --from=deps /app/packages/eslint-config-custom/node_modules ./packages/eslint-config-custom/node_modules
 COPY --from=deps /app/packages/tailwind-config/node_modules ./packages/tailwind-config/node_modules
-COPY --from=deps /app/packages/ui/node_modules ./packages/ui/node_modules
 
 # Copy source files
 COPY . .
