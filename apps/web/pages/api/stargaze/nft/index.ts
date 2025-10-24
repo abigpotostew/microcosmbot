@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { getOwnedCount } from '@microcosms/bot'
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 const schema = z.object({
   //since it's an internal api, don't bother checking for the contract address
@@ -28,13 +28,16 @@ const schema = z.object({
  * @param req
  * @param res
  */
-export default async function handler(req: NextRequest) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
     if (req.method !== 'GET') {
-      return NextResponse.json({ message: 'not found' }, { status: 404 })
+      return res.status(404).json({ message: 'not found' })
     }
 
-    const url = new URL(req.url, 'https://example.com')
+    const url = new URL(req.url ?? '/', 'https://example.com')
     const query = url.searchParams
     const parse = schema.safeParse({
       contractAddress: query.get('contractAddress'),
@@ -47,9 +50,8 @@ export default async function handler(req: NextRequest) {
     if (!parse.success) {
       console.log('invalid parameters', parse.error.format())
 
-      return NextResponse.json(
+      return res.status(400).json(
         { message: 'invalid parameters', errors: parse.error.format() },
-        { status: 400 }
       )
     }
     const chainIdOut = parse.data.chainId || 'stargaze-1'
@@ -60,22 +62,16 @@ export default async function handler(req: NextRequest) {
       useRemoteCache: false,
     })
 
+    // 'Cache-Control': 's-maxage=3600',
     //cache for 1 hour
-    return NextResponse.json(
-      { count },
-      {
-        status: 200,
-        headers: {
-          'Cache-Control': 's-maxage=3600',
-          'Content-Type': 'application/json',
-        },
-      }
+    res.setHeader('Cache-Control', 's-maxage=3600')
+    return res.status(200).json(
+      { count }
     )
   } catch (e) {
-    console.error('unexpected error', e)
-    return NextResponse.json(
-      { message: 'internal server error' },
-      { status: 500 }
+        console.error('unexpected error', e)
+        return res.status(500).json(
+      { message: 'internal server error' }
     )
   }
 }

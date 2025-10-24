@@ -1,16 +1,29 @@
 {
-  "extends": "tsconfig/nextjs.json",
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "svg-module.d.ts",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Next.js",
   "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+
+
     "baseUrl": ".",
     "paths": {
       "components/*": [
@@ -51,7 +64,12 @@
       {
         "name": "next"
       }
-    ],
-    "strictNullChecks": true
-  }
+    ]
+  },
+  "include": ["src",  "next-env.d.ts",
+  "**/*.ts",
+  "**/*.tsx",
+  "svg-module.d.ts",
+  ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
