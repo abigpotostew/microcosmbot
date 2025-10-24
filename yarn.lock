@@ -7919,10 +7919,10 @@ graceful-fs@^4.1.2:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-"grammy@npm:@ponomarevlad/grammy@1.19.2-next-edge":
-  version "1.19.2-next-edge"
-  resolved "https://registry.yarnpkg.com/@ponomarevlad/grammy/-/grammy-1.19.2-next-edge.tgz#ff9f7ea254a22fce41bcd92591e86f5d9822af9c"
-  integrity sha512-/lvzIBFot6q/4t5tkpCWyEVtfapHerzbc9tkV0yMbZaanEo07t1sEt7zpC8z323XDuwkr7ZA9GS5OQcbbLWLFw==
+grammy@1.19.2:
+  version "1.19.2"
+  resolved "https://registry.yarnpkg.com/grammy/-/grammy-1.19.2.tgz#9cf960f2191acc2e0dd4d6360df864b29f2b0126"
+  integrity sha512-bvDWesJgLn65MOsWhShVTVG1bSnh6Yo3OtUwoFzTG21CdPt6r8nzPWcuBSzxMDUQyv8I1c0TXH7zIxXFxiH4sw==
   dependencies:
     "@grammyjs/types" "3.3.0"
     abort-controller "^3.0.0"

@@ -28,7 +28,7 @@
     "@next/bundle-analyzer": "^13.4.9",
     "@microcosms/db": "*",
     "@grammyjs/menu": "1.2.1",
-    "grammy": "npm:@ponomarevlad/grammy@1.19.2-next-edge",
+    "grammy": "1.19.2",
     "tiny-async-pool": "2.1.0",
     "@next/font": "^13.1.6",
     "@tailwindcss/typography": "^0.5.9",
