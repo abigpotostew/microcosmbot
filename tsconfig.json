@@ -62,6 +62,18 @@
       "@microcosms/bot/*": [
         "./bot/*"
       ],
+      "@microcosmbot/bot/*": [
+        "./bot/*"
+      ],
+      "@microcosmbot/bot": [
+        "./bot/index.ts"
+      ],
+      "@microcosmbot/db": [
+        "prisma/index.ts"
+      ],
+      "@microcosmbot/db/*": [
+        "prisma/*"
+      ],
       "@microcosmbot/ui/*": [
         "./components/*"
       ]

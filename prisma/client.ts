@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-let client: ReturnType<typeof createClient> | null = null
+let client: PrismaClient | null = null
 export const prismaClient = () => {
   if (!client) {
     client = createClient()
@@ -15,4 +15,3 @@ export const createClient = () => {
   return client
 }
 
-export const goforit = true
