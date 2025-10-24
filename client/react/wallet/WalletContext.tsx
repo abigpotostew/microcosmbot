@@ -102,7 +102,6 @@ export const WalletProvider = ({
 
         // Get all other signers
         // They are state vars so that when they are updated StargazeClient is also udpated
-        // @ts-expect-error messed up dependencies
         setSigningCosmWasmClient(signingCosmWasmClient)
         setSigningStargateClient(signingStargateClient)
       } else {

@@ -11,7 +11,6 @@ import { wallets as OmniWallet } from '@cosmos-kit/omni'
 import { getSigningCosmosClientOptions } from 'stargazejs'
 
 const signerOptions: SignerOptions = {
-  // @ts-expect-error messed up dependencies
   signingCosmwasm: ({
     chain_name,
   }): SigningCosmWasmClientOptions | undefined => {

@@ -19,6 +19,7 @@
     "@cosmjs/stargate": "^0.30.1",
     "@cosmos-kit/core": "1.5.1",
     "@cosmos-kit/cosmostation": "0.15.28",
+    "@cosmjs/cosmwasm-stargate": "0.28.13",
     "@cosmos-kit/keplr": "0.33.30",
     "@cosmos-kit/leap": "0.15.0",
     "@cosmos-kit/omni": "0.33.28",
