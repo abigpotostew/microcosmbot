@@ -21,7 +21,7 @@ const getBotInfoFromEnv = (): UserFromGetMe => {
     })
     .safeParse(info)
   if (!infoParsed.success) {
-    console.warn('NEXT_PUBLIC_GETME_BOT_INFO is not valid getMe JSON format')
+    console.warn('NEXT_PUBLIC_GETME_BOT_INFO is not valid getMe JSON format',process.env.NEXT_PUBLIC_GETME_BOT_INFO)
     return {
       id: 1,
       is_bot: true,
@@ -57,7 +57,7 @@ const getBotInfoFromEnv = (): UserFromGetMe => {
     }
   }
 
-  console.log('finding group... @ ', process.env.DATABASE_URL)
+  console.log('finding group... @', process.env.DATABASE_URL)
  prismaClient().group.findFirst({
   
 }).then((g)=>{
