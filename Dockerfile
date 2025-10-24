@@ -13,7 +13,6 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/db/package.json ./packages/db/
 COPY packages/eslint-config-custom/package.json ./packages/eslint-config-custom/
 COPY packages/tailwind-config/package.json ./packages/tailwind-config/
-COPY packages/tsconfig/package.json ./packages/tsconfig/
 
 # Copy Prisma schema before install (needed for prepare script)
 COPY packages/db/prisma ./packages/db/prisma
