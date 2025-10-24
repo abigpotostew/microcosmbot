@@ -28,6 +28,7 @@
     "@grammyjs/types": "3.3.0",
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.18",
+    "classnames": "2.5.1",
     "@keplr-wallet/cosmos": "0.12.11",
     "@next/bundle-analyzer": "^13.4.9",
     "@next/font": "^13.1.6",
