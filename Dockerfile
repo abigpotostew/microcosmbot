@@ -16,6 +16,9 @@ COPY package.json pnpm-lock.yaml  ./
 # Copy Prisma schema before install (needed for prepare script)
 COPY ./prisma ./prisma
 
+# enable corepack for pnpm
+RUN corepack enable
+
 # Install dependencies
 RUN pnpm install --frozen-lockfile --production=false
 
@@ -31,6 +34,9 @@ COPY --from=deps /app/node_modules ./node_modules
 
 # Copy source files
 COPY . .
+
+# enable corepack for pnpm
+RUN corepack enable
 
 # Generate Prisma Client
 RUN pnpm exec prisma generate
