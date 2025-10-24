@@ -4,7 +4,7 @@ import useWallet from '../client/react/wallet/useWallet'
 import { useCallback, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { signLoginMessageWithAmino } from 'libs/verify/keplr'
-import { PrimaryButton } from '@microcosmbot/ui'
+import { PrimaryButton } from '@microcosmbot/ui/Button'
 import { SpinningCircles } from 'react-loading-icons'
 type Props = {
   children?: React.ReactNode

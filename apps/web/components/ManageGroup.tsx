@@ -17,7 +17,8 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/20/solid'
 import { TokenRuleListItem } from './VerifyWtfBox'
-import { LoadingIcon, PrimaryButton } from '@microcosmbot/ui'
+import { LoadingIcon } from '@microcosmbot/ui/LoadingIcon'
+import { PrimaryButton } from '@microcosmbot/ui/Button'
 import { z } from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import Dropdown from 'components/Dropdown'

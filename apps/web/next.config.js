@@ -4,7 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer({
   reactStrictMode: true,
   output: 'standalone',
-  transpilePackages: ['@microcosmbot/ui', '@microcosms/bot', '@microcosms/db'],
+  transpilePackages: ['@microcosms/db'],
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

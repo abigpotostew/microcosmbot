@@ -48,6 +48,7 @@ RUN cd packages/db && npx prisma generate
 # Build the application using Turbo
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV NEXT_PUBLIC_GETME_BOT_INFO={"id":6277121004,"is_bot":true,"first_name":"MicroCosmBot","username":"microcosmbotdotxyz_bot","can_join_groups":true,"can_read_all_group_messages":true,"supports_inline_queries":false}
 
 # Build with turbo
 RUN yarn build

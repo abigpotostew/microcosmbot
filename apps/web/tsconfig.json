@@ -37,8 +37,14 @@
       "server/*": [
         "server/*"
       ],
+      "@microcosms/bot": [
+        "./bot/index.ts"
+      ],
       "@microcosms/bot/*": [
-        "../../packages/bot/src/*"
+        "./bot/*"
+      ],
+      "@microcosmbot/ui/*": [
+        "./components/*"
       ]
     },
     "plugins": [
@@ -47,10 +53,5 @@
       }
     ],
     "strictNullChecks": true
-  },
-  "references": [
-    {
-      "path": "../../packages/bot"
-    }
-  ]
+  }
 }

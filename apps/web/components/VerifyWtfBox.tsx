@@ -14,7 +14,8 @@ import FrameBlock from './FrameBlock'
 import { VerifyButtons } from 'components/VerifyButtons'
 import { ReactNode, useState } from 'react'
 import classNames from 'classnames'
-import { PrimaryButton, KeyValue } from '@microcosmbot/ui'
+import { PrimaryButton } from '@microcosmbot/ui/Button'
+import { KeyValue } from '@microcosmbot/ui/KeyValue'
 import * as React from 'react'
 
 const StargazeName = ({ address }: { address: string }) => {
