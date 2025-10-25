@@ -37,15 +37,12 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 * Run your bot locally with `turbo dev` in the `apps/web` directory.
 * Call the config api to tell the bot where to send updates. `curl -X GET  http://localhost:3000/api/bot/<your bot key>/config`
 * You will now receive bot updates from telegram to your local machine.
-* For testing the background checks, create an upstash QStash. Save QSTASH_URL, QSTASH_TOKEN, QSTASH_CURRENT_SIGNING_KEY, and QSTASH_NEXT_SIGNING_KEY from qstash
-
 ### Deployment
 
 * Get your bot info and store the JSON in `NEXT_PUBLIC_GETME_BOT_INFO` (one time)
   * Call the telegram api `https://api.telegram.org/bot<your-bot-api-key>/getMe` and copy the `result` field object in the environment variable.
   * This helps speed up the api calls because grammy will not have to call this each time a function boots.
-* Setup `https://console.upstash.com/qstash` which is used for the cron job to periodically check nft token ownership. Copy the key to your env.
-* Deploy to vercel through the git integration.
+* Deploy to coolify or your own self host service. this is not described here.
 
 ### Cron
 A vercel cron job enqueues a job that checks the nft token ownership of all users in the database. If a user no longer owns the token, they are removed from the database and banned from the group. This is to ensure that only users who own the token can be in the group.

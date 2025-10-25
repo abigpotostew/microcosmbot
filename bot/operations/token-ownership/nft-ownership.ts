@@ -316,8 +316,9 @@ export const fetchCosmWasm = async (
     `/cosmwasm/wasm/v1/contract/${contractAddress}/smart/${msg}`
   )
   if (!res.ok) {
-    console.log(`failed to fetch`, res.status, res.statusText, await res.text())
-    throw new Error(`failed to fetch`)
+    const text= await res.text()    
+    console.log(`failed to fetch`, res.status, res.statusText, text)
+    throw new Error(`failed to fetch ${chainId} ${contractAddress} ${msg}, ${res.status} ${res.statusText} ${text}`)
   }
   return res.json()
 }

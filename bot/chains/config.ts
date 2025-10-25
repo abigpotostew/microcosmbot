@@ -1,3 +1,4 @@
+import { Bech32Address } from '@keplr-wallet/cosmos'
 import { Bech32Config, ChainInfo } from '@keplr-wallet/types'
 
 export interface ChainInfoWithExplorer extends ChainInfo {
@@ -10,7 +11,7 @@ export interface ChainInfoNew {
   chainId: string
   chainName: string
   useChainName: string
-  // bech32Config: Bech32Config
+  bech32Prefix: string
 }
 
 export const ChainInfos: ChainInfoNew[] = [
@@ -30,7 +31,7 @@ export const ChainInfos: ChainInfoNew[] = [
     // bip44: {
     //   coinType: 118,
     // },
-    // bech32Config: Bech32Address.defaultBech32Config('stars'),
+    bech32Prefix: 'stars',
     // currencies: [
     //   {
     //     coinDenom: 'STARS',
@@ -92,7 +93,7 @@ export const ChainInfos: ChainInfoNew[] = [
     useChainName: 'neutron',
     chainName: 'Neutron',
     chainId: 'neutron-1',
-    // bech32Config: Bech32Address.defaultBech32Config('neutron'),
+    bech32Prefix: 'neutron',
     // "staking": {
     //   "staking_tokens": [
     //     {

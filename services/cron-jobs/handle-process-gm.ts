@@ -71,7 +71,7 @@ export const handleGroupMemberId = async (
       ok: true,
     }
   } catch (e) {
-    cl.error('something went wrong. retrying')
+    cl.error('something went wrong. retrying', e)
     return {
       ok: false,
       error: 'something went wrong.',

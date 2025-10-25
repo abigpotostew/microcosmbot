@@ -2,6 +2,7 @@ import { Group, GroupTokenGate, Wallet } from 'prisma'
 import { LogContext, tinyAsyncPoolAll } from '../../utils'
 import { Pointer } from '../../utils/pointer'
 import { getOwnedCount } from '../token-ownership/nft-ownership'
+import { ChainInfos } from '@microcosms/bot'
 
 function shuffle<T>(array: Array<T>) {
   let currentIndex = array.length,
@@ -54,6 +55,14 @@ export const verifyWalletAgainstAccessRule = async (
 
   return hasValidOwnedCount(ownedCount)
 }
+
+const getChainIdFromWallet = (wallet: Wallet) => {
+  const bech32Config = ChainInfos.find((c) =>
+    wallet.address.startsWith(c.bech32Prefix)
+  )
+  return bech32Config?.chainId
+}
+
 export const checkAccessRules = async (
   cl: LogContext,
   group: Group & { groupTokenGate: GroupTokenGate[] },
@@ -64,6 +73,12 @@ export const checkAccessRules = async (
 
   //todo abort signal if wallet is found
   await tinyAsyncPoolAll(wallets, async (wallet) => {
+    // if the wallet doesn't match the group chainId, skip it.
+    const chainId = getChainIdFromWallet(wallet)
+    if (chainId !== group.chainId) {
+      return
+    }
+
     if (foundWallet.value) {
       return
     }
