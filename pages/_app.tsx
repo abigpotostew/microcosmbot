@@ -5,7 +5,7 @@ import 'styles/globals.css'
 
 import { RecoilRoot } from 'recoil'
 import type { AppProps, AppType } from 'next/app'
-import { Amatic_SC, Lexend_Deca, Patrick_Hand } from '@next/font/google'
+import { Amatic_SC, Lexend_Deca, Patrick_Hand } from 'next/font/google'
 import LayoutWrapper from 'components/LayoutWrapper'
 import classNames from 'classnames'
 import { useEffect } from 'react'
