@@ -36,10 +36,10 @@ class MyDocument extends Document {
           <NextScript />
         </body>
         <script
-          data-goatcounter="https://stats.stewart.codes/count"
+          src="https://dingdong.stewart.codes/tracker.js"
+          data-endpoint="https://dingdong.stewart.codes"
           async
-          src="//stats.stewart.codes/count.js"
-        />
+        ></script>
       </Html>
     )
   }
