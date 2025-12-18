@@ -5,9 +5,6 @@ module.exports = withBundleAnalyzer({
   reactStrictMode: true,
   output: 'standalone',
   transpilePackages: ['@microcosms/db'],
-  experimental: {
-    instrumentationHook: true,
-  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
